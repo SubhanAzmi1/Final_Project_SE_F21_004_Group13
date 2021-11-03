@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import App from './App';
@@ -37,13 +36,4 @@ test('delete artist', () => {
 
   fireEvent.click(deleteButton);
   expect(artistEntry).not.toBeInTheDocument();
-=======
-import { render, screen } from '@testing-library/react';
-import App from './App';
-
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
->>>>>>> d5e8b864cbfc89d4a8195b07cbe6caee1fa1090a
 });
