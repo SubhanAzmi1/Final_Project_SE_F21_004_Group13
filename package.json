@@ -1,6 +1,5 @@
 {
   "dependencies": {
-<<<<<<< HEAD
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -9,27 +8,13 @@
     "react-dom": "^17.0.2",
     "react-scripts": "^4.0.3",
     "web-vitals": "^2.1.2"
-=======
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.5",
-    "@testing-library/user-event": "^12.6.3",
-    "prettier": "^2.2.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-scripts": "^4.0.2",
-    "web-vitals": "^1.1.0"
->>>>>>> d5e8b864cbfc89d4a8195b07cbe6caee1fa1090a
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-<<<<<<< HEAD
     "eject": "react-scripts eject",
     "lint": "./node_modules/.bin/eslint"
-=======
-    "eject": "react-scripts eject"
->>>>>>> d5e8b864cbfc89d4a8195b07cbe6caee1fa1090a
   },
   "eslintConfig": {
     "extends": [
@@ -49,7 +34,6 @@
       "last 1 safari version"
     ]
   },
-<<<<<<< HEAD
   "proxy": "http://localhost:8081",
   "devDependencies": {
     "eslint-config-airbnb": "^18.2.1",
@@ -59,7 +43,4 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "2.4.1"
   }
-=======
-  "proxy": "http://localhost:8081"
->>>>>>> d5e8b864cbfc89d4a8195b07cbe6caee1fa1090a
 }

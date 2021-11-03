@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import './App.css';
 import React, { useState, useRef } from 'react';
 
@@ -97,19 +96,6 @@ function App() {
       <button type="button" onClick={onClickSave}>Save</button>
     </div>
   );
-=======
-import logo from './logo.svg';
-import './App.css';
-import { useState, useRef } from 'react';
-
-
-function App() {
-  // fetches JSON data passed in by flask.render_template and loaded
-  // in public/index.html in the script with id "data"
-  const args = JSON.parse(document.getElementById("data").text);
-
-  // TODO: Implement your main page as a React component.
->>>>>>> d5e8b864cbfc89d4a8195b07cbe6caee1fa1090a
 }
 
 export default App;

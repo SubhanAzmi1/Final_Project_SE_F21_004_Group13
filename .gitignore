@@ -1,10 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 .env
-<<<<<<< HEAD
 __pycache__
-=======
->>>>>>> d5e8b864cbfc89d4a8195b07cbe6caee1fa1090a
 
 # dependencies
 /node_modules
