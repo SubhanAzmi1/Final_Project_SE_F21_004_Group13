@@ -1,11 +1,5 @@
 {
     "singleQuote": true,
-<<<<<<< HEAD
     "printWidth": 160,
     "trailingComma": "all"
 }
-=======
-    "printWidth": 100,
-    "trailingComma": "all"
-}
->>>>>>> d5e8b864cbfc89d4a8195b07cbe6caee1fa1090a
