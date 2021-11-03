@@ -36,3 +36,20 @@
     transform: rotate(360deg);
   }
 }
+<<<<<<< HEAD
+
+body {
+  background-color: lightblue;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+img {
+  border-radius: 25px;
+}
+
+audio {
+  padding-bottom: 30px;
+}
+=======
+>>>>>>> d5e8b864cbfc89d4a8195b07cbe6caee1fa1090a

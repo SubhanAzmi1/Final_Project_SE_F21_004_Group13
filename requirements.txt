@@ -1,1 +1,9 @@
 Flask
+<<<<<<< HEAD
+requests
+python-dotenv
+Flask-Login
+psycopg2-binary
+Flask-SQLAlchemy
+=======
+>>>>>>> d5e8b864cbfc89d4a8195b07cbe6caee1fa1090a
