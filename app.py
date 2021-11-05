@@ -22,8 +22,17 @@ from flask_sqlalchemy import SQLAlchemy
 from genius import get_lyrics_link
 from spotify import get_access_token, get_song_data
 
-
 load_dotenv(find_dotenv())
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+GOOGLE_DISCOVERY_URL = (
+    "https://accounts.google.com/.well-known/openid-configuration"
+)
+
+from oauthlib.oauth2 import WebApplicationClient
+
+client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 app = flask.Flask(__name__, static_folder="./build/static")
 # Point SQLAlchemy to your Heroku database
@@ -34,6 +43,7 @@ if db_url.startswith("postgres://"):
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 # Gets rid of a warning
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 app.secret_key = (os.getenv("F_SECRET_KEY")).encode(
     "utf_8"
 )  # don't defraud my app ok? I wont.
@@ -107,8 +117,6 @@ def load_user(user_name):
     Required by flask_login
     """
     return User.query.get(user_name)
-
-import flask_sqlalchemy as alch
 
 bp = flask.Blueprint("bp", __name__, template_folder="./build")
 
