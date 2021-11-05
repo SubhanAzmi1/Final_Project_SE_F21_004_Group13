@@ -1,5 +1,24 @@
 import './App.css';
 import React, { useState, useRef } from 'react';
+import { Login } from './Login';
+import { Logout } from './Logout';
+
+function Logout{
+  const onSuccess = () => {
+    console.log("Successfully logged out!");
+  };
+
+  return (
+    <div>
+      <GoogleLogout
+        clientID = {clientID} 
+        buttonText = "Logout" 
+        onLogoutSuccess = {onSuccess} 
+      ></GoogleLogout>
+    </div>
+  );
+}
+
 
 function App() {
   const args = (document.getElementById('data') == null) ? ({
