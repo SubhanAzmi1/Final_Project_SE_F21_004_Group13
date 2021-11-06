@@ -2,10 +2,13 @@
     <head></head>
     <body>
         <h1>Log In</h1>
-        <form method="POST" action="/login">
-            <input type="text" name="username" placeholder="Your Username">
-            <input type="submit" value="Submit">
-        </form>
+        {% if loggedIn %}
+            <p>Navigate to your home page!</p>
+        {% else %}
+            <a class="button" href="/login">Google Login</a>
+        {% endif %}
+        
         <a href={{ url_for('signup') }}>Sign Up</a>
+        
     </body>
 </html>
