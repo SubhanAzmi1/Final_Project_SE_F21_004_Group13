@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
 import { GoogleLogin } from 'react-google-login';
+import { refreshTokenSetup } from '../utils/refreshToken';
 
 const clientID = 'YOUR_CLIENT_ID.apps.googleusercontent.com';
 
@@ -7,6 +7,7 @@ const clientID = 'YOUR_CLIENT_ID.apps.googleusercontent.com';
 function Login(){
   const onSuccess = (res) => {
     console.log('[LoginSuccess] currentUser:', res.profileObj);
+    refreshTokenSetup(res);
   };
 
   const onFailure = (res) => {
@@ -26,3 +27,5 @@ function Login(){
     </div>
   );
 }
+
+export default Login;

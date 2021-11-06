@@ -1,5 +1,4 @@
-import React, { useState, useRef } from 'react';
-import { GoogleLogin } from 'react-google-login';
+import { GoogleLogout } from 'react-google-login';
 
 const clientID = 'YOUR_CLIENT_ID.apps.googleusercontent.com';
 
@@ -19,3 +18,5 @@ function Logout(){
     </div>
   );
 }
+
+export default Logout;
