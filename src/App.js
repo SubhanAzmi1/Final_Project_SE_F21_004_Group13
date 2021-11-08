@@ -1,7 +1,6 @@
 import './App.css';
 import React, { useState, useRef } from 'react';
-import { Login } from './Login';
-import { Logout } from './Logout';
+import Logout from './Logout';
 
 function App() {
   const args = (document.getElementById('data') == null) ? ({
@@ -9,6 +8,7 @@ function App() {
     username: 'John',
     has_artists_saved: false,
   }) : JSON.parse(document.getElementById('data').text);
+  
   const [artists, updateArtists] = useState(args.artist_ids);
   const form = useRef(null);
 
@@ -96,6 +96,7 @@ function App() {
       <input type="text" ref={form} data-testid="text_input" />
       <button type="button" onClick={onClickAdd}>Add Artist</button>
       <button type="button" onClick={onClickSave}>Save</button>
+      <Logout />
     </div>
   );
 }
