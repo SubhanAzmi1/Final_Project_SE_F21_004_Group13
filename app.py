@@ -24,15 +24,13 @@ from spotify import get_access_token, get_song_data
 
 load_dotenv(find_dotenv())
 
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-GOOGLE_DISCOVERY_URL = (
-    "https://accounts.google.com/.well-known/openid-configuration"
-)
+# GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+# GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+# GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
-from oauthlib.oauth2 import WebApplicationClient
+# from oauthlib.oauth2 import WebApplicationClient
 
-client = WebApplicationClient(GOOGLE_CLIENT_ID)
+# client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 app = flask.Flask(__name__, static_folder="./build/static")
 # Point SQLAlchemy to your Heroku database
@@ -59,7 +57,6 @@ class User(UserMixin, db.Model):
 
     id = db.Column("id", db.Integer, primary_key=True)
     username = db.Column("name", db.String(80), unique=True, nullable=False)
-    password = db.Column("passwd", db.String, nullable=False)
 
     # Important for listing heroes and comics
     heroes = db.relationship(
@@ -82,6 +79,7 @@ class User(UserMixin, db.Model):
         """
         return self.username
 
+
 class Hero(db.Model):
     """
     Heroes here
@@ -93,6 +91,7 @@ class Hero(db.Model):
 
     def __repr__(self):
         return "<Hero %r>" % self.hero_id
+
 
 class Comic(db.Model):
     """
@@ -106,11 +105,14 @@ class Comic(db.Model):
     def __repr__(self):
         return "<Hero %r>" % self.comic_id
 
+
+# db.drop_all()
 db.create_all()
 
 login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
+
 
 @login_manager.user_loader
 def load_user(user_name):
@@ -119,52 +121,54 @@ def load_user(user_name):
     """
     return User.query.get(user_name)
 
+
 bp = flask.Blueprint("bp", __name__, template_folder="./build")
 
+
 @bp.route("/index")
-@login_required
+# @login_required
 def index():
     """
     Main page. Fetches song data and embeds it in the returned HTML. Returns
     dummy data if something goes wrong.
     """
-    artists = Hero.query.filter_by(username=current_user.username).all()
-    artist_ids = [a.artist_id for a in artists]
-    has_artists_saved = len(artist_ids) > 0
-    if has_artists_saved:
-        artist_id = random.choice(artist_ids)
+    # artists = Hero.query.filter_by(username=current_user.username).all()
+    # artist_ids = [a.artist_id for a in artists]
+    # has_artists_saved = len(artist_ids) > 0
+    # if has_artists_saved:
+    #     artist_id = random.choice(artist_ids)
 
-        # API calls
-        access_token = get_access_token()
-        (song_name, song_artist, song_image_url, preview_url) = get_song_data(
-            artist_id, access_token
-        )
-        genius_url = get_lyrics_link(song_name)
+    #     # API calls
+    #     access_token = get_access_token()
+    #     (song_name, song_artist, song_image_url, preview_url) = get_song_data(
+    #         artist_id, access_token
+    #     )
+    #     genius_url = get_lyrics_link(song_name)
 
-    else:
-        (song_name, song_artist, song_image_url, preview_url, genius_url) = (
-            None,
-            None,
-            None,
-            None,
-            None,
-        )
+    # else:
+    #     (song_name, song_artist, song_image_url, preview_url, genius_url) = (
+    #         None,
+    #         None,
+    #         None,
+    #         None,
+    #         None,
+    #     )
 
-    data = json.dumps(
-        {
-            "username": current_user.username,
-            "artist_ids": artist_ids,
-            "has_artists_saved": has_artists_saved,
-            "song_name": song_name,
-            "song_artist": song_artist,
-            "song_image_url": song_image_url,
-            "preview_url": preview_url,
-            "genius_url": genius_url,
-        }
-    )
+    # data = json.dumps(
+    #     {
+    #         "username": current_user.username,
+    #         "artist_ids": artist_ids,
+    #         "has_artists_saved": has_artists_saved,
+    #         "song_name": song_name,
+    #         "song_artist": song_artist,
+    #         "song_image_url": song_image_url,
+    #         "preview_url": preview_url,
+    #         "genius_url": genius_url,
+    #     }
+    # )
     return flask.render_template(
         "index.html",
-        data=data,
+        # data=data,
     )
 
 
@@ -241,6 +245,41 @@ def save():
     return flask.jsonify(response)
 
 
+@app.route("/login_google_authenticate", methods=["POST"])
+def login_google_authenticate():
+    """
+    Receives google id_token from App.js; verifies token belonging to app;
+    get user info from google;
+    checks for user in database otherwise creates one;
+    returns user_data for main page.
+    """
+    id_token = flask.request.json.get("token")
+
+    # validate token
+
+    # retreive info from token like user name and email, maybe pic too
+
+    # check if user in database via unique email
+
+    # if so then response = data from database
+
+    # otherwise add new user
+    # response stuff is mostly null.
+    response = {
+        "username": None,
+        "artist_ids": None,
+        "has_artists_saved": None,
+        "song_name": None,
+        "song_artist": None,
+        "song_image_url": None,
+        "preview_url": None,
+        "genius_url": None,
+    }
+    # print(id_token)
+    # print(response)
+    return flask.jsonify(response)
+
+
 def update_db_ids_for_user(username, valid_ids):
     """
     Updates the DB so that only entries for valid_ids exist in it.
@@ -248,9 +287,7 @@ def update_db_ids_for_user(username, valid_ids):
     @param valid_ids: a set of artist IDs that the DB should update itself
         to reflect
     """
-    existing_ids = {
-        v.artist_id for v in Hero.query.filter_by(username=username).all()
-    }
+    existing_ids = {v.artist_id for v in Hero.query.filter_by(username=username).all()}
     new_ids = valid_ids - existing_ids
     for new_id in new_ids:
         db.session.add(Hero(artist_id=new_id, username=username))
@@ -265,16 +302,16 @@ def update_db_ids_for_user(username, valid_ids):
 @app.route("/")
 def main():
     """
-    Main page just reroutes to index or login depending on whether the
-    user is authenticated
+    Main page just reroutes to login.
     """
-    if current_user.is_authenticated:
-        return flask.redirect(flask.url_for("bp.index"))
-    return flask.redirect(flask.url_for("login"))
+    # if current_user.is_authenticated:
+    return flask.redirect(flask.url_for("bp.index"))
+    # return flask.redirect(flask.url_for("login"))
 
 
 if __name__ == "__main__":
-    app.run(
-        host=os.getenv("IP", "0.0.0.0"),
-        port=int(os.getenv("PORT", "8081")),
-    )
+    app.run(debug=True, port=int(os.getenv("PORT", "8081")))
+    # app.run(
+    #     host=os.getenv("IP", "0.0.0.0"),
+    #     port=int(os.getenv("PORT", "8081")),
+    # )

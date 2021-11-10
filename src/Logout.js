@@ -1,18 +1,24 @@
 import React, { div } from 'react';
 import { GoogleLogout } from 'react-google-login';
 
-const clientID = 'YOUR_CLIENT_ID.apps.googleusercontent.com';
+require('dotenv').config();
+
+const clientID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+console.log('From logOUT');
 
 //  for logging out
-function Logout() {
+// eslint-disable-next-line react/prop-types
+function Logout({ setLoggedIn }) { // FIX ESLINT LATER
   function onSuccess() {
     console.log('Successfully logged out!');
+    const loginfalse = false;
+    setLoggedIn(loginfalse);
   }
 
   return (
     <div>
       <GoogleLogout
-        clientID={clientID}
+        clientId={clientID}
         buttonText="Logout"
         onLogoutSuccess={onSuccess}
       />
