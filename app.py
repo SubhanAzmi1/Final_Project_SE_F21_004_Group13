@@ -125,9 +125,9 @@ def load_user(user_name):
 bp = flask.Blueprint("bp", __name__, template_folder="./build")
 
 
-@bp.route("/index")
+@bp.route("/login")
 # @login_required
-def index():
+def login():
     """
     Main page. Fetches song data and embeds it in the returned HTML. Returns
     dummy data if something goes wrong.
@@ -200,12 +200,12 @@ def signup_post():
     return flask.redirect(flask.url_for("login"))
 
 
-@app.route("/login")
-def login():
-    """
-    Login endpoint for GET requests
-    """
-    return flask.render_template("login.html")
+# @app.route("/login")
+# def login():
+#     """
+#     Login endpoint for GET requests
+#     """
+#     return flask.render_template("login.html")
 
 
 @app.route("/login", methods=["POST"])
@@ -266,14 +266,14 @@ def login_google_authenticate():
     # otherwise add new user
     # response stuff is mostly null.
     response = {
-        "username": None,
-        "artist_ids": None,
-        "has_artists_saved": None,
-        "song_name": None,
-        "song_artist": None,
-        "song_image_url": None,
-        "preview_url": None,
-        "genius_url": None,
+        "username": "Subhanfromback",
+        "artist_ids": [],
+        "has_artists_saved": False,
+        # "song_name": None,
+        # "song_artist": None,
+        # "song_image_url": None,
+        # "preview_url": None,
+        # "genius_url": None,
     }
     # print(id_token)
     # print(response)
@@ -305,7 +305,7 @@ def main():
     Main page just reroutes to login.
     """
     # if current_user.is_authenticated:
-    return flask.redirect(flask.url_for("bp.index"))
+    return flask.redirect(flask.url_for("bp.login"))
     # return flask.redirect(flask.url_for("login"))
 
 

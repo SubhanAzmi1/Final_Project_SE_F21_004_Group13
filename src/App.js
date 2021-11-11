@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useState } from 'react';
 import {
-  BrowserRouter as Router, Switch, Route, Redirect,
+  BrowserRouter as Router, Switch, Route,
 } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
@@ -13,52 +13,57 @@ require('dotenv').config();
 //    https://www.freecodecamp.org/news/pass-data-between-components-in-react/
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn'));
+  // const [userData, setUserData] = useState(null);
+  const [name, setName] = useState(sessionStorage.getItem('name'));
+  // const [savedArtist, setSavedArtist] = useState([]);
+  const [hasSavedArtist, setHasSavedArtist] = useState(false);
   console.log('what is logged in status: ', +loggedIn);
-  const getUserDataFromLogin = (idToken) => {
-    //  Upon verification receive the data dict,
-    //  and pass it back to parent component.
-    // console.log('what is logged in status: ', +loggedIn);
-    fetch('/login_google_authenticate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token: idToken }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setUserData({ userData: data });
-        console.log(userData);
-      });
-    console.log(userData);
-  };
+  // const getUserDataFromLogin = (idToken) => {
+  //   //  Upon verification receive the data dict,
+  //   //  and pass it back to parent component.
+  //   // console.log('what is logged in status: ', +loggedIn);
+  //   fetch('/login_google_authenticate', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ token: idToken }),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log(data);
+  //       // setUserData({ userData: data });
+  //       setName(data.username);
+  //       // setSavedArtist(data.artist_ids);
+  //       setHasSavedArtist(data.has_artists_saved);
+  //       console.log('name is: ', name);
+  //       history.push('/home');
+  //     });
+  //   console.log('name is: ', name);
+  // };
   return (
     <div>
       <Router>
         <Switch>
-          <Route exact path="/index">
-            { loggedIn === 'true' ? (
-              <>
-                <Redirect to="/home" />
-              </>
-            )
-              : (
-                <>
-                  <Login
-                    getUserDataFromLogin={(value) => getUserDataFromLogin(value)}
-                    setLoggedIn={(value) => setLoggedIn(value)}
-                  />
-                  <Logout
-                    setLoggedIn={(value) => setLoggedIn(value)}
-                  />
-                </>
-              )}
-          </Route>
           <Route exact path="/home">
-            <Home userData={userData} />
+            <Home
+              userName={name}
+              hsa={hasSavedArtist}
+              setLoggedIn={setLoggedIn}
+            />
+          </Route>
+          <Route exact path="/login">
+            <>
+              <Login
+                setLoggedIn={setLoggedIn}
+                setName={setName}
+                setHasSavedArtist={setHasSavedArtist}
+              />
+              <Logout
+                setLoggedIn={setLoggedIn}
+              />
+            </>
           </Route>
         </Switch>
       </Router>

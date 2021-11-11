@@ -1,5 +1,6 @@
 import React from 'react';
 import { GoogleLogin } from 'react-google-login';
+import { useHistory } from 'react-router-dom';
 
 import './App.css';
 
@@ -22,7 +23,8 @@ function refreshTokenSetup(res) {
 
 // stuff for login
 // eslint-disable-next-line react/prop-types
-function Login({ getUserDataFromLogin, setLoggedIn }) { // FIX ESLINT LATER
+function Login({ setLoggedIn, setName, setHasSavedArtist }) { // FIX ESLINT LATER
+  const history = useHistory();
   function onSuccess(res) {
     console.log('[LoginSuccess] currentUser:', res.profileObj);
     refreshTokenSetup(res);
@@ -31,9 +33,31 @@ function Login({ getUserDataFromLogin, setLoggedIn }) { // FIX ESLINT LATER
     // console.log(idToken);
     //  Upon verification receive the data dict,
     //  and pass it back to parent component.
-    getUserDataFromLogin(idToken);
+    // getUserDataFromLogin(idToken);
+    fetch('/login_google_authenticate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: idToken }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        // setUserData({ userData: data });
+        setName(data.username);
+        // setSavedArtist(data.artist_ids);
+        setHasSavedArtist(data.has_artists_saved);
+        // console.log('name is: ', name);
+        history.push('/home');
+      });
+    // console.log('what is logged in status: ', +loggedIn);
+    // sessionStorage.setItem('loggedIn', true);
+    // setLoggedIn(sessionStorage.getItem('loggedIn'));
     const logintrue = true;
     setLoggedIn(logintrue);
+    // history.push('/home');
+    // console.log('what is logged in status: ', +loggedIn);
   }
 
   function onFailure(res) {

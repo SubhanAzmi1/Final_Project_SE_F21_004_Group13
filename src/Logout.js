@@ -1,5 +1,6 @@
 import React, { div } from 'react';
 import { GoogleLogout } from 'react-google-login';
+import { useHistory } from 'react-router-dom';
 
 require('dotenv').config();
 
@@ -9,10 +10,12 @@ console.log('From logOUT');
 //  for logging out
 // eslint-disable-next-line react/prop-types
 function Logout({ setLoggedIn }) { // FIX ESLINT LATER
+  const history = useHistory();
   function onSuccess() {
     console.log('Successfully logged out!');
     const loginfalse = false;
     setLoggedIn(loginfalse);
+    history.push('/login');
   }
 
   return (
