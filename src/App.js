@@ -11,37 +11,14 @@ require('dotenv').config();
 // Sources:
 //   Passing data between components:
 //    https://www.freecodecamp.org/news/pass-data-between-components-in-react/
+//  UseHistory routing:
+//    https://www.youtube.com/watch?v=tiAlSpyWIDs
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn'));
-  // const [userData, setUserData] = useState(null);
   const [name, setName] = useState(sessionStorage.getItem('name'));
-  // const [savedArtist, setSavedArtist] = useState([]);
   const [hasSavedArtist, setHasSavedArtist] = useState(false);
   console.log('what is logged in status: ', +loggedIn);
-  // const getUserDataFromLogin = (idToken) => {
-  //   //  Upon verification receive the data dict,
-  //   //  and pass it back to parent component.
-  //   // console.log('what is logged in status: ', +loggedIn);
-  //   fetch('/login_google_authenticate', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ token: idToken }),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log(data);
-  //       // setUserData({ userData: data });
-  //       setName(data.username);
-  //       // setSavedArtist(data.artist_ids);
-  //       setHasSavedArtist(data.has_artists_saved);
-  //       console.log('name is: ', name);
-  //       history.push('/home');
-  //     });
-  //   console.log('name is: ', name);
-  // };
   return (
     <div>
       <Router>
@@ -72,7 +49,3 @@ function App() {
 }
 
 export default App;
-
-// <Route exact path="/home">
-// <Home userData={userData} />
-// </Route>

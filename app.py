@@ -24,7 +24,7 @@ from spotify import get_access_token, get_song_data
 
 load_dotenv(find_dotenv())
 
-# GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 # GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 # GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
@@ -253,11 +253,17 @@ def login_google_authenticate():
     checks for user in database otherwise creates one;
     returns user_data for main page.
     """
-    id_token = flask.request.json.get("token")
-
+    token = flask.request.json.get("token")
+    email = flask.request.json.get("email")
+    f_name = flask.request.json.get("fName")
+    image_url = flask.request.json.get("imageUrl")
+    print(token)
+    print("email is: " + email)
+    print("firstName is: " + f_name)
+    print("imageurl is: " + image_url)
     # validate token
-
     # retreive info from token like user name and email, maybe pic too
+    # SKIPPING THE PREVIOS TWO FOR NOW BY JUST GETTING INFO FROM FRONT ON SUCCESS LOGIN
 
     # check if user in database via unique email
 
@@ -266,7 +272,7 @@ def login_google_authenticate():
     # otherwise add new user
     # response stuff is mostly null.
     response = {
-        "username": "Subhanfromback",
+        "username": f_name,
         "artist_ids": [],
         "has_artists_saved": False,
         # "song_name": None,

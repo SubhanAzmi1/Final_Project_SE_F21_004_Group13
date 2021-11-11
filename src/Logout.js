@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 require('dotenv').config();
 
 const clientID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-console.log('From logOUT');
+// console.log('From logOUT');
 
 //  for logging out
 // eslint-disable-next-line react/prop-types

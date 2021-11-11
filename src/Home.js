@@ -4,9 +4,6 @@ import Logout from './Logout';
 
 // eslint-disable-next-line react/prop-types
 function Home({ userName, hsa, setLoggedIn }) { // FIX ESLINT LATER
-  // const [hasartistssaved, sethasartistssaved] = useState(null);
-  // sethasartistssaved(hasArtistsSaved);
-
   return (
     <div>
       <h1>

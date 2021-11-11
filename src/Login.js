@@ -7,7 +7,7 @@ import './App.css';
 require('dotenv').config();
 
 const clientID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-console.log('From login');
+// console.log('From login');
 
 function refreshTokenSetup(res) {
   let refreshTiming = (res.tokenObj.expires_in || 3600 - 5 * 60) * 1000;
@@ -29,35 +29,31 @@ function Login({ setLoggedIn, setName, setHasSavedArtist }) { // FIX ESLINT LATE
     console.log('[LoginSuccess] currentUser:', res.profileObj);
     refreshTokenSetup(res);
     // get id_token from google and send it to backend.
+    //    can maybe skip verifying in backend and send info from frontend.
     const idToken = res.tokenId;
-    // console.log(idToken);
     //  Upon verification receive the data dict,
     //  and pass it back to parent component.
-    // getUserDataFromLogin(idToken);
     fetch('/login_google_authenticate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ token: idToken }),
+      body: JSON.stringify({
+        token: idToken,
+        email: res.profileObj.email,
+        fName: res.profileObj.givenName,
+        imageUrl: res.profileObj.imageUrl,
+      }),
     })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        // setUserData({ userData: data });
         setName(data.username);
-        // setSavedArtist(data.artist_ids);
         setHasSavedArtist(data.has_artists_saved);
-        // console.log('name is: ', name);
         history.push('/home');
       });
-    // console.log('what is logged in status: ', +loggedIn);
-    // sessionStorage.setItem('loggedIn', true);
-    // setLoggedIn(sessionStorage.getItem('loggedIn'));
     const logintrue = true;
     setLoggedIn(logintrue);
-    // history.push('/home');
-    // console.log('what is logged in status: ', +loggedIn);
   }
 
   function onFailure(res) {
