@@ -56,7 +56,8 @@ class User(UserMixin, db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    username = db.Column("name", db.String(80), unique=True, nullable=False)
+    username = db.Column("name", db.String(80), nullable=False)
+    email = db.Column("email", db.String(200), unique=True, nullable=False)
 
     # Important for listing heroes and comics
     heroes = db.relationship(
@@ -257,24 +258,32 @@ def login_google_authenticate():
     email = flask.request.json.get("email")
     f_name = flask.request.json.get("fName")
     image_url = flask.request.json.get("imageUrl")
-    print(token)
-    print("email is: " + email)
-    print("firstName is: " + f_name)
-    print("imageurl is: " + image_url)
+
     # validate token
     # retreive info from token like user name and email, maybe pic too
     # SKIPPING THE PREVIOS TWO FOR NOW BY JUST GETTING INFO FROM FRONT ON SUCCESS LOGIN
 
     # check if user in database via unique email
-
+    user = User.query.filter_by(email=email).first()
+    if user:
+        # if so then response = data from database
+        #   update name if user has updated on google.
+        if user.username != f_name:
+            user.username = f_name
+            db.session.commit()
+    else:
+        user = User(email=email, username=f_name)
+        db.session.add(user)
+        db.session.commit()
     # if so then response = data from database
 
     # otherwise add new user
     # response stuff is mostly null.
     response = {
-        "username": f_name,
+        "username": user.username,
         "artist_ids": [],
         "has_artists_saved": False,
+        "userId": user.id,
         # "song_name": None,
         # "song_artist": None,
         # "song_image_url": None,

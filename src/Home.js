@@ -1,14 +1,22 @@
+/* eslint-disable react/prop-types */
 import './App.css';
 import React from 'react';
 import Logout from './Logout';
 
 // eslint-disable-next-line react/prop-types
-function Home({ userName, hsa, setLoggedIn }) { // FIX ESLINT LATER
+function Home({
+  userName,
+  hsa,
+  id,
+  setLoggedIn,
+}) { // FIX ESLINT LATER
   return (
     <div>
       <h1>
         {userName}
-        &apos;s Song Explorer
+        &apos;s Song Explorer. User ID:
+        {' '}
+        {id}
       </h1>
       {hsa ? (
         <>

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { useHistory } from 'react-router-dom';
@@ -23,7 +24,12 @@ function refreshTokenSetup(res) {
 
 // stuff for login
 // eslint-disable-next-line react/prop-types
-function Login({ setLoggedIn, setName, setHasSavedArtist }) { // FIX ESLINT LATER
+function Login({
+  setLoggedIn,
+  setName,
+  setUserId,
+  setHasSavedArtist,
+}) { // FIX ESLINT LATER
   const history = useHistory();
   function onSuccess(res) {
     console.log('[LoginSuccess] currentUser:', res.profileObj);
@@ -49,6 +55,7 @@ function Login({ setLoggedIn, setName, setHasSavedArtist }) { // FIX ESLINT LATE
       .then((data) => {
         console.log(data);
         setName(data.username);
+        setUserId(data.userId);
         setHasSavedArtist(data.has_artists_saved);
         history.push('/home');
       });

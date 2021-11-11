@@ -18,6 +18,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn'));
   const [name, setName] = useState(sessionStorage.getItem('name'));
   const [hasSavedArtist, setHasSavedArtist] = useState(false);
+  const [userId, setUserId] = useState(null);
   console.log('what is logged in status: ', +loggedIn);
   return (
     <div>
@@ -26,6 +27,7 @@ function App() {
           <Route exact path="/home">
             <Home
               userName={name}
+              id={userId}
               hsa={hasSavedArtist}
               setLoggedIn={setLoggedIn}
             />
@@ -35,6 +37,7 @@ function App() {
               <Login
                 setLoggedIn={setLoggedIn}
                 setName={setName}
+                setUserId={setUserId}
                 setHasSavedArtist={setHasSavedArtist}
               />
               <Logout
