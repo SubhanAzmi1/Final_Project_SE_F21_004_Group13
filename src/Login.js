@@ -32,7 +32,7 @@ function Login({
 }) { // FIX ESLINT LATER
   const history = useHistory();
   function onSuccess(res) {
-    console.log('[LoginSuccess] currentUser:', res.profileObj);
+    window.console.log('[LoginSuccess] currentUser:', res.profileObj);
     refreshTokenSetup(res);
     // get id_token from google and send it to backend.
     //    can maybe skip verifying in backend and send info from frontend.
@@ -53,7 +53,6 @@ function Login({
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setName(data.username);
         setUserId(data.userId);
         setHasSavedArtist(data.has_artists_saved);
@@ -64,7 +63,7 @@ function Login({
   }
 
   function onFailure(res) {
-    console.log('[LoginFailure] res:', res);
+    window.console.log('[LoginFailure] res:', res);
   }
 
   return (

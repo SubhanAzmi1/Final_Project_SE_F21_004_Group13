@@ -19,7 +19,7 @@ function App() {
   const [name, setName] = useState(sessionStorage.getItem('name'));
   const [hasSavedArtist, setHasSavedArtist] = useState(false);
   const [userId, setUserId] = useState(null);
-  console.log('what is logged in status: ', +loggedIn);
+  window.console.log('what is logged in status: ', +loggedIn);
   return (
     <div>
       <Router>

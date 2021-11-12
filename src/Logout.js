@@ -12,7 +12,7 @@ const clientID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 function Logout({ setLoggedIn }) { // FIX ESLINT LATER
   const history = useHistory();
   function onSuccess() {
-    console.log('Successfully logged out!');
+    window.console.log('Successfully logged out!');
     const loginfalse = false;
     setLoggedIn(loginfalse);
     history.push('/login');
