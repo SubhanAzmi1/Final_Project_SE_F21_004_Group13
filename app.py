@@ -279,7 +279,7 @@ def login_google_authenticate():
 
     # otherwise add new user
     # response stuff is mostly null.
-    response = {
+    data = {
         "username": user.username,
         "artist_ids": [],
         "has_artists_saved": False,
@@ -292,7 +292,7 @@ def login_google_authenticate():
     }
     # print(id_token)
     # print(response)
-    return flask.jsonify(response)
+    return flask.jsonify(data)
 
 
 def update_db_ids_for_user(username, valid_ids):
@@ -325,8 +325,8 @@ def main():
 
 
 if __name__ == "__main__":
-    # app.run(debug=True, port=int(os.getenv("PORT", "8081")))
-    app.run(
-        host=os.getenv("IP", "0.0.0.0"),
-        port=int(os.getenv("PORT", "8081")),
-    )
+    app.run(debug=True, port=int(os.getenv("PORT", "8081")))
+    # app.run(
+    #     host=os.getenv("IP", "0.0.0.0"),
+    #     port=int(os.getenv("PORT", "8081")),
+    # )
