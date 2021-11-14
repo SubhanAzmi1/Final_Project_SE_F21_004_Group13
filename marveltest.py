@@ -8,16 +8,20 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-test_text = "spider"
+test_text = "venom"
 exact = "exact"
 starts = "other"
 
-heroes = get_charac_data(test_text, starts)
+names, modified_dates, image_urls, descriptions = get_charac_data(test_text, starts)
 print("heroes results: ")
-print(heroes)
+print(names)
+print(modified_dates)
+print(image_urls)
+print(descriptions)
 
-titles, release_dates, urls = get_comic_data(test_text, starts)
+titles, release_dates, image_urls, series = get_comic_data(test_text, starts)
 print("titles results: ")
 print(titles)
 print(release_dates)
-print(urls)
+print(image_urls)
+print(series)

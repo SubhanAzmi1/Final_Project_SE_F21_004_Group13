@@ -1,5 +1,4 @@
-import React from 'react';
-import {useState} from 'react';
+import React, { useState } from 'react';
 
 // This component is for putting in form data
 
@@ -8,63 +7,73 @@ function SearchForm(props) {
   const [heroRadioActive, setHeroActive] = useState(true);
   const [comicRadioActive, setComicActive] = useState(false);
 
-  function setHeroRadio(e) {
+  function setHeroRadio() {
     setHeroActive(true);
     setComicActive(false);
   }
 
-  function setComicRadio(e) {
+  function setComicRadio() {
     setHeroActive(false);
     setComicActive(true);
   }
 
   // State and function for text
-  const [formSearch, setSearch] = useState("");
+  const [formSearch, setSearch] = useState('');
 
   function updateSearch(e) {
     setSearch(e.target.value.trim());
   }
 
-  function doSearch() {
+  function doStartsWithSearch() {
     props.onClick(formSearch, heroRadioActive);
   }
-
   return (
     <div>
-      <h2>Enter a hero or comic issue here!</h2>
+      <h2>
+        Enter a hero or comic issue here!
+      </h2>
       <form>
-          <input 
+        <label htmlFor="hero">
+          <input
             type="radio"
             value="Hero"
             name="Selection"
             id="hero"
-            onChange={ setHeroRadio }
+            onChange={setHeroRadio}
             checked={heroRadioActive}
           />
-          <label for="hero">Hero</label>
-          <br/>
-
-          <input 
-            type="radio" 
+          Hero
+        </label>
+        <br />
+        <label htmlFor="comic">
+          <input
+            type="radio"
             value="Comic"
             name="Selection"
             id="comic"
-            onChange={ setComicRadio }
+            onChange={setComicRadio}
             checked={comicRadioActive}
           />
-          <label for="comic">Comic</label>
-          <br/>
+          Comic
+        </label>
+        <br />
       </form>
       <form>
-          <input type="text" 
-            placeholder="Hero or Comic Name Here" 
-            onChange={ updateSearch } 
-            maxlength="30"
-          />
+        <input
+          type="text"
+          placeholder="Hero or Comic Name Here"
+          onChange={updateSearch}
+          maxLength="30"
+        />
       </form>
-      <button onClick={ doSearch }>Search</button>
+      <button onClick={doStartsWithSearch} type="button">Starts-with search</button>
     </div>
-  )
+  );
 }
-
+SearchForm.defaultProps = {
+  onClick: () => {},
+};
+SearchForm.propTypes = {
+  onClick: Function,
+};
 export default SearchForm;

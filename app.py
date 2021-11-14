@@ -21,6 +21,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from genius import get_lyrics_link
 from spotify import get_access_token, get_song_data
+from marvel import get_charac_data, get_comic_data
 
 load_dotenv(find_dotenv())
 
@@ -293,6 +294,46 @@ def login_google_authenticate():
     # print(id_token)
     # print(response)
     return flask.jsonify(data)
+
+
+@app.route("/marvelLookupHero", methods=["POST"])
+def marvelLookupHero():
+    """
+    Returns info about characters based on search word.
+    Utilizes marvel.py to contact marvel api.
+    """
+    searchText = flask.request.json.get("text")
+    starts = "other"
+    names, modified_dates, image_urls, descriptions = get_charac_data(
+        searchText, starts
+    )
+
+    searchResult = {
+        "names": names,
+        "modified_dates": modified_dates,
+        "image_urls": image_urls,
+        "descriptions": descriptions,
+    }
+    return flask.jsonify(searchResult)
+
+
+@app.route("/marvelLookupComic", methods=["POST"])
+def marvelLookupComic():
+    """
+    Returns info about comics based on search word.
+    Utilizes marvel.py to contact marvel api.
+    """
+    searchText = flask.request.json.get("text")
+    starts = "other"
+    titles, release_dates, image_urls, series = get_comic_data(searchText, starts)
+
+    searchResult = {
+        "titles": titles,
+        "release_dates": release_dates,
+        "image_urls": image_urls,
+        "series": series,
+    }
+    return flask.jsonify(searchResult)
 
 
 def update_db_ids_for_user(username, valid_ids):

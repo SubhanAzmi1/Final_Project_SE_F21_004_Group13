@@ -43,17 +43,30 @@ def get_charac_data(search_word, e_or_sw):  # exact or starts_with.
         search_parameter1 = "nameStartsWith"
 
     requesturl = f"https://gateway.marvel.com:443/v1/public/characters?{search_parameter1}={search_word}&apikey={PUB_KEY}&limit=5&ts={ts}&hash={hash}"
-    print(requesturl)
+    # print(requesturl)
     response = requests.get(requesturl)
 
     json_response = response.json()
     data = json_response["data"]
 
-    heroes = []
+    names = []
+    modified_dates = []
+    image_urls = []
+    descriptions = []
     for characters in data["results"]:
-        heroes.append(characters["name"])
+        names.append(characters["name"])
 
-    return heroes
+        descriptions.append(characters["description"])
+
+        image_urls.append(
+            characters["thumbnail"]["path"] + "." + characters["thumbnail"]["extension"]
+        )
+
+        unmodified = str(characters["modified"])
+        modified = unmodified.partition("T")[0]
+        modified_dates.append(modified)
+
+    return (names, modified_dates, image_urls, descriptions)
 
 
 def get_comic_data(search_word, e_or_sw):
@@ -67,8 +80,8 @@ def get_comic_data(search_word, e_or_sw):
     else:  # starts_with
         search_parameter1 = "titleStartsWith"
 
-    requesturl = f"https://gateway.marvel.com:443/v1/public/comics?{search_parameter1}={search_word}&apikey={PUB_KEY}&limit=5&ts={ts}&hash={hash}"
-    print(requesturl)
+    requesturl = f"https://gateway.marvel.com:443/v1/public/comics?noVariants=true&{search_parameter1}={search_word}&apikey={PUB_KEY}&limit=5&ts={ts}&hash={hash}"
+    # print(requesturl)
     response = requests.get(requesturl)
 
     json_response = response.json()
@@ -79,14 +92,25 @@ def get_comic_data(search_word, e_or_sw):
     #
     titles = []
     release_dates = []
-    urls = []
+    image_urls = []
+    series = []
     for comics in data["results"]:
         titles.append(comics["title"])
-        release_dates.append(comics["dates"][0]["date"])
-        # TOdo: shorten date time string before appending. current: "2021-12-01T00:00:00-0500"
-        urls.append(comics["urls"][0]["url"])
 
-    return (titles, release_dates, urls)
+        unmodified = str(comics["dates"][0]["date"])
+        modified = unmodified.partition("T")[0]
+        release_dates.append(modified)
+
+        # urls.append(comics["urls"][0]["url"])
+        # this is for digital webpage
+
+        image_urls.append(
+            comics["thumbnail"]["path"] + "." + comics["thumbnail"]["extension"]
+        )
+
+        series.append(comics["series"]["name"])
+
+    return (titles, release_dates, image_urls, series)
 
 
 # there are 4 different types of searches
