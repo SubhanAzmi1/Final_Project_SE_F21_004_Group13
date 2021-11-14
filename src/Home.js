@@ -3,13 +3,12 @@ import './App.css';
 import React from 'react';
 import Logout from './Logout';
 
-// eslint-disable-next-line react/prop-types
 function Home({
   userName,
   hsa,
   id,
   setLoggedIn,
-}) { // FIX ESLINT LATER
+}) {
   return (
     <div>
       <h1>
@@ -31,5 +30,17 @@ function Home({
     </div>
   );
 }
+Home.defaultProps = {
+  setLoggedIn: () => {},
+  hsa: true,
+  userName: '',
+  id: '',
+};
 
+Home.propTypes = {
+  setLoggedIn: Function,
+  userName: String,
+  hsa: Boolean,
+  id: String,
+};
 export default Home;

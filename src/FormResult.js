@@ -8,8 +8,7 @@ function FormResult({
 }) {
   fixResultsEmpty(false);
   function addForm() {
-    // eslint-disable-next-line react/prop-types
-    onClick(nameList[0], '1');// FIX ESLINT LATER
+    onClick(nameList[0], '1');
   }
   // depending on isHero is true i have different headers
   //    for the table to be displayed.
