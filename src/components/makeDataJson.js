@@ -6,6 +6,7 @@ function MakeDataJson({
   nameList, dates, images, extraInfos, ids,
 }) {
   const dataJson = [];
+  window.console.log(nameList);
   for (let i = 0; i < nameList.length; i += 1) {
     dataJson.push({
       nameTitle: nameList[i],

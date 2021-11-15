@@ -84,10 +84,11 @@ def get_comic_data(search_word, e_or_sw):
         search_parameter1 = "titleStartsWith"
 
     requesturl = f"https://gateway.marvel.com:443/v1/public/comics?noVariants=true&{search_parameter1}={search_word}&apikey={PUB_KEY}&limit=5&ts={ts}&hash={hash}"
-    # print(requesturl)
+    print(requesturl)
     response = requests.get(requesturl)
 
     json_response = response.json()
+    # print(json_response)
     data = json_response["data"]
     # title
     # release date

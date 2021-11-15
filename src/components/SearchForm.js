@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 // This component is for putting in form data
 
@@ -6,7 +6,6 @@ function SearchForm(props) {
   // States and function for radio
   const [heroRadioActive, setHeroActive] = useState(true);
   const [comicRadioActive, setComicActive] = useState(false);
-
   function setHeroRadio() {
     setHeroActive(true);
     setComicActive(false);
@@ -18,14 +17,14 @@ function SearchForm(props) {
   }
 
   // State and function for text
-  const [formSearch, setSearch] = useState('');
-
-  function updateSearch(e) {
-    setSearch(e.target.value.trim());
-  }
-
+  const textInput = useRef(null);
   function doStartsWithSearch() {
-    props.onClick(formSearch, heroRadioActive);
+    const textToSearch = textInput.current.value;
+    props.setTts(textToSearch);
+    props.setIsHero(heroRadioActive);
+    console.log(textToSearch);
+    props.onClick(heroRadioActive);
+    textInput.current.value = '';
   }
   return (
     <div>
@@ -62,8 +61,8 @@ function SearchForm(props) {
         <input
           type="text"
           placeholder="Hero or Comic Name Here"
-          onChange={updateSearch}
-          maxLength="30"
+          ref={textInput}
+          maxLength="45"
         />
       </form>
       <button onClick={doStartsWithSearch} type="button">Starts-with search</button>
@@ -72,8 +71,12 @@ function SearchForm(props) {
 }
 SearchForm.defaultProps = {
   onClick: () => {},
+  setTts: () => {},
+  setIsHero: () => {},
 };
 SearchForm.propTypes = {
   onClick: Function,
+  setTts: Function,
+  setIsHero: Function,
 };
 export default SearchForm;

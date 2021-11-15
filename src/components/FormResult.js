@@ -1,7 +1,8 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useMemo } from 'react';
 import { useTable } from 'react-table';
 
-import MakeDataJson from './makeDataJson';
+// import MakeDataJson from './makeDataJson';
 // This component appears with the results given from an API.
 // It gives the option to either add a given result.
 // sources:
@@ -10,12 +11,13 @@ function FormResult({
   isHero, nameList, dates, images, extraInfos, ids, AddFav, fixResultsEmpty,
 }) {
   fixResultsEmpty(false);
-  function addForm() {
-    onClick(nameList[0], '1');
-  }
+  // function addForm() {
+  //   onClick(nameList[0], '1');
+  // }
   // depending on isHero is true i have different headers
   //    for the table to be displayed.
   //    then each column in a row is one item from the various arrays.
+  let tableInstance;
   const COLUMNSHERO = [
     {
       Header: 'Image',
@@ -47,7 +49,7 @@ function FormResult({
     {
       Header: 'Add to Favorites',
       Cell: () => (
-        <button onClick={() => AddFav(isHero,)} type="button">
+        <button onClick={() => AddFav(isHero)} type="button">
           Add
         </button>
       ),
@@ -84,24 +86,77 @@ function FormResult({
     {
       Header: 'Add to Favorites',
       Cell: () => (
-        <button onClick={() => AddFav()} type="button">
+        <button onClick={() => AddFav(isHero)} type="button">
           Add
         </button>
       ),
     },
   ];
+
+  function makeDataJs() {
+    const dataJson = [];
+    // window.console.log(nameList);
+    for (let i = 0; i < nameList.length; i += 1) {
+      dataJson.push({
+        nameTitle: nameList[i],
+        date: dates[i],
+        imageUrl: images[i],
+        info: extraInfos[i],
+        id: ids[i],
+      });
+    }
+    return dataJson;
+  }
   const columnsHero = useMemo(() => COLUMNSHERO, []);
   const columnsComic = useMemo(() => COLUMNSCOMIC, []);
-  const data = useMemo(() => MakeDataJson(nameList, dates, images, extraInfos, ids), []);
+  const data = useMemo(() => makeDataJs(), []);
+  window.console.log(data);
+  if (isHero === true) {
+    tableInstance = useTable({
+      columnsHero,
+      data,
+    });
+  } else {
+    tableInstance = useTable({
+      columnsComic,
+      data,
+    });
+  }
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = tableInstance;
   return (
-    <div>
-      <p>
-        { props.name }
-      <button
-        onClick={ addForm }
-      >Add Hero/Comic</button>
-      </p>
-    </div>
+    <table {...getTableProps()}>
+      <thead>
+        {headerGroups.map((headerGroup) => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column) => (
+              <th {...column.getHeaderProps()}>
+                {column.render('Header')}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()}>
+        {rows.map((row) => {
+          prepareRow(row);
+          return (
+            <tr {...row.getRowProps()}>
+              {row.cells.map((cell) => (
+                <td {...cell.getCellProps()}>
+                  {cell.render('Cell')}
+                </td>
+              ))}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
   );
 }
 FormResult.defaultProps = {
@@ -126,3 +181,12 @@ FormResult.propTypes = {
   ids: Array,
 };
 export default FormResult;
+
+//    <div>
+// <p>
+// { props.name }
+// <button
+// onClick={ addForm }
+// >Add Hero/Comic</button>
+// </p>
+// </div>

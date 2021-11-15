@@ -2,6 +2,7 @@
 import '../App.css';
 import React from 'react';
 import Logout from './Logout';
+import Searcher from './Searcher';
 
 function Home({
   userName,
@@ -13,7 +14,7 @@ function Home({
     <div>
       <h1>
         {userName}
-        &apos;s Song Explorer. User ID:
+        &apos;s Marvel Explorer. User ID:
         {' '}
         {id}
       </h1>
@@ -24,8 +25,7 @@ function Home({
       ) : (
         <h2>Looks like you don&apos;t have anything saved! Use the form below!</h2>
       )}
-      <h1>Your saved artists:</h1>
-      <h1>Save a favorite artist ID for later:</h1>
+      <Searcher />
       <Logout setLoggedIn={setLoggedIn} />
     </div>
   );

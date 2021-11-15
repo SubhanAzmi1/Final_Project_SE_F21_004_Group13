@@ -315,6 +315,12 @@ def marvelLookupHero():
         "descriptions": descriptions,
         "ids": ids,
     }
+    print("heroes results: ")
+    print(names)
+    print(modified_dates)
+    print(image_urls)
+    print(descriptions)
+    print(ids)
     return flask.jsonify(searchResult)
 
 
@@ -325,6 +331,7 @@ def marvelLookupComic():
     Utilizes marvel.py to contact marvel api.
     """
     searchText = flask.request.json.get("text")
+    # print("searchText is: " + searchText)
     starts = "other"
     titles, release_dates, image_urls, series, ids = get_comic_data(searchText, starts)
 
@@ -335,6 +342,12 @@ def marvelLookupComic():
         "series": series,
         "ids": ids,
     }
+    print("titles results: ")
+    print(titles)
+    print(release_dates)
+    print(image_urls)
+    print(series)
+    print(ids)
     return flask.jsonify(searchResult)
 
 
