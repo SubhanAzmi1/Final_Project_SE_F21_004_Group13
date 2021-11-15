@@ -304,7 +304,7 @@ def marvelLookupHero():
     """
     searchText = flask.request.json.get("text")
     starts = "other"
-    names, modified_dates, image_urls, descriptions = get_charac_data(
+    names, modified_dates, image_urls, descriptions, ids = get_charac_data(
         searchText, starts
     )
 
@@ -313,6 +313,7 @@ def marvelLookupHero():
         "modified_dates": modified_dates,
         "image_urls": image_urls,
         "descriptions": descriptions,
+        "ids": ids,
     }
     return flask.jsonify(searchResult)
 
@@ -325,13 +326,14 @@ def marvelLookupComic():
     """
     searchText = flask.request.json.get("text")
     starts = "other"
-    titles, release_dates, image_urls, series = get_comic_data(searchText, starts)
+    titles, release_dates, image_urls, series, ids = get_comic_data(searchText, starts)
 
     searchResult = {
         "titles": titles,
         "release_dates": release_dates,
         "image_urls": image_urls,
         "series": series,
+        "ids": ids,
     }
     return flask.jsonify(searchResult)
 

@@ -53,6 +53,7 @@ def get_charac_data(search_word, e_or_sw):  # exact or starts_with.
     modified_dates = []
     image_urls = []
     descriptions = []
+    ids = []
     for characters in data["results"]:
         names.append(characters["name"])
 
@@ -66,7 +67,9 @@ def get_charac_data(search_word, e_or_sw):  # exact or starts_with.
         modified = unmodified.partition("T")[0]
         modified_dates.append(modified)
 
-    return (names, modified_dates, image_urls, descriptions)
+        ids.append(characters["id"])
+
+    return (names, modified_dates, image_urls, descriptions, ids)
 
 
 def get_comic_data(search_word, e_or_sw):
@@ -94,6 +97,7 @@ def get_comic_data(search_word, e_or_sw):
     release_dates = []
     image_urls = []
     series = []
+    ids = []
     for comics in data["results"]:
         titles.append(comics["title"])
 
@@ -110,7 +114,9 @@ def get_comic_data(search_word, e_or_sw):
 
         series.append(comics["series"]["name"])
 
-    return (titles, release_dates, image_urls, series)
+        ids.append(comics["id"])
+
+    return (titles, release_dates, image_urls, series, ids)
 
 
 # there are 4 different types of searches

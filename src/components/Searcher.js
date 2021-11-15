@@ -8,13 +8,14 @@ function Searcher() {
   const [releasedModifiedDates, setreleasedModifiedDates] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
   const [addtionalInfo, setAddtionalInfo] = useState([]);
+  const [ids, setIds] = useState([]);
   const [wereSearchResultsEmpty, setWereSearchResultsEmpty] = useState(false);
-  function searchUpResult(searchText, isHero) {
+  function searchUpResult({ searchText, isHero1 }) {
     setNameList([]);
     setreleasedModifiedDates([]);
     setImageUrls([]);
     setAddtionalInfo([]);
-    if (isHero === true) {
+    if (isHero1 === true) {
       fetch('/marvelLookupHero', {
         method: 'POST',
         headers: {
@@ -32,6 +33,7 @@ function Searcher() {
           setreleasedModifiedDates(searchResult.modified_dates);
           setImageUrls(searchResult.image_urls);
           setAddtionalInfo(searchResult.descriptions);
+          setIds(searchResult.ids);
         });
     } else { // comic
       fetch('/marvelLookupComic', {
@@ -51,10 +53,11 @@ function Searcher() {
           setreleasedModifiedDates(searchResult.release_dates);
           setImageUrls(searchResult.image_urls);
           setAddtionalInfo(searchResult.series);
+          setIds(searchResult.ids);
         });
     }
     console.log(searchText);
-    console.log(isHero);
+    console.log(isHero1);
   }
 
   function searchResultAdd(name, id) {
@@ -76,11 +79,12 @@ function Searcher() {
       )}
       {nameList.length !== 0 ? (
         <FormResult
-          isHero={isHero}
+          isHero={isHero1}
           nameList={nameList}
           dates={releasedModifiedDates}
           images={imageUrls}
           extraInfos={addtionalInfo}
+          ids={ids}
           onClick={searchResultAdd}
           fixResultsEmpty={setWereSearchResultsEmpty}
         />

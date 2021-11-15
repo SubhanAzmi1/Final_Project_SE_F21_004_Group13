@@ -3,7 +3,7 @@ import React from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { useHistory } from 'react-router-dom';
 
-import './App.css';
+import '../App.css';
 
 require('dotenv').config();
 

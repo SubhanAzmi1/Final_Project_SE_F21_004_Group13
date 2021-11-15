@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import {
   BrowserRouter as Router, Switch, Route,
 } from 'react-router-dom';
-import Home from './Home';
-import Login from './Login';
-import Logout from './Logout';
+import Home from './components/Home';
+import Login from './components/Login';
+import Logout from './components/Logout';
 
 require('dotenv').config();
 // Sources:
