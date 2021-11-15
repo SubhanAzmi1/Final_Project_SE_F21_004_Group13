@@ -12,16 +12,20 @@ test_text = "venom"
 exact = "exact"
 starts = "other"
 
-names, modified_dates, image_urls, descriptions = get_charac_data(test_text, starts)
+names, modified_dates, image_urls, descriptions, ids = get_charac_data(
+    test_text, starts
+)
 print("heroes results: ")
 print(names)
 print(modified_dates)
 print(image_urls)
 print(descriptions)
+print(ids)
 
-titles, release_dates, image_urls, series = get_comic_data(test_text, starts)
+titles, release_dates, image_urls, series, ids = get_comic_data(test_text, starts)
 print("titles results: ")
 print(titles)
 print(release_dates)
 print(image_urls)
 print(series)
+print(ids)
