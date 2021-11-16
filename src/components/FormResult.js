@@ -53,7 +53,7 @@ function FormResult({
         {obj.id}
       </td>
       <td>
-        <button onClick={() => AddFav(isHero)} type="button">
+        <button onClick={() => AddFav(isHero, obj.id)} type="button">
           Add
         </button>
       </td>

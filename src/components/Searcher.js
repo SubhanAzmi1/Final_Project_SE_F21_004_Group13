@@ -73,11 +73,11 @@ function Searcher() {
           setImageUrls(searchResult.image_urls);
           setAddtionalInfo(searchResult.series);
           setIds(searchResult.ids);
-          window.console.log(nameList);
-          window.console.log(releasedModifiedDates);
-          window.console.log(imageUrls);
-          window.console.log(addtionalInfo);
-          window.console.log(ids);
+          // window.console.log(nameList);
+          // window.console.log(releasedModifiedDates);
+          // window.console.log(imageUrls);
+          // window.console.log(addtionalInfo);
+          // window.console.log(ids);
           if (nameList.length === 0) {
             setWereSearchResultsEmpty(true);
           }
@@ -88,8 +88,9 @@ function Searcher() {
     // console.log(heroRadioActive);
   }
 
-  function searchResultAdd(ishero) {
+  function searchResultAdd(ishero, id) {
     window.console.log(ishero);
+    window.console.log(id);
   }
 
   return (
