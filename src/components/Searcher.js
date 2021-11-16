@@ -104,9 +104,36 @@ function Searcher() {
     // console.log(heroRadioActive);
   }
 
-  function searchResultAdd(ishero, id) {
-    window.console.log(ishero);
-    window.console.log(id);
+  function searchResultAdd(name, datePublished, description, id, imageLink) {
+    //  window.console.log(ishero);
+    //  window.console.log(id);
+
+    //  appending JSON
+    IDsToAdd.push(
+      {
+        name,
+        datePublished,
+        imageLink,
+        description,
+        id
+      }
+    )
+  }
+
+  function saveResults {
+    fetch('/marvelAddToDatabase', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        toAdd: IDsToAdd,
+        isHero: heroRadioActive
+      }),
+    })
+      .then((response) => response.json()) {
+      console.log("IDs have been added!");
+    }
   }
 
   return (
