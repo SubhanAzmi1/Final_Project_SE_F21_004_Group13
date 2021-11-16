@@ -1,53 +1,59 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
-import App from './App';
+import Login from './components/Login';
+import Logout from './components/Logout';
 import Home from './components/Home';
 import Searcher from './components/Searcher';
 
-test('renders login buttons', () => {
-  render(<App />);
-  const addButton = screen.getByText('Login');
-  expect(addButton).toBeInTheDocument();
+test('renders login button', () => {
+  render(<Login />);
+  const saveButton = screen.getByText('Login');
+  expect(saveButton).toBeInTheDocument();
+});
+
+test('renders logout button', () => {
+  render(<Logout />);
   const saveButton = screen.getByText('Logout');
   expect(saveButton).toBeInTheDocument();
 });
 
 test('renders welcome signage', () => {
-  render(<Home />);
-  const welcome = screen.getByText('Marvel Explorer');
+  const userName1 = 'blas';
+  const id1 = '01';
+  const hsa1 = true;
+  render(<Home userName={userName1} id={id1} hsa={hsa1} />);
+  const welcome = screen.getByText('Enter a hero or comic issue here!');
   expect(welcome).toBeInTheDocument();
 });
 
-test('renders welcome signage', () => {
+test('renders button text in seracher', () => {
   render(<Searcher />);
   const searchButton = screen.getByText('Starts-with search');
   expect(searchButton).toBeInTheDocument();
 });
 
-test('add artist', () => {
-  render(<App />);
-  const addButton = screen.getByText('Add Artist');
+test('textbox change to empty after button click.', () => {
+  render(<Home />);
+  const searchButton = screen.getByText('Starts-with search');
   const textInput = screen.getByTestId('text_input');
-  fireEvent.change(textInput, { target: { value: 'Pinegrove' } });
-  fireEvent.click(addButton);
+  fireEvent.change(textInput, { target: { value: 'venom' } });
+  fireEvent.click(searchButton);
 
-  const artistEntry = screen.getByText('Pinegrove');
-  const deleteButton = screen.getByText('Delete');
-  expect(artistEntry).toBeInTheDocument();
-  expect(deleteButton).toBeInTheDocument();
+  const textValueAfterButtonPress = screen.getByTestId('text_input');
+  expect(textValueAfterButtonPress).toBeEmptyDOMElement();
 });
 
-test('delete artist', () => {
-  render(<App />);
-  const addButton = screen.getByText('Add Artist');
-  const textInput = screen.getByTestId('text_input');
-  fireEvent.change(textInput, { target: { value: 'Pinegrove' } });
-  fireEvent.click(addButton);
+// test('delete artist', () => {
+//   render(<App />);
+//   const addButton = screen.getByText('Add Artist');
+//   const textInput = screen.getByTestId('text_input');
+//   fireEvent.change(textInput, { target: { value: 'Pinegrove' } });
+//   fireEvent.click(addButton);
 
-  const artistEntry = screen.getByText('Pinegrove');
-  const deleteButton = screen.getByText('Delete');
-  expect(artistEntry).toBeInTheDocument();
+//   const artistEntry = screen.getByText('Pinegrove');
+//   const deleteButton = screen.getByText('Delete');
+//   expect(artistEntry).toBeInTheDocument();
 
-  fireEvent.click(deleteButton);
-  expect(artistEntry).not.toBeInTheDocument();
-});
+//   fireEvent.click(deleteButton);
+//   expect(artistEntry).not.toBeInTheDocument();
+// });

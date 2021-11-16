@@ -130,6 +130,7 @@ function Searcher() {
             type="text"
             placeholder="Hero or Comic Name Here"
             ref={textInput}
+            data-testid="text_input"
             maxLength="45"
           />
         </form>
