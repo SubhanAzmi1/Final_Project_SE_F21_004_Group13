@@ -21,6 +21,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from genius import get_lyrics_link
 from spotify import get_access_token, get_song_data
+from marvel import get_charac_data, get_comic_data
 
 load_dotenv(find_dotenv())
 
@@ -279,7 +280,7 @@ def login_google_authenticate():
 
     # otherwise add new user
     # response stuff is mostly null.
-    response = {
+    data = {
         "username": user.username,
         "artist_ids": [],
         "has_artists_saved": False,
@@ -292,7 +293,62 @@ def login_google_authenticate():
     }
     # print(id_token)
     # print(response)
-    return flask.jsonify(response)
+    return flask.jsonify(data)
+
+
+@app.route("/marvelLookupHero", methods=["POST"])
+def marvelLookupHero():
+    """
+    Returns info about characters based on search word.
+    Utilizes marvel.py to contact marvel api.
+    """
+    searchText = flask.request.json.get("text")
+    starts = "other"
+    names, modified_dates, image_urls, descriptions, ids = get_charac_data(
+        searchText, starts
+    )
+
+    searchResult = {
+        "names": names,
+        "modified_dates": modified_dates,
+        "image_urls": image_urls,
+        "descriptions": descriptions,
+        "ids": ids,
+    }
+    print("heroes results: ")
+    print(names)
+    print(modified_dates)
+    print(image_urls)
+    print(descriptions)
+    print(ids)
+    return flask.jsonify(searchResult)
+
+
+@app.route("/marvelLookupComic", methods=["POST"])
+def marvelLookupComic():
+    """
+    Returns info about comics based on search word.
+    Utilizes marvel.py to contact marvel api.
+    """
+    searchText = flask.request.json.get("text")
+    # print("searchText is: " + searchText)
+    starts = "other"
+    titles, release_dates, image_urls, series, ids = get_comic_data(searchText, starts)
+
+    searchResult = {
+        "titles": titles,
+        "release_dates": release_dates,
+        "image_urls": image_urls,
+        "series": series,
+        "ids": ids,
+    }
+    print("titles results: ")
+    print(titles)
+    print(release_dates)
+    print(image_urls)
+    print(series)
+    print(ids)
+    return flask.jsonify(searchResult)
 
 
 def update_db_ids_for_user(username, valid_ids):
@@ -325,8 +381,8 @@ def main():
 
 
 if __name__ == "__main__":
-    # app.run(debug=True, port=int(os.getenv("PORT", "8081")))
-    app.run(
-        host=os.getenv("IP", "0.0.0.0"),
-        port=int(os.getenv("PORT", "8081")),
-    )
+    app.run(debug=True, port=int(os.getenv("PORT", "8081")))
+    # app.run(
+    #     host=os.getenv("IP", "0.0.0.0"),
+    #     port=int(os.getenv("PORT", "8081")),
+    # )

@@ -3,7 +3,7 @@ import React from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { useHistory } from 'react-router-dom';
 
-import './App.css';
+import '../App.css';
 
 require('dotenv').config();
 
@@ -23,13 +23,12 @@ function refreshTokenSetup(res) {
 }
 
 // stuff for login
-// eslint-disable-next-line react/prop-types
 function Login({
   setLoggedIn,
   setName,
   setUserId,
   setHasSavedArtist,
-}) { // FIX ESLINT LATER
+}) {
   const history = useHistory();
   function onSuccess(res) {
     window.console.log('[LoginSuccess] currentUser:', res.profileObj);
@@ -80,5 +79,16 @@ function Login({
     </div>
   );
 }
-
+Login.defaultProps = {
+  setLoggedIn: () => {},
+  setName: () => {},
+  setUserId: () => {},
+  setHasSavedArtist: () => {},
+};
+Login.propTypes = {
+  setLoggedIn: Function,
+  setName: Function,
+  setUserId: Function,
+  setHasSavedArtist: Function,
+};
 export default Login;
