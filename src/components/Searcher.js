@@ -1,6 +1,8 @@
+/* eslint-disable no-nested-ternary */
 import React, { useState, useRef } from 'react';
 
 // import SearchForm from './SearchForm';
+
 import FormResult from './FormResult';
 
 function Searcher() {
