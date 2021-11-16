@@ -9,8 +9,6 @@ import random
 
 import flask
 
-from flask_talisman import Talisman
-
 from dotenv import load_dotenv, find_dotenv
 from flask_login import (
     login_user,
@@ -36,12 +34,7 @@ GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 # client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 app = flask.Flask(__name__, static_folder="./build/static")
-if "DYNO" in os.environ:
-    if flask.request.url.startswith("http://"):
-        url = flask.request.url.replace("http://", "https://", 1)
-        code = 301
-        flask.redirect(url, code=code)
-    Talisman(app)
+
 # Point SQLAlchemy to your Heroku database
 db_url = os.getenv("DATABASE_URL")
 if db_url.startswith("postgres://"):
