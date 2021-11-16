@@ -20,6 +20,22 @@ function Searcher() {
     setComicActive(false);
   }
 
+  function saveResults {
+    fetch('/marvelAddToDatabase', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        toAdd: IDsToAdd,
+        isHero: heroRadioActive
+      }),
+    })
+      .then((response) => response.json()) {
+      console.log("IDs have been added!");
+    }
+  }
+
   function setComicRadio() {
     setHeroActive(false);
     setComicActive(true);
@@ -42,7 +58,7 @@ function Searcher() {
       })
         .then((response) => response.json())
         .then((searchResult) => {
-        // console.log(dataPostSave);
+          // console.log(dataPostSave);
           setNameList(searchResult.names);
           setreleasedModifiedDates(searchResult.modified_dates);
           setImageUrls(searchResult.image_urls);
@@ -67,7 +83,7 @@ function Searcher() {
       })
         .then((response) => response.json())
         .then((searchResult) => {
-        // console.log(dataPostSave);
+          // console.log(dataPostSave);
           setNameList(searchResult.titles);
           setreleasedModifiedDates(searchResult.release_dates);
           setImageUrls(searchResult.image_urls);
@@ -160,6 +176,9 @@ function Searcher() {
       )}
     </div>
   );
+  <button onClick={saveResults}>
+    Save Results
+  </button>
 }
 
 export default Searcher;
