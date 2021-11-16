@@ -88,8 +88,12 @@ class Hero(db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    hero_id = db.Column("hero_id", db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    image_link = db.Column("image_link", db.String, nullable=False)
+    title = db.Column("title", db.String, nullable=False)
+    date_published = db.Column("date_published", db.String, nullable=False)
+    series = db.Column("series", db.String, nullable=False)
+    comic_id = db.Column("comic_id", db.Integer, nullable=False)
 
     def __repr__(self):
         return "<Hero %r>" % self.hero_id
@@ -101,8 +105,13 @@ class Comic(db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    comic_id = db.Column("comic_id", db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    image_link = db.Column("image_link", db.String, nullable=False)
+    title = db.Column("title", db.String, nullable=False)
+    date_published = db.Column("date_published", db.String, nullable=False)
+    series = db.Column("series", db.String, nullable=False)
+    comic_id = db.Column("comic_id", db.Integer, nullable=False)
+    
 
     def __repr__(self):
         return "<Hero %r>" % self.comic_id

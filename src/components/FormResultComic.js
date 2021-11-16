@@ -116,8 +116,8 @@ function FormResultComic({
   );
 }
 FormResultComic.defaultProps = {
-  AddFav: () => {},
-  fixResultsEmpty: () => {},
+  AddFav: () => { },
+  fixResultsEmpty: () => { },
   isHero: true,
   nameList: [],
   dates: [],
