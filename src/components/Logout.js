@@ -28,5 +28,10 @@ function Logout({ setLoggedIn }) { // FIX ESLINT LATER
     </div>
   );
 }
-
+Logout.defaultProps = {
+  setLoggedIn: () => {},
+};
+Logout.propTypes = {
+  setLoggedIn: Function,
+};
 export default Logout;

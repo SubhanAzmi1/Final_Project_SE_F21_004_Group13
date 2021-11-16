@@ -2,5 +2,6 @@ Flask
 requests
 python-dotenv
 Flask-Login
+flask_talisman
 psycopg2-binary
 Flask-SQLAlchemy
