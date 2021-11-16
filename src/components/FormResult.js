@@ -6,6 +6,7 @@ import React from 'react';
 // sources:
 // tables https://www.youtube.com/watch?v=hson9BXU9F8
 // iterate thorugh json: https://stackoverflow.com/questions/43241139/looping-through-table-data-react-js
+// html tables: https://www.w3schools.com/html/html_tables.asp
 function FormResult({
   isHero, nameList, dates, images, extraInfos, ids, AddFav, fixResultsEmpty,
 }) {
