@@ -25,7 +25,7 @@ function Home({
       ) : (
         <h2>Looks like you don&apos;t have anything saved! Use the form below!</h2>
       )}
-      <Searcher />
+      <Searcher id={id} />
       <Logout setLoggedIn={setLoggedIn} />
     </div>
   );

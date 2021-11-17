@@ -108,6 +108,10 @@ class Comic(db.Model):
     id = db.Column("id", db.Integer, primary_key=True)
     comic_id = db.Column("comic_id", db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    image_link = db.Column("image_link", db.String, nullable=False)
+    name = db.Column("name", db.String, nullable=False)
+    date_modified = db.Column("date_modified", db.String, nullable=False)
+    description = db.Column("description", db.String, nullable=False)
 
     def __repr__(self):
         return "<Hero %r>" % self.comic_id
@@ -139,40 +143,6 @@ def login():
     Main page. Fetches song data and embeds it in the returned HTML. Returns
     dummy data if something goes wrong.
     """
-    # artists = Hero.query.filter_by(username=current_user.username).all()
-    # artist_ids = [a.artist_id for a in artists]
-    # has_artists_saved = len(artist_ids) > 0
-    # if has_artists_saved:
-    #     artist_id = random.choice(artist_ids)
-
-    #     # API calls
-    #     access_token = get_access_token()
-    #     (song_name, song_artist, song_image_url, preview_url) = get_song_data(
-    #         artist_id, access_token
-    #     )
-    #     genius_url = get_lyrics_link(song_name)
-
-    # else:
-    #     (song_name, song_artist, song_image_url, preview_url, genius_url) = (
-    #         None,
-    #         None,
-    #         None,
-    #         None,
-    #         None,
-    #     )
-
-    # data = json.dumps(
-    #     {
-    #         "username": current_user.username,
-    #         "artist_ids": artist_ids,
-    #         "has_artists_saved": has_artists_saved,
-    #         "song_name": song_name,
-    #         "song_artist": song_artist,
-    #         "song_image_url": song_image_url,
-    #         "preview_url": preview_url,
-    #         "genius_url": genius_url,
-    #     }
-    # )
     return flask.render_template(
         "index.html",
         # data=data,
@@ -207,12 +177,63 @@ def signup_post():
     return flask.redirect(flask.url_for("login"))
 
 
-# @app.route("/login")
-# def login():
-#     """
-#     Login endpoint for GET requests
-#     """
-#     return flask.render_template("login.html")
+@app.route("/get_User_Heroes", methods=["POST"])
+def get_User_Heroes():
+    """
+    Randomized characrer from usernames's saved database.
+    @param username: the username of the current user
+    """
+    # TODO: insert the data fetched by your app main page here as a JSON
+    id = flask.request.json.get("id")
+    characters = Hero.query.filter_by(user_id=id).all()
+
+    has_hero_saved = len(characters) > 0
+
+    DATA = []
+
+    if has_hero_saved:
+        for charac in characters:
+            DATA.append(
+                {
+                    "heroId": charac.hero_id,
+                    "heroName": charac.name,
+                    "heroDateModified": charac.date_modified,
+                    "heroImageLink": charac.image_link,
+                    "heroDescription": charac.description,
+                }
+            )
+    else:
+        pass
+
+    return flask.jsonify(DATA)
+
+
+@app.route("/get_User_Comics", methods=["POST"])
+def get_User_Comics():
+    """
+    Randomized comic from usernames's saved database.
+    @param username: the username of the current user
+    """
+    id = flask.request.json.get("id")
+    comics = Comic.query.filter_by(user_id=id).all()
+    has_comic_saved = len(comics) > 0
+
+    DATA = []
+
+    if has_comic_saved:
+        for comic in comics:
+            DATA.append(
+                {
+                    "comicId": comic.comic_id,
+                    "comicName": comic.name,
+                    "comicDatePublished": comic.date_modified,
+                    "comicImageLink": comic.image_link,
+                    "comicSeries": comic.description,
+                }
+            )
+    else:
+        pass
+    return flask.jsonify(DATA)
 
 
 @app.route("/login", methods=["POST"])
@@ -356,6 +377,17 @@ def marvelLookupComic():
     return flask.jsonify(searchResult)
 
 
+@app.route("/marvelMakeChangesToDatabase", methods=["POST"])
+def marvelMakeChangesToDatabase():
+    """
+    Returns info about comics based on search word.
+    Utilizes marvel.py to contact marvel api.
+    """
+    heroes_fe = flask.request.json.get("FEHeroes")
+    comics_fe = flask.request.json.get("FEComics")
+    id = flask.request.json.get("id")
+
+
 def update_db_ids_for_user(user_id, valid_ids):
     """
     Updates the DB so that only entries for valid_ids exist in it.
@@ -386,12 +418,11 @@ def main():
 
 
 if __name__ == "__main__":
-    # app.run(
-    #     debug=True,
-    #     port=int(os.getenv("PORT", "8081")),
-    #     ssl_context="adhoc",
-    # )
     app.run(
-        host=os.getenv("IP", "0.0.0.0"),
+        debug=True,
         port=int(os.getenv("PORT", "8081")),
     )
+    # app.run(
+    #     host=os.getenv("IP", "0.0.0.0"),
+    #     port=int(os.getenv("PORT", "8081")),
+    # )
