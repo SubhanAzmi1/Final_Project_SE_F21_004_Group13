@@ -99,34 +99,37 @@ def get_comic_data(search_word, e_or_sw):
 
     json_response = response.json()
     # print(json_response)
-    data = json_response["data"]
-    # title
-    # release date
-    # url
-    #
     titles = []
     release_dates = []
     image_urls = []
     series = []
     ids = []
-    for comics in data["results"]:
-        titles.append(comics["title"])
+    try:
+        data = json_response["data"]
+        # title
+        # release date
+        # url
+        #
 
-        unmodified = str(comics["dates"][0]["date"])
-        modified = unmodified.partition("T")[0]
-        release_dates.append(modified)
+        for comics in data["results"]:
+            titles.append(comics["title"])
 
-        # urls.append(comics["urls"][0]["url"])
-        # this is for digital webpage
+            unmodified = str(comics["dates"][0]["date"])
+            modified = unmodified.partition("T")[0]
+            release_dates.append(modified)
 
-        image_urls.append(
-            comics["thumbnail"]["path"] + "." + comics["thumbnail"]["extension"]
-        )
+            # urls.append(comics["urls"][0]["url"])
+            # this is for digital webpage
 
-        series.append(comics["series"]["name"])
+            image_urls.append(
+                comics["thumbnail"]["path"] + "." + comics["thumbnail"]["extension"]
+            )
 
-        ids.append(comics["id"])
+            series.append(comics["series"]["name"])
 
+            ids.append(comics["id"])
+    except KeyError:
+        pass
     return (titles, release_dates, image_urls, series, ids)
 
 
