@@ -94,7 +94,7 @@ class Hero(db.Model):
     title = db.Column("title", db.String, nullable=False)
     date_published = db.Column("date_published", db.String, nullable=False)
     series = db.Column("series", db.String, nullable=False)
-    comic_id = db.Column("comic_id", db.Integer, nullable=False)
+    hero_id = db.Column("hero_id", db.Integer, nullable=False)
 
     def __repr__(self):
         return "<Hero %r>" % self.hero_id
