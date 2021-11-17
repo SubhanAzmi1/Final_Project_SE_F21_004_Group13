@@ -96,8 +96,8 @@ function Searcher() {
     //  appending JSON
     IDsToAdd.push(
       {
-        name, datePublished, imageLink, description, id
-      }
+        name, datePublished, imageLink, description, id,
+      },
     );
   }
 
@@ -109,11 +109,11 @@ function Searcher() {
       },
       body: JSON.stringify({
         toAdd: IDsToAdd,
-        isHero: heroRadioActive
+        isHero: heroRadioActive,
       }),
     })
       .then((response) => response.json())
-      .then((saveResults) => {
+      .then(() => {
         console.log('IDs have been added!');
       });
   }
