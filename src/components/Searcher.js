@@ -24,6 +24,7 @@ function Searcher() {
     setHeroActive(false);
     setComicActive(true);
   }
+
   function searchUpResult() {
     setNameList([]);
     setreleasedModifiedDates([]);
@@ -42,7 +43,7 @@ function Searcher() {
       })
         .then((response) => response.json())
         .then((searchResult) => {
-        // console.log(dataPostSave);
+          // console.log(dataPostSave);
           setNameList(searchResult.names);
           setreleasedModifiedDates(searchResult.modified_dates);
           setImageUrls(searchResult.image_urls);
@@ -67,7 +68,7 @@ function Searcher() {
       })
         .then((response) => response.json())
         .then((searchResult) => {
-        // console.log(dataPostSave);
+          // console.log(dataPostSave);
           setNameList(searchResult.titles);
           setreleasedModifiedDates(searchResult.release_dates);
           setImageUrls(searchResult.image_urls);
@@ -88,9 +89,33 @@ function Searcher() {
     // console.log(heroRadioActive);
   }
 
-  function searchResultAdd(ishero, id) {
-    window.console.log(ishero);
-    window.console.log(id);
+  function searchResultAdd(name, datePublished, description, id, imageLink) {
+    //  window.console.log(ishero);
+    //  window.console.log(id);
+
+    //  appending JSON
+    IDsToAdd.push(
+      {
+        name, datePublished, imageLink, description, id,
+      },
+    );
+  }
+
+  function saveResults() {
+    fetch('/marvelAddToDatabase', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        toAdd: IDsToAdd,
+        isHero: heroRadioActive,
+      }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        console.log('IDs have been added!');
+      });
   }
 
   return (

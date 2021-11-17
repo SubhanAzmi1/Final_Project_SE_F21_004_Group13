@@ -1,8 +1,9 @@
 """
 Flask app logic for P1M3
 """
-# pylint: disable=no-member
+# pylint: disable=no-member 
 # pylint: disable=too-few-public-methods
+# word 
 import os
 import json
 import random
@@ -89,8 +90,12 @@ class Hero(db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    hero_id = db.Column("hero_id", db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    image_link = db.Column("image_link", db.String, nullable=False)
+    title = db.Column("title", db.String, nullable=False)
+    date_published = db.Column("date_published", db.String, nullable=False)
+    series = db.Column("series", db.String, nullable=False)
+    hero_id = db.Column("hero_id", db.Integer, nullable=False)
 
     def __repr__(self):
         return "<Hero %r>" % self.hero_id
@@ -102,8 +107,13 @@ class Comic(db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    comic_id = db.Column("comic_id", db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    image_link = db.Column("image_link", db.String, nullable=False)
+    title = db.Column("title", db.String, nullable=False)
+    date_published = db.Column("date_published", db.String, nullable=False)
+    series = db.Column("series", db.String, nullable=False)
+    comic_id = db.Column("comic_id", db.Integer, nullable=False)
+    
 
     def __repr__(self):
         return "<Hero %r>" % self.comic_id
@@ -324,6 +334,53 @@ def marvelLookupHero():
     print(ids)
     return flask.jsonify(searchResult)
 
+@app.route("/marvelAddToDatabase", methods=["POST"])
+def add_to_database():
+    """
+    Adding to Marvel Database
+    """
+
+    marvel_data = f.request.get_json()["toAdd"][0]
+    is_hero = f.request.get_json()["isHero"]
+
+    addition_flag = False
+
+    # may also need to pass ID
+    user_id = 1
+
+    result = Account.query.filter_by(id=user_id).first()
+
+    # ITERATE THROUGH LIST LIKE BEFORE
+    if (isHero):
+        for cell in marvel_data:
+            hero_id = cell[0]
+            series = cell[1]
+            title = cell[2]
+            date_published = cell[3]
+            image_link = cell[4]
+
+            new_hero = Hero(comic_id=comic_id, series=series, title=title, date_published=date_published, image_link=image_link)
+            result.heros.append(new_hero)
+
+            addition_flag = True
+    else:
+        for cell in marvel_data:
+            comic_id = cell[0]
+            series = cell[1]
+            title = cell[2]
+            date_published = cell[3]
+            image_link = cell[4]
+
+            new_comic = Comic(comic_id=comic_id, series=series, title=title, date_published=date_published, image_link=image_link)
+            result.comics.append(new_comic)
+
+            addition_flag = True
+
+
+    if addition_flag:
+        db.session.commit()
+
+    return f.jsonify({"message" : "returned successfully"})
 
 @app.route("/marvelLookupComic", methods=["POST"])
 def marvelLookupComic():

@@ -54,7 +54,7 @@ function FormResult({
         {obj.id}
       </td>
       <td>
-        <button onClick={() => AddFav(isHero, obj.id)} type="button">
+        <button onClick={() => AddFav(obj.nameTitle, obj.date, obj.imageUrl, obj.info, obj.id)} type="button">
           Add
         </button>
       </td>
@@ -99,8 +99,8 @@ function FormResult({
   );
 }
 FormResult.defaultProps = {
-  AddFav: () => {},
-  fixResultsEmpty: () => {},
+  AddFav: () => { },
+  fixResultsEmpty: () => { },
   isHero: true,
   nameList: [],
   dates: [],
