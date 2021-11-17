@@ -367,6 +367,82 @@ def main():
     # return flask.redirect(flask.url_for("login"))
 
 
+
+@app.route("/homepage", methods=["POST"])
+def home(email_from_front):
+    """
+    Randomized characrer from usernames's saved database.
+    @param username: the username of the current user
+    """
+  # TODO: insert the data fetched by your app main page here as a JSON
+    characters = Hero.query.filter_by(email=email_from_front).all()
+    charac = random.choice(characters)
+
+    has_hero_saved = (len(characters) > 0)
+
+    DATA = None
+
+    if has_hero_saved:
+        DATA = {
+            has_hero_saved: True,
+            "Name": charac.name,
+            "release_date": charac.release_date,
+            "image_url": charac.image_url,
+            "description": charac.description,
+            "id": charac.id,
+        }
+    else:
+        DATA = {
+            has_hero_saved: False,
+            "Name": 'None',
+            "release_date": 'None',
+            "image_url": 'None',
+            "description": 'None',
+            "id": 0,
+        }
+
+
+    data = json.dumps(DATA)
+    return flask.jsonify(data)
+
+@app.route("/homepage", methods=["POST"])
+def home(email_from_front):
+    """
+    Randomized comic from usernames's saved database.
+    @param username: the username of the current user
+    """
+    comics = Comic.query.filter_by(email=email_from_front).all()
+    book = random.choice(comics)
+    true = 1
+    false = 0
+    has_comic_saved = (len(comics) > 0)
+    
+    DATA = None
+
+    if has_comic_saved:
+        DATA = {
+        has_comic_saved: true,
+        "titles": book.titles,
+        "release_dates": book.release_dates,
+        "image_urls": book.image_urls,
+        "series": book.series,
+        "ids": book.ids,
+    }
+    else:
+        DATA = {
+
+        has_comic_saved: false,
+        "titles": 'None',
+        "release_dates": 'None',
+        "image_urls":'None',
+        "series": 'None',
+        "ids":'None',
+ }
+    data = json.dumps(DATA)
+    return flask.jsonify(data)  
+    
+
+        
 if __name__ == "__main__":
     app.run(debug=True, port=int(os.getenv("PORT", "8081")))
     # app.run(
