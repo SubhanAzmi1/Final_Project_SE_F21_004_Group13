@@ -21,14 +21,13 @@ from flask_sqlalchemy import SQLAlchemy
 
 from genius import get_lyrics_link
 from spotify import get_access_token, get_song_data
+from marvel import get_charac_data, get_comic_data
 
 load_dotenv(find_dotenv())
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-GOOGLE_DISCOVERY_URL = (
-    "https://accounts.google.com/.well-known/openid-configuration"
-)
+GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
 from oauthlib.oauth2 import WebApplicationClient
 
@@ -58,8 +57,8 @@ class User(UserMixin, db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    username = db.Column("name", db.String(80), unique=True, nullable=False)
-    password = db.Column("passwd", db.String, nullable=False)
+    username = db.Column("name", db.String(80), nullable=False)
+    email = db.Column("email", db.String(200), unique=True, nullable=False)
 
     # Important for listing heroes and comics
     heroes = db.relationship(
@@ -82,6 +81,7 @@ class User(UserMixin, db.Model):
         """
         return self.username
 
+
 class Hero(db.Model):
     """
     Heroes here
@@ -93,6 +93,7 @@ class Hero(db.Model):
 
     def __repr__(self):
         return "<Hero %r>" % self.hero_id
+
 
 class Comic(db.Model):
     """
@@ -106,11 +107,14 @@ class Comic(db.Model):
     def __repr__(self):
         return "<Hero %r>" % self.comic_id
 
+
+# db.drop_all()
 db.create_all()
 
 login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
+
 
 @login_manager.user_loader
 def load_user(user_name):
@@ -119,52 +123,54 @@ def load_user(user_name):
     """
     return User.query.get(user_name)
 
+
 bp = flask.Blueprint("bp", __name__, template_folder="./build")
 
-@bp.route("/index")
-@login_required
-def index():
+
+@bp.route("/login")
+# @login_required
+def login():
     """
     Main page. Fetches song data and embeds it in the returned HTML. Returns
     dummy data if something goes wrong.
     """
-    artists = Hero.query.filter_by(username=current_user.username).all()
-    artist_ids = [a.artist_id for a in artists]
-    has_artists_saved = len(artist_ids) > 0
-    if has_artists_saved:
-        artist_id = random.choice(artist_ids)
+    # artists = Hero.query.filter_by(username=current_user.username).all()
+    # artist_ids = [a.artist_id for a in artists]
+    # has_artists_saved = len(artist_ids) > 0
+    # if has_artists_saved:
+    #     artist_id = random.choice(artist_ids)
 
-        # API calls
-        access_token = get_access_token()
-        (song_name, song_artist, song_image_url, preview_url) = get_song_data(
-            artist_id, access_token
-        )
-        genius_url = get_lyrics_link(song_name)
+    #     # API calls
+    #     access_token = get_access_token()
+    #     (song_name, song_artist, song_image_url, preview_url) = get_song_data(
+    #         artist_id, access_token
+    #     )
+    #     genius_url = get_lyrics_link(song_name)
 
-    else:
-        (song_name, song_artist, song_image_url, preview_url, genius_url) = (
-            None,
-            None,
-            None,
-            None,
-            None,
-        )
+    # else:
+    #     (song_name, song_artist, song_image_url, preview_url, genius_url) = (
+    #         None,
+    #         None,
+    #         None,
+    #         None,
+    #         None,
+    #     )
 
-    data = json.dumps(
-        {
-            "username": current_user.username,
-            "artist_ids": artist_ids,
-            "has_artists_saved": has_artists_saved,
-            "song_name": song_name,
-            "song_artist": song_artist,
-            "song_image_url": song_image_url,
-            "preview_url": preview_url,
-            "genius_url": genius_url,
-        }
-    )
+    # data = json.dumps(
+    #     {
+    #         "username": current_user.username,
+    #         "artist_ids": artist_ids,
+    #         "has_artists_saved": has_artists_saved,
+    #         "song_name": song_name,
+    #         "song_artist": song_artist,
+    #         "song_image_url": song_image_url,
+    #         "preview_url": preview_url,
+    #         "genius_url": genius_url,
+    #     }
+    # )
     return flask.render_template(
         "index.html",
-        data=data,
+        # data=data,
     )
 
 
@@ -196,12 +202,12 @@ def signup_post():
     return flask.redirect(flask.url_for("login"))
 
 
-@app.route("/login")
-def login():
-    """
-    Login endpoint for GET requests
-    """
-    return flask.render_template("login.html")
+# @app.route("/login")
+# def login():
+#     """
+#     Login endpoint for GET requests
+#     """
+#     return flask.render_template("login.html")
 
 
 @app.route("/login", methods=["POST"])
@@ -241,6 +247,97 @@ def save():
     return flask.jsonify(response)
 
 
+@app.route("/login_google_authenticate", methods=["POST"])
+def login_google_authenticate():
+    """
+    Receives google id_token from App.js; verifies token belonging to app;
+    get user info from google;
+    checks for user in database otherwise creates one;
+    returns user_data for main page.
+    """
+    token = flask.request.json.get("token")
+    email = flask.request.json.get("email")
+    f_name = flask.request.json.get("fName")
+    image_url = flask.request.json.get("imageUrl")
+
+    # validate token
+    # retreive info from token like user name and email, maybe pic too
+    # SKIPPING THE PREVIOS TWO FOR NOW BY JUST GETTING INFO FROM FRONT ON SUCCESS LOGIN
+
+    # check if user in database via unique email
+    user = User.query.filter_by(email=email).first()
+    if user:
+        # if so then response = data from database
+        #   update name if user has updated on google.
+        if user.username != f_name:
+            user.username = f_name
+            db.session.commit()
+    else:
+        user = User(email=email, username=f_name)
+        db.session.add(user)
+        db.session.commit()
+    # if so then response = data from database
+
+    # otherwise add new user
+    # response stuff is mostly null.
+    data = {
+        "username": user.username,
+        "artist_ids": [],
+        "has_artists_saved": False,
+        "userId": user.id,
+        # "song_name": None,
+        # "song_artist": None,
+        # "song_image_url": None,
+        # "preview_url": None,
+        # "genius_url": None,
+    }
+    # print(id_token)
+    # print(response)
+    return flask.jsonify(data)
+
+
+@app.route("/marvelLookupHero", methods=["POST"])
+def marvelLookupHero():
+    """
+    Returns info about characters based on search word.
+    Utilizes marvel.py to contact marvel api.
+    """
+    searchText = flask.request.json.get("text")
+    starts = "other"
+    names, modified_dates, image_urls, descriptions, ids = get_charac_data(
+        searchText, starts
+    )
+
+    searchResult = {
+        "names": names,
+        "modified_dates": modified_dates,
+        "image_urls": image_urls,
+        "descriptions": descriptions,
+        "ids": ids,
+    }
+    return flask.jsonify(searchResult)
+
+
+@app.route("/marvelLookupComic", methods=["POST"])
+def marvelLookupComic():
+    """
+    Returns info about comics based on search word.
+    Utilizes marvel.py to contact marvel api.
+    """
+    searchText = flask.request.json.get("text")
+    starts = "other"
+    titles, release_dates, image_urls, series, ids = get_comic_data(searchText, starts)
+
+    searchResult = {
+        "titles": titles,
+        "release_dates": release_dates,
+        "image_urls": image_urls,
+        "series": series,
+        "ids": ids,
+    }
+    return flask.jsonify(searchResult)
+
+
 def update_db_ids_for_user(username, valid_ids):
     """
     Updates the DB so that only entries for valid_ids exist in it.
@@ -248,9 +345,7 @@ def update_db_ids_for_user(username, valid_ids):
     @param valid_ids: a set of artist IDs that the DB should update itself
         to reflect
     """
-    existing_ids = {
-        v.artist_id for v in Hero.query.filter_by(username=username).all()
-    }
+    existing_ids = {v.artist_id for v in Hero.query.filter_by(username=username).all()}
     new_ids = valid_ids - existing_ids
     for new_id in new_ids:
         db.session.add(Hero(artist_id=new_id, username=username))
@@ -265,16 +360,92 @@ def update_db_ids_for_user(username, valid_ids):
 @app.route("/")
 def main():
     """
-    Main page just reroutes to index or login depending on whether the
-    user is authenticated
+    Main page just reroutes to login.
     """
-    if current_user.is_authenticated:
-        return flask.redirect(flask.url_for("bp.index"))
-    return flask.redirect(flask.url_for("login"))
+    # if current_user.is_authenticated:
+    return flask.redirect(flask.url_for("bp.login"))
+    # return flask.redirect(flask.url_for("login"))
 
 
+
+@app.route("/homepage", methods=["POST"])
+def home(email_from_front):
+    """
+    Randomized characrer from usernames's saved database.
+    @param username: the username of the current user
+    """
+  # TODO: insert the data fetched by your app main page here as a JSON
+    characters = Hero.query.filter_by(email=email_from_front).all()
+    charac = random.choice(characters)
+
+    has_hero_saved = (len(characters) > 0)
+
+    DATA = None
+
+    if has_hero_saved:
+        DATA = {
+            has_hero_saved: True,
+            "Name": charac.name,
+            "release_date": charac.release_date,
+            "image_url": charac.image_url,
+            "description": charac.description,
+            "id": charac.id,
+        }
+    else:
+        DATA = {
+            has_hero_saved: False,
+            "Name": 'None',
+            "release_date": 'None',
+            "image_url": 'None',
+            "description": 'None',
+            "id": 0,
+        }
+
+
+    data = json.dumps(DATA)
+    return flask.jsonify(data)
+
+@app.route("/homepage", methods=["POST"])
+def home(email_from_front):
+    """
+    Randomized comic from usernames's saved database.
+    @param username: the username of the current user
+    """
+    comics = Comic.query.filter_by(email=email_from_front).all()
+    book = random.choice(comics)
+    true = 1
+    false = 0
+    has_comic_saved = (len(comics) > 0)
+    
+    DATA = None
+
+    if has_comic_saved:
+        DATA = {
+        has_comic_saved: true,
+        "titles": book.titles,
+        "release_dates": book.release_dates,
+        "image_urls": book.image_urls,
+        "series": book.series,
+        "ids": book.ids,
+    }
+    else:
+        DATA = {
+
+        has_comic_saved: false,
+        "titles": 'None',
+        "release_dates": 'None',
+        "image_urls":'None',
+        "series": 'None',
+        "ids":'None',
+ }
+    data = json.dumps(DATA)
+    return flask.jsonify(data)  
+    
+
+        
 if __name__ == "__main__":
-    app.run(
-        host=os.getenv("IP", "0.0.0.0"),
-        port=int(os.getenv("PORT", "8081")),
-    )
+    app.run(debug=True, port=int(os.getenv("PORT", "8081")))
+    # app.run(
+    #     host=os.getenv("IP", "0.0.0.0"),
+    #     port=int(os.getenv("PORT", "8081")),
+    # )
