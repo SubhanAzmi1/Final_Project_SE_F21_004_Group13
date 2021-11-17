@@ -91,6 +91,10 @@ class Hero(db.Model):
     id = db.Column("id", db.Integer, primary_key=True)
     hero_id = db.Column("hero_id", db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    image_link = db.Column("image_link", db.String, nullable=False)
+    name = db.Column("name", db.String, nullable=False)
+    date_modified = db.Column("date_modified", db.String, nullable=False)
+    description = db.Column("description", db.String, nullable=False)
 
     def __repr__(self):
         return "<Hero %r>" % self.hero_id
@@ -352,20 +356,20 @@ def marvelLookupComic():
     return flask.jsonify(searchResult)
 
 
-def update_db_ids_for_user(username, valid_ids):
+def update_db_ids_for_user(user_id, valid_ids):
     """
     Updates the DB so that only entries for valid_ids exist in it.
     @param username: the username of the current user
     @param valid_ids: a set of artist IDs that the DB should update itself
         to reflect
     """
-    existing_ids = {v.artist_id for v in Hero.query.filter_by(username=username).all()}
+    existing_ids = {v.hero_id for v in Hero.query.filter_by(user_id=user_id).all()}
     new_ids = valid_ids - existing_ids
     for new_id in new_ids:
-        db.session.add(Hero(artist_id=new_id, username=username))
+        db.session.add(Hero(hero_id=new_id, user_id=user_id))
     if len(existing_ids - valid_ids) > 0:
-        for hero in Hero.query.filter_by(username=username).filter(
-            Hero.artist_id.notin_(valid_ids)
+        for hero in Hero.query.filter_by(user_id=user_id).filter(
+            Hero.hero_id.notin_(valid_ids)
         ):
             db.session.delete(hero)
     db.session.commit()
@@ -382,7 +386,11 @@ def main():
 
 
 if __name__ == "__main__":
-    # app.run(debug=True, port=int(os.getenv("PORT", "8081")))
+    # app.run(
+    #     debug=True,
+    #     port=int(os.getenv("PORT", "8081")),
+    #     ssl_context="adhoc",
+    # )
     app.run(
         host=os.getenv("IP", "0.0.0.0"),
         port=int(os.getenv("PORT", "8081")),
