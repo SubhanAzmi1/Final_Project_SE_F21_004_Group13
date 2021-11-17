@@ -1,4 +1,9 @@
 # Flask and `create-react-app`
+# Heroku deployment address: 
+
+https://fierce-waters-92778.herokuapp.com
+
+You have to type out the https in the front. We are still working on the http vs https stuff. 
 
 ## Requirements
 1. `npm install`

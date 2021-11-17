@@ -42,18 +42,3 @@ test('textbox change to empty after button click.', () => {
   const textValueAfterButtonPress = screen.getByTestId('text_input');
   expect(textValueAfterButtonPress).toBeEmptyDOMElement();
 });
-
-// test('delete artist', () => {
-//   render(<App />);
-//   const addButton = screen.getByText('Add Artist');
-//   const textInput = screen.getByTestId('text_input');
-//   fireEvent.change(textInput, { target: { value: 'Pinegrove' } });
-//   fireEvent.click(addButton);
-
-//   const artistEntry = screen.getByText('Pinegrove');
-//   const deleteButton = screen.getByText('Delete');
-//   expect(artistEntry).toBeInTheDocument();
-
-//   fireEvent.click(deleteButton);
-//   expect(artistEntry).not.toBeInTheDocument();
-// });

@@ -44,31 +44,41 @@ def get_charac_data(search_word, e_or_sw):  # exact or starts_with.
 
     requesturl = f"https://gateway.marvel.com:443/v1/public/characters?{search_parameter1}={search_word}&apikey={PUB_KEY}&limit=5&ts={ts}&hash={hash}"
     # print(requesturl)
-    response = requests.get(requesturl)
+    names = None
+    modified_dates = None
+    image_urls = None
+    descriptions = None
+    ids = None
+    try:
+        response = requests.get(requesturl)
 
-    json_response = response.json()
-    data = json_response["data"]
+        json_response = response.json()
+        data = json_response["data"]
 
-    names = []
-    modified_dates = []
-    image_urls = []
-    descriptions = []
-    ids = []
-    for characters in data["results"]:
-        names.append(characters["name"])
+        names = []
+        modified_dates = []
+        image_urls = []
+        descriptions = []
+        ids = []
+        for characters in data["results"]:
+            names.append(characters["name"])
 
-        descriptions.append(characters["description"])
+            descriptions.append(characters["description"])
 
-        image_urls.append(
-            characters["thumbnail"]["path"] + "." + characters["thumbnail"]["extension"]
-        )
+            image_urls.append(
+                characters["thumbnail"]["path"]
+                + "."
+                + characters["thumbnail"]["extension"]
+            )
 
-        unmodified = str(characters["modified"])
-        modified = unmodified.partition("T")[0]
-        modified_dates.append(modified)
+            unmodified = str(characters["modified"])
+            modified = unmodified.partition("T")[0]
+            modified_dates.append(modified)
 
-        ids.append(characters["id"])
+            ids.append(characters["id"])
 
+    except KeyError:
+        pass
     return (names, modified_dates, image_urls, descriptions, ids)
 
 
