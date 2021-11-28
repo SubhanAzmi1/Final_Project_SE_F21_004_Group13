@@ -8,7 +8,7 @@ import React from 'react';
 // iterate thorugh json: https://stackoverflow.com/questions/43241139/looping-through-table-data-react-js
 // html tables: https://www.w3schools.com/html/html_tables.asp
 function DisplayHeros({
-  listofDICKS, DeleteFav,
+  listofDICKSh, DeleteFavH,
 }) {
   // function addForm() {
   //   onClick(nameList[0], '1');
@@ -16,29 +16,31 @@ function DisplayHeros({
   // depending on isHero is true i have different headers
   //    for the table to be displayed.
   //    then each column in a row is one item from the various arrays.
-  const tableData = listofDICKS.map((obj) => (
+  window.console.log(listofDICKSh);
+  const tableDataH = listofDICKSh.map((objH) => (
     <tr>
       <td>
         <img
-          src={obj.imageUrl}
+          src={objH.heroImageLink}
           width={60} // to be determined
-          alt="Comic"
+          alt="Character"
         />
       </td>
       <td>
-        {obj.nameTitle}
+        {objH.heroName}
+        {window.console.log(objH.heroName)}
       </td>
       <td>
-        {obj.date}
+        {objH.heroDateModified}
       </td>
       <td>
-        {obj.info}
+        {objH.heroDescription}
       </td>
       <td>
-        {obj.id}
+        {objH.heroId}
       </td>
       <td>
-        <button onClick={() => DeleteFav(obj.nameTitle, obj.date, obj.info, obj.id, obj.imageUrl)} type="button">
+        <button onClick={() => DeleteFavH(objH.heroName, objH.heroDateModified, objH.heroDescription, objH.heroId, objH.heroImageLink)} type="button">
           Delete
         </button>
       </td>
@@ -58,20 +60,20 @@ function DisplayHeros({
           </tr>
         </thead>
         <tbody>
-          {tableData}
+          {tableDataH}
         </tbody>
       </table>
     </div>
   );
 }
 DisplayHeros.defaultProps = {
-  DeleteFav: () => {},
-  listofDICKS: [],
+  DeleteFavH: () => {},
+  listofDICKSh: [],
 };
 
 DisplayHeros.propTypes = {
-  DeleteFav: Function,
-  listofDICKS: Array,
+  DeleteFavH: Function,
+  listofDICKSh: Array,
 };
 export default DisplayHeros;
 

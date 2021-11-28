@@ -119,8 +119,8 @@ function Searcher({ id }) {
   function searchResultAdd(ishero, name, date, info, id2, imageLink) {
     //  appending JSON
     if (ishero === true) {
-      window.console.log('we got in here bitch!');
-      window.console.log(id2);
+      // window.console.log('we got in here bitch!');
+      // window.console.log(id2);
       const heroIDsToFE = [];
       heroIDsToFE.push(
         {
@@ -131,11 +131,11 @@ function Searcher({ id }) {
           heroDescription: info,
         },
       );
-      const updatedHeroes = [...herosFE, setHerosFE];
-      setComicsFE(updatedHeroes);
+      const updatedHeroes = [...herosFE, heroIDsToFE];
+      setHerosFE(updatedHeroes);
     } else {
-      window.console.log('we got in here bitch! 222');
-      window.console.log(id2);
+      // window.console.log('we got in here bitch! 222');
+      // window.console.log(id2);
       const comicsIDsFE = [];
       comicsIDsFE.push(
         {
@@ -153,37 +153,41 @@ function Searcher({ id }) {
       window.console.log(comicsFE);
     }
   }
-  function deleteFavComic(name, date, info, id2, imageLink) {
+  function deleteFavComic(namec, datec, infoc, id2c, imageLinkc) {
     //  appending JSON
 
     const comicsIDsFE = [];
     comicsIDsFE.push(
       {
-        comicId: id2,
-        comicName: name,
-        comicDatePublished: date,
-        comicImageLink: imageLink,
-        comicSeries: info,
+        comicId: id2c,
+        comicName: namec,
+        comicDatePublished: datec,
+        comicImageLink: imageLinkc,
+        comicSeries: infoc,
       },
     );
     const updatedComics = [...comicsFE.slice(0, comicsIDsFE), ...comicsFE.slice(comicsIDsFE + 1)];
     setComicsFE(updatedComics);
   }
-  function deleteFavHero(name, date, info, id2, imageLink) {
+  function deleteFavHero(nameh, dateh, infoh, id2h, imageLinkh) {
     //  appending JSON
 
     const heroIDsToFE = [];
     heroIDsToFE.push(
       {
-        heroId: id2,
-        heroName: name,
-        heroDateModified: date,
-        heroImageLink: imageLink,
-        heroDescription: info,
+        heroId: id2h,
+        heroName: nameh,
+        heroDateModified: dateh,
+        heroImageLink: imageLinkh,
+        heroDescription: infoh,
       },
     );
     const updatedHeroes = [...herosFE.slice(0, heroIDsToFE), ...herosFE.slice(heroIDsToFE + 1)];
-    setComicsFE(updatedHeroes);
+    // let newHeroes = herosFE.slice();
+    // window.console.log(newHeroes);
+    // newHeroes = newHeroes.filter((value1) => value1 !== heroIDsToFE[0]);
+    // window.console.log(newHeroes);
+    setHerosFE(updatedHeroes);
   }
 
   function saveResults() {
@@ -271,8 +275,12 @@ function Searcher({ id }) {
         <div />
       )}
       <div>
-        <DisplayComics listofDICKS={comicsFE} DeleteFav={deleteFavComic} />
-        <DisplayHeros listofDICKS={herosFE} DeleteFav={deleteFavHero} />
+        <DisplayComics listofDICKSc={comicsFE} DeleteFavC={deleteFavComic} />
+      </div>
+      <div>
+        <DisplayHeros listofDICKSh={herosFE} DeleteFavH={deleteFavHero} />
+      </div>
+      <div>
         <button onClick={saveResults} type="button">Save Changes</button>
       </div>
     </div>

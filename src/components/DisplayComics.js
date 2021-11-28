@@ -8,7 +8,7 @@ import React from 'react';
 // iterate thorugh json: https://stackoverflow.com/questions/43241139/looping-through-table-data-react-js
 // html tables: https://www.w3schools.com/html/html_tables.asp
 function DisplayComics({
-  listofDICKS, DeleteFav,
+  listofDICKSc, DeleteFavC,
 }) {
   // function addForm() {
   //   onClick(nameList[0], '1');
@@ -16,29 +16,30 @@ function DisplayComics({
   // depending on isHero is true i have different headers
   //    for the table to be displayed.
   //    then each column in a row is one item from the various arrays.
-  const tableData = listofDICKS.map((obj) => (
+  window.console.log(listofDICKSc);
+  const tableDataC = listofDICKSc.map((objC) => (
     <tr>
       <td>
         <img
-          src={obj.imageUrl}
+          src={objC.comicImageLink}
           width={60} // to be determined
           alt="Comic"
         />
       </td>
       <td>
-        {obj.nameTitle}
+        {objC.comicName}
       </td>
       <td>
-        {obj.date}
+        {objC.comicDatePublished}
       </td>
       <td>
-        {obj.info}
+        {objC.comicSeries}
       </td>
       <td>
-        {obj.id}
+        {objC.comicId}
       </td>
       <td>
-        <button onClick={() => DeleteFav(obj.nameTitle, obj.date, obj.info, obj.id, obj.imageUrl)} type="button">
+        <button onClick={() => DeleteFavC(objC.comicName, objC.comicDatePublished, objC.comicSeries, objC.comicId, objC.comicImageLink)} type="button">
           Delete
         </button>
       </td>
@@ -58,20 +59,20 @@ function DisplayComics({
           </tr>
         </thead>
         <tbody>
-          {tableData}
+          {tableDataC}
         </tbody>
       </table>
     </div>
   );
 }
 DisplayComics.defaultProps = {
-  DeleteFav: () => {},
-  listofDICKS: [],
+  DeleteFavC: () => {},
+  listofDICKSc: [],
 };
 
 DisplayComics.propTypes = {
-  DeleteFav: Function,
-  listofDICKS: Array,
+  DeleteFavC: Function,
+  listofDICKSc: Array,
 };
 export default DisplayComics;
 
