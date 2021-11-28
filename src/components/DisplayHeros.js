@@ -16,8 +16,15 @@ function DisplayHeros({
   // depending on isHero is true i have different headers
   //    for the table to be displayed.
   //    then each column in a row is one item from the various arrays.
-  window.console.log(listofDICKSh);
-  const tableDataH = listofDICKSh.map((objH) => (
+
+  const dataJsonH = [];
+  // convert array_of_array_of_objects (listofdicksh) to array_of_objects (datajsonh)
+  for (let i = 0; i < listofDICKSh.length; i += 1) {
+    dataJsonH.push(listofDICKSh[i][0]);
+  }
+  // window.console.log(listofDICKSh);
+  window.console.log(dataJsonH);
+  const tableDataH = dataJsonH.map((objH) => (
     <tr>
       <td>
         <img

@@ -16,8 +16,15 @@ function DisplayComics({
   // depending on isHero is true i have different headers
   //    for the table to be displayed.
   //    then each column in a row is one item from the various arrays.
-  window.console.log(listofDICKSc);
-  const tableDataC = listofDICKSc.map((objC) => (
+
+  const dataJsonC = [];
+  // convert array_of_array_of_objects (listofdicksh) to array_of_objects (datajsonh)
+  for (let i = 0; i < listofDICKSc.length; i += 1) {
+    dataJsonC.push(listofDICKSc[i][0]);
+  }
+  // window.console.log(listofDICKSc);
+  window.console.log(dataJsonC);
+  const tableDataC = dataJsonC.map((objC) => (
     <tr>
       <td>
         <img
