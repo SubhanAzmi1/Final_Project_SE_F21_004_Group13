@@ -46,7 +46,7 @@ function DisplayComics({
         {objC.comicId}
       </td>
       <td>
-        <button onClick={() => DeleteFavC(objC.comicName, objC.comicDatePublished, objC.comicSeries, objC.comicId, objC.comicImageLink)} type="button">
+        <button onClick={() => DeleteFavC(objC.comicId)} type="button">
           Delete
         </button>
       </td>

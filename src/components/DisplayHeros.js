@@ -46,7 +46,7 @@ function DisplayHeros({
         {objH.heroId}
       </td>
       <td>
-        <button onClick={() => DeleteFavH(objH.heroName, objH.heroDateModified, objH.heroDescription, objH.heroId, objH.heroImageLink)} type="button">
+        <button onClick={() => DeleteFavH(objH.heroId)} type="button">
           Delete
         </button>
       </td>
