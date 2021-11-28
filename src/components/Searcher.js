@@ -3,6 +3,9 @@ import React, { useState, useRef } from 'react';
 
 // import SearchForm from './SearchForm';
 
+// sources:
+//  add object to usestate: https://newbedev.com/how-do-i-insert-into-an-array-inside-a-object-using-usestate-code-example
+
 import FormResult from './FormResult';
 import DisplayComics from './DisplayComics';
 import DisplayHeros from './DisplayHeros';
@@ -121,41 +124,55 @@ function Searcher({ id }) {
     if (ishero === true) {
       // window.console.log('we got in here bitch!');
       // window.console.log(id2);
-      const heroIDsToFE = [];
-      heroIDsToFE.push(
-        {
-          heroId: id2,
-          heroName: name,
-          heroDateModified: date,
-          heroImageLink: imageLink,
-          heroDescription: info,
-        },
-      );
-      const updatedHeroes = [...herosFE, heroIDsToFE];
-      setHerosFE(updatedHeroes);
+      // const heroIDsToFE = [];
+      // heroIDsToFE.push(
+      //   {
+      //     heroId: id2,
+      //     heroName: name,
+      //     heroDateModified: date,
+      //     heroImageLink: imageLink,
+      //     heroDescription: info,
+      //   },
+      // );
+      // const updatedHeroes = [...herosFE, heroIDsToFE];
+      // setHerosFE(updatedHeroes);
+      setHerosFE(() => ([...herosFE, {
+        heroId: id2,
+        heroName: name,
+        heroDateModified: date,
+        heroImageLink: imageLink,
+        heroDescription: info,
+      }]));
     } else {
       // window.console.log('we got in here bitch! 222');
       // window.console.log(id2);
-      const comicsIDsFE = [];
-      comicsIDsFE.push(
-        {
-          comicId: id2,
-          comicName: name,
-          comicDatePublished: date,
-          comicImageLink: imageLink,
-          comicSeries: info,
-        },
-      );
-      window.console.log(comicsFE);
-      const updatedComics = [...comicsFE, comicsIDsFE];
-      window.console.log(updatedComics);
-      setComicsFE(updatedComics);
-      window.console.log(comicsFE);
+      // const comicsIDsFE = [];
+      // comicsIDsFE.push(
+      //   {
+      //     comicId: id2,
+      //     comicName: name,
+      //     comicDatePublished: date,
+      //     comicImageLink: imageLink,
+      //     comicSeries: info,
+      //   },
+      // );
+      // // window.console.log(comicsFE);
+      // const updatedComics = [...comicsFE, comicsIDsFE];
+      // // window.console.log(updatedComics);
+      // setComicsFE(updatedComics);
+      setComicsFE(() => ([...comicsFE, {
+        comicId: id2,
+        comicName: name,
+        comicDatePublished: date,
+        comicImageLink: imageLink,
+        comicSeries: info,
+      }]));
+      // window.console.log(comicsFE);
     }
   }
   function deleteFavComic(namec, datec, infoc, id2c, imageLinkc) {
     //  appending JSON
-
+    window.console.log(namec);
     const comicsIDsFE = [];
     comicsIDsFE.push(
       {
@@ -166,7 +183,9 @@ function Searcher({ id }) {
         comicSeries: infoc,
       },
     );
+    window.console.log(comicsFE);
     const updatedComics = [...comicsFE.slice(0, comicsIDsFE), ...comicsFE.slice(comicsIDsFE + 1)];
+    window.console.log(updatedComics);
     setComicsFE(updatedComics);
   }
   function deleteFavHero(nameh, dateh, infoh, id2h, imageLinkh) {

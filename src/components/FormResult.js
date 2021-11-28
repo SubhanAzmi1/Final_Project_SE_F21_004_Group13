@@ -32,7 +32,7 @@ function FormResult({
   // depending on isHero is true i have different headers
   //    for the table to be displayed.
   //    then each column in a row is one item from the various arrays.
-  window.console.log(data);
+  // window.console.log(data);
   const tableData = data.map((obj) => (
     <tr>
       <td>
@@ -44,7 +44,6 @@ function FormResult({
       </td>
       <td>
         {obj.nameTitle}
-        {window.console.log(obj.nameTitle)}
       </td>
       <td>
         {obj.date}
