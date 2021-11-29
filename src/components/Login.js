@@ -27,7 +27,6 @@ function Login({
   setLoggedIn,
   setName,
   setUserId,
-  setHasSavedArtist,
 }) {
   const history = useHistory();
   function onSuccess(res) {
@@ -54,7 +53,6 @@ function Login({
       .then((data) => {
         setName(data.username);
         setUserId(data.userId);
-        setHasSavedArtist(data.has_artists_saved);
         history.push('/home');
       });
     const logintrue = true;
@@ -83,12 +81,10 @@ Login.defaultProps = {
   setLoggedIn: () => {},
   setName: () => {},
   setUserId: () => {},
-  setHasSavedArtist: () => {},
 };
 Login.propTypes = {
   setLoggedIn: Function,
   setName: Function,
   setUserId: Function,
-  setHasSavedArtist: Function,
 };
 export default Login;
