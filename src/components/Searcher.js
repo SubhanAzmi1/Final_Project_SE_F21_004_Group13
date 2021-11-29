@@ -126,6 +126,12 @@ function Searcher({ userIdS }) {
     //  appending JSON
     if (ishero === true) {
       // window.console.log('we got in here bitch!');
+      // check to see if it is already in list then just skip
+      for (let i = 0; i < herosFE.length; i += 1) {
+        if (herosFE[i].heroId === id2) {
+          return;
+        }
+      }
       setHerosFE(() => ([...herosFE, {
         heroId: id2,
         heroName: name,
@@ -136,6 +142,12 @@ function Searcher({ userIdS }) {
     } else {
       // window.console.log('we got in here bitch! 222');
       // // window.console.log(comicsFE);
+      // check to see if it is already in list then just skip
+      for (let i = 0; i < comicsFE.length; i += 1) {
+        if (comicsFE[i].comicId === id2) {
+          return;
+        }
+      }
       setComicsFE(() => ([...comicsFE, {
         comicId: id2,
         comicName: name,

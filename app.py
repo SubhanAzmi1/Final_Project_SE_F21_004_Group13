@@ -89,7 +89,7 @@ class Hero(db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    hero_id = db.Column("hero_id", db.String, nullable=False)
+    hero_id = db.Column("hero_id", db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     image_link = db.Column("image_link", db.String, nullable=False)
     name = db.Column("name", db.String, nullable=False)
@@ -106,7 +106,7 @@ class Comic(db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    comic_id = db.Column("comic_id", db.String, nullable=False)
+    comic_id = db.Column("comic_id", db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     image_link = db.Column("image_link", db.String, nullable=False)
     name = db.Column("name", db.String, nullable=False)
