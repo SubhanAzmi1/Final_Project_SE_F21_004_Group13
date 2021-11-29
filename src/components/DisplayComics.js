@@ -42,9 +42,6 @@ function DisplayComics({
         {objC.comicDatePublished}
       </td>
       <td>
-        {objC.comicSeries}
-      </td>
-      <td>
         {objC.comicId}
       </td>
       <td>
@@ -62,7 +59,6 @@ function DisplayComics({
             <th>Image</th>
             <th>Title</th>
             <th>Date_published</th>
-            <th>Series</th>
             <th>ID</th>
             <th>Delete Favorites!</th>
           </tr>

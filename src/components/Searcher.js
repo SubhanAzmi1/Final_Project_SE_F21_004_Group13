@@ -26,6 +26,7 @@ function Searcher({ userIdS }) {
   const [comicsFE, setComicsFE] = useState([]);
   const [randThing, setRandThing] = useState([]);
   const [getcounter, setGetCounter] = useState(0);
+  const [isRandHero, setisRandHero] = useState(false);
   function getUserComics() {
     fetch('/get_User_Comics', {
       method: 'POST',
@@ -70,7 +71,7 @@ function Searcher({ userIdS }) {
     })
       .then((response) => response.json())
       .then((DATA) => {
-        // window.console.log(DATA);
+        setisRandHero(DATA[0].hero);
         setRandThing(DATA);
       });
   }
@@ -217,9 +218,17 @@ function Searcher({ userIdS }) {
   return (
     <div id="main">
       <colrandom>
-        <div>
-          <DisplayRandom listofDICKSr={comicsFE} AddFav={searchResultAdd} />
-        </div>
+        {getcounter === 1 ? (
+          <div>
+            <DisplayRandom
+              isHero={isRandHero}
+              listofDICKSr={randThing}
+              AddFav={searchResultAdd}
+            />
+          </div>
+        ) : (
+          <div />
+        )}
       </colrandom>
       <colmid>
         <div>

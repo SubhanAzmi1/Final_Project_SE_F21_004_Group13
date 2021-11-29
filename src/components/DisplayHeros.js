@@ -42,9 +42,6 @@ function DisplayHeros({
         {objH.heroDateModified}
       </td>
       <td>
-        {objH.heroDescription}
-      </td>
-      <td>
         {objH.heroId}
       </td>
       <td>
@@ -62,7 +59,6 @@ function DisplayHeros({
             <th>Image</th>
             <th>Name</th>
             <th>Date_Modified</th>
-            <th>Description</th>
             <th>ID</th>
             <th>Delete Favorites!</th>
           </tr>

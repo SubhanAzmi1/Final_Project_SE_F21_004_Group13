@@ -173,11 +173,11 @@ def get_rand_h_or_c():
         listdictinfo.append(
             {
                 "hero": True,
-                "heroId": data["results"][random_result]["id"],
-                "heroName": data["results"][random_result]["name"],
-                "heroDateModified": modified,
-                "heroImageLink": imagelink,
-                "heroDescription": data["results"][random_result]["description"],
+                "id": data["results"][random_result]["id"],
+                "nameTitle": data["results"][random_result]["name"],
+                "date": modified,
+                "imageUrl": imagelink,
+                "info": data["results"][random_result]["description"],
             }
         )
     else:  # comic
@@ -193,13 +193,14 @@ def get_rand_h_or_c():
         listdictinfo.append(
             {
                 "hero": False,
-                "comicId": data["results"][random_result]["id"],
-                "comicName": data["results"][random_result]["title"],
-                "comicDatePublished": modified,
-                "comicImageLink": imagelink,
-                "comicSeries": data["results"][random_result]["series"]["name"],
+                "id": data["results"][random_result]["id"],
+                "nameTitle": data["results"][random_result]["title"],
+                "date": modified,
+                "imageUrl": imagelink,
+                "info": data["results"][random_result]["series"]["name"],
             }
         )
+    print(listdictinfo)
     return listdictinfo
 
 
