@@ -27,7 +27,7 @@ function App() {
           <Route exact path="/home">
             <Home
               userName={name}
-              id={userId}
+              userIdH={userId}
               hsa={hasSavedArtist}
               setLoggedIn={setLoggedIn}
             />

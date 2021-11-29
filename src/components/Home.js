@@ -7,7 +7,7 @@ import Searcher from './Searcher';
 function Home({
   userName,
   hsa,
-  id,
+  userIdH,
   setLoggedIn,
 }) {
   return (
@@ -16,7 +16,7 @@ function Home({
         {userName}
         &apos;s Marvel Explorer. User ID:
         {' '}
-        {id}
+        {userIdH}
       </h1>
       {hsa ? (
         <>
@@ -25,7 +25,7 @@ function Home({
       ) : (
         <h2>Looks like you don&apos;t have anything saved! Use the form below!</h2>
       )}
-      <Searcher id={id} />
+      <Searcher userIdS={userIdH} />
       <Logout setLoggedIn={setLoggedIn} />
     </div>
   );
@@ -34,13 +34,13 @@ Home.defaultProps = {
   setLoggedIn: () => {},
   hsa: true,
   userName: '',
-  id: '',
+  userIdH: '',
 };
 
 Home.propTypes = {
   setLoggedIn: Function,
   userName: String,
   hsa: Boolean,
-  id: String,
+  userIdH: String,
 };
 export default Home;

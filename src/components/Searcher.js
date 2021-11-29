@@ -11,7 +11,7 @@ import FormResult from './FormResult';
 import DisplayComics from './DisplayComics';
 import DisplayHeros from './DisplayHeros';
 
-function Searcher({ id }) {
+function Searcher({ userIdS }) {
   const [nameList, setNameList] = useState([]);
   const [releasedModifiedDates, setreleasedModifiedDates] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
@@ -31,12 +31,13 @@ function Searcher({ id }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id,
+        userIdS,
       }),
     })
       .then((response) => response.json())
       .then((DATA) => {
-        setHerosFE(DATA);
+        window.console.log(DATA);
+        setComicsFE(DATA);
       });
   }
   function getUserHeroes() {
@@ -46,12 +47,13 @@ function Searcher({ id }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id,
+        userIdS,
       }),
     })
       .then((response) => response.json())
       .then((DATA) => {
-        setComicsFE(DATA);
+        window.console.log(DATA);
+        setHerosFE(DATA);
       });
   }
   if (getcounter === 0) {
@@ -172,14 +174,14 @@ function Searcher({ id }) {
       body: JSON.stringify({
         FEHeroes: herosFE,
         FEComics: comicsFE,
-        id,
+        userIdS,
       }),
     })
       .then((response) => response.json())
       .then(() => {
-        console.log('IDs have been added!');
+        console.log('IDs have been updated!');
+        setGetCounter(0);
       });
-    setGetCounter(0);
   }
   return (
     <div>
@@ -260,31 +262,10 @@ function Searcher({ id }) {
   );
 }
 Searcher.defaultProps = {
-  id: '',
+  userIdS: '',
 };
 
 Searcher.propTypes = {
-  id: String,
+  userIdS: String,
 };
 export default Searcher;
-
-/* <FormResult
-          isHero={isHero1}
-          nameList={nameList}
-          dates={releasedModifiedDates}
-          images={imageUrls}
-          extraInfos={addtionalInfo}
-          ids={ids}
-          onClick={searchResultAdd}
-          fixResultsEmpty={setWereSearchResultsEmpty}
-        /> */
-/* <FormResult
-        name="Venom"
-        id="00234824"
-        onClick={searchResultAdd}
-      />
-      <FormResult
-        name="Wraith"
-        id="00234235"
-        onClick={searchResultAdd}
-      /> */
