@@ -211,7 +211,7 @@ function Searcher({ userIdS }) {
     })
       .then((response) => response.json())
       .then(() => {
-        console.log('IDs have been updated!');
+        window.console.log('IDs have been updated!');
         setGetCounter(0);
       });
   }
