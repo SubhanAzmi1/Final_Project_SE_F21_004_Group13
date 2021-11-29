@@ -38,7 +38,7 @@ function FormResult({
       <td>
         <img
           src={obj.imageUrl}
-          width={60} // to be determined
+          width={50} // to be determined
           alt="Character"
         />
       </td>
@@ -64,7 +64,7 @@ function FormResult({
   return (
     <div>
       {isHero === true ? (
-        <table>
+        <table border="1" cellPadding="0.25" id="displayfavtable">
           <thead>
             <tr>
               <th>Image</th>
@@ -80,7 +80,7 @@ function FormResult({
           </tbody>
         </table>
       ) : (
-        <table>
+        <table border="1" cellPadding="0.25" id="displayfavtable">
           <thead>
             <tr>
               <th>Image</th>

@@ -3,6 +3,9 @@ Flask app logic for P1M3
 """
 # pylint: disable=no-member
 # pylint: disable=too-few-public-methods
+
+# sources:
+#   find specific in list_dict: https://www.geeksforgeeks.org/python-find-dictionary-matching-value-in-list/
 import os
 import json
 import random
@@ -445,14 +448,7 @@ def login_google_authenticate():
     # response stuff is mostly null.
     data = {
         "username": user.username,
-        "artist_ids": [],
-        "has_artists_saved": False,
         "userId": user.id,
-        # "song_name": None,
-        # "song_artist": None,
-        # "song_image_url": None,
-        # "preview_url": None,
-        # "genius_url": None,
     }
     # print(id_token)
     # print(response)

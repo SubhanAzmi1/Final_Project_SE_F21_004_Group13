@@ -17,7 +17,6 @@ require('dotenv').config();
 function App() {
   const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn'));
   const [name, setName] = useState(sessionStorage.getItem('name'));
-  const [hasSavedArtist, setHasSavedArtist] = useState(false);
   const [userId, setUserId] = useState(null);
   window.console.log('what is logged in status: ', +loggedIn);
   return (
@@ -28,7 +27,6 @@ function App() {
             <Home
               userName={name}
               userIdH={userId}
-              hsa={hasSavedArtist}
               setLoggedIn={setLoggedIn}
             />
           </Route>
@@ -38,7 +36,6 @@ function App() {
                 setLoggedIn={setLoggedIn}
                 setName={setName}
                 setUserId={setUserId}
-                setHasSavedArtist={setHasSavedArtist}
               />
               <Logout
                 setLoggedIn={setLoggedIn}

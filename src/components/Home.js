@@ -1,4 +1,7 @@
 /* eslint-disable react/prop-types */
+
+// sources:
+// app styling: https://www.quackit.com/html/html_editors/scratchpad/?example=/css/flexbox/tutorial/create_a_website_layout_with_flexbox_example_1
 import '../App.css';
 import React from 'react';
 import Logout from './Logout';
@@ -6,33 +9,30 @@ import Searcher from './Searcher';
 
 function Home({
   userName,
-  hsa,
   userIdH,
   setLoggedIn,
 }) {
   return (
     <div>
-      <h1>
-        {userName}
-        &apos;s Marvel Explorer. User ID:
-        {' '}
-        {userIdH}
-      </h1>
-      {hsa ? (
-        <>
-          <h2> Click here to see lyrics! </h2>
-        </>
-      ) : (
-        <h2>Looks like you don&apos;t have anything saved! Use the form below!</h2>
-      )}
-      <Searcher userIdS={userIdH} />
-      <Logout setLoggedIn={setLoggedIn} />
+      <header>
+        <h1>
+          {userName}
+          &apos;s Marvel Explorer. User ID:
+          {' '}
+          {userIdH}
+        </h1>
+      </header>
+      <body>
+        <Searcher userIdS={userIdH} />
+      </body>
+      <footer>
+        <Logout setLoggedIn={setLoggedIn} />
+      </footer>
     </div>
   );
 }
 Home.defaultProps = {
   setLoggedIn: () => {},
-  hsa: true,
   userName: '',
   userIdH: '',
 };
@@ -40,7 +40,6 @@ Home.defaultProps = {
 Home.propTypes = {
   setLoggedIn: Function,
   userName: String,
-  hsa: Boolean,
   userIdH: String,
 };
 export default Home;

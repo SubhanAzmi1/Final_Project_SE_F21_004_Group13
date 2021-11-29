@@ -31,7 +31,7 @@ function DisplayHeros({
       <td>
         <img
           src={objH.heroImageLink}
-          width={60} // to be determined
+          width={25} // to be determined
           alt="Character"
         />
       </td>
@@ -56,7 +56,7 @@ function DisplayHeros({
   ));
   return (
     <div>
-      <table>
+      <table border="1" cellPadding="0.25" id="displayfavtable">
         <thead>
           <tr>
             <th>Image</th>

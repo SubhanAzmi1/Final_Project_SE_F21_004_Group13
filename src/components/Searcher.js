@@ -36,7 +36,7 @@ function Searcher({ userIdS }) {
     })
       .then((response) => response.json())
       .then((DATA) => {
-        window.console.log(DATA);
+        // window.console.log(DATA);
         setComicsFE(DATA);
       });
   }
@@ -52,7 +52,7 @@ function Searcher({ userIdS }) {
     })
       .then((response) => response.json())
       .then((DATA) => {
-        window.console.log(DATA);
+        // window.console.log(DATA);
         setHerosFE(DATA);
       });
   }
@@ -196,80 +196,90 @@ function Searcher({ userIdS }) {
       });
   }
   return (
-    <div>
-      <div>
-        <h2>
-          Enter a hero or comic issue here!
-        </h2>
-        <form>
-          <label htmlFor="hero">
-            <input
-              type="radio"
-              value="Hero"
-              name="Selection"
-              id="hero"
-              onChange={setHeroRadio}
-              checked={heroRadioActive}
-            />
-            Hero
-          </label>
-          <br />
-          <label htmlFor="comic">
-            <input
-              type="radio"
-              value="Comic"
-              name="Selection"
-              id="comic"
-              onChange={setComicRadio}
-              checked={comicRadioActive}
-            />
-            Comic
-          </label>
-          <br />
-        </form>
-        <form>
-          <input
-            type="text"
-            placeholder="Hero or Comic Name Here"
-            ref={textInput}
-            data-testid="text_input"
-            maxLength="45"
-          />
-        </form>
-        <button onClick={searchUpResult} type="button">Starts-with search</button>
-      </div>
-      {wereSearchResultsEmpty ? (
+    <div id="main">
+      <colrandom>
         <div>
-          There were no results for your query! Try again.
+          I am in the random
         </div>
-      ) : (
-        <div />
-      )}
-      {ids.length !== 0 ? (
+      </colrandom>
+      <colmid>
         <div>
-          <FormResult
-            isHero={heroRadioActive}
-            nameList={nameList}
-            dates={releasedModifiedDates}
-            images={imageUrls}
-            extraInfos={addtionalInfo}
-            ids={ids}
-            AddFav={searchResultAdd}
-            fixResultsEmpty={setWereSearchResultsEmpty}
-          />
+          <h2>
+            Enter a hero or comic issue here!
+          </h2>
+          <form>
+            <label htmlFor="hero">
+              <input
+                type="radio"
+                value="Hero"
+                name="Selection"
+                id="hero"
+                onChange={setHeroRadio}
+                checked={heroRadioActive}
+              />
+              Hero
+            </label>
+            <label htmlFor="comic">
+              <input
+                type="radio"
+                value="Comic"
+                name="Selection"
+                id="comic"
+                onChange={setComicRadio}
+                checked={comicRadioActive}
+              />
+              Comic
+            </label>
+            <br />
+          </form>
+          <form>
+            <input
+              type="text"
+              placeholder="Hero or Comic Name Here"
+              ref={textInput}
+              data-testid="text_input"
+              maxLength="45"
+            />
+          </form>
+          <button onClick={searchUpResult} type="button">Starts-with search</button>
         </div>
-      ) : (
-        <div />
-      )}
-      <div>
-        <DisplayComics listofDICKSc={comicsFE} DeleteFavC={deleteFavComic} />
-      </div>
-      <div>
-        <DisplayHeros listofDICKSh={herosFE} DeleteFavH={deleteFavHero} />
-      </div>
-      <div>
-        <button onClick={saveResults} type="button">Save Changes</button>
-      </div>
+        {wereSearchResultsEmpty ? (
+          <div>
+            There were no results for your query! Try again.
+          </div>
+        ) : (
+          <div />
+        )}
+        {ids.length !== 0 ? (
+          <div>
+            <FormResult
+              isHero={heroRadioActive}
+              nameList={nameList}
+              dates={releasedModifiedDates}
+              images={imageUrls}
+              extraInfos={addtionalInfo}
+              ids={ids}
+              AddFav={searchResultAdd}
+              fixResultsEmpty={setWereSearchResultsEmpty}
+            />
+          </div>
+        ) : (
+          <div />
+        )}
+      </colmid>
+      <colsaved>
+        <div>
+          Favorite Comics
+          <DisplayComics listofDICKSc={comicsFE} DeleteFavC={deleteFavComic} />
+        </div>
+        <div>
+          Favorite Heroes
+          <DisplayHeros listofDICKSh={herosFE} DeleteFavH={deleteFavHero} />
+        </div>
+        <div>
+          <button onClick={saveResults} type="button">Save Changes</button>
+        </div>
+      </colsaved>
     </div>
   );
 }

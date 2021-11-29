@@ -31,7 +31,7 @@ function DisplayComics({
       <td>
         <img
           src={objC.comicImageLink}
-          width={60} // to be determined
+          width={25} // to be determined
           alt="Comic"
         />
       </td>
@@ -56,7 +56,7 @@ function DisplayComics({
   ));
   return (
     <div>
-      <table>
+      <table border="1" cellPadding="0.25" id="displayfavtable">
         <thead>
           <tr>
             <th>Image</th>
