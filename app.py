@@ -24,7 +24,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from genius import get_lyrics_link
 from spotify import get_access_token, get_song_data
-from marvel import get_charac_data, get_comic_data
+from marvel import get_charac_data, get_comic_data, get_rand_h_or_c
 
 load_dotenv(find_dotenv())
 
@@ -508,6 +508,15 @@ def marvelLookupComic():
     # print(series)
     # print(ids)
     return flask.jsonify(searchResult)
+
+
+@app.route("/get_Random_Hero_or_Comic", methods=["POST"])
+def get_Random_Hero_or_Comic():
+    """
+    calls the marvel api to get a random comic or character data and return to front end.
+    returns a list with a dict in it.
+    """
+    return flask.jsonify(get_rand_h_or_c())
 
 
 def update_db_ids_for_user(user_id, valid_ids):

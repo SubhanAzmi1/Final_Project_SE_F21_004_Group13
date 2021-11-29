@@ -10,6 +10,7 @@ import React, { useState, useRef } from 'react';
 import FormResult from './FormResult';
 import DisplayComics from './DisplayComics';
 import DisplayHeros from './DisplayHeros';
+import DisplayRandom from './DisplayRandom';
 
 function Searcher({ userIdS }) {
   const [nameList, setNameList] = useState([]);
@@ -23,6 +24,7 @@ function Searcher({ userIdS }) {
   const textInput = useRef(null);
   const [herosFE, setHerosFE] = useState([]);
   const [comicsFE, setComicsFE] = useState([]);
+  const [randThing, setRandThing] = useState([]);
   const [getcounter, setGetCounter] = useState(0);
   function getUserComics() {
     fetch('/get_User_Comics', {
@@ -56,9 +58,26 @@ function Searcher({ userIdS }) {
         setHerosFE(DATA);
       });
   }
+  function getRandomHorC() {
+    fetch('/get_Random_Hero_or_Comic', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userIdS,
+      }),
+    })
+      .then((response) => response.json())
+      .then((DATA) => {
+        // window.console.log(DATA);
+        setRandThing(DATA);
+      });
+  }
   if (getcounter === 0) {
     getUserComics();
     getUserHeroes();
+    getRandomHorC();
     setGetCounter(1);
   }
   function setHeroRadio() {
@@ -199,7 +218,7 @@ function Searcher({ userIdS }) {
     <div id="main">
       <colrandom>
         <div>
-          I am in the random
+          <DisplayRandom listofDICKSr={comicsFE} AddFav={searchResultAdd} />
         </div>
       </colrandom>
       <colmid>

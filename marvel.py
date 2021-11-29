@@ -15,6 +15,8 @@ import requests
 import time
 import hashlib
 import json
+import random
+import string
 
 
 def create_api_access_hash_string(ts):
@@ -131,6 +133,74 @@ def get_comic_data(search_word, e_or_sw):
     except KeyError:
         pass
     return (titles, release_dates, image_urls, series, ids)
+
+
+def get_rand_h_or_c():
+    """
+    calls the marvel api to get a random comic or character data and return to front end.
+    uses random first letter to choose between the results generated and returns its data.
+    """
+    ts = time.strftime("%Y%d%m%H%M%S")
+    hash = create_api_access_hash_string(ts)
+    PUB_KEY = os.getenv("MARVEL_PUB_KEY")
+    chooseit = random.choice(["characters?", "comics?noVariants=true&"])
+    if chooseit == "characters?":
+        search_parameter1 = "nameStartsWith"
+    else:  # comic
+        search_parameter1 = "titleStartsWith"
+
+    search_word = random.choice(string.ascii_letters)
+
+    requesturl = f"https://gateway.marvel.com:443/v1/public/{chooseit}{search_parameter1}={search_word}&apikey={PUB_KEY}&limit=20&ts={ts}&hash={hash}"
+
+    print(requesturl)
+    response = requests.get(requesturl)
+
+    json_response = response.json()
+    data = json_response["data"]
+    top_result_limit = len(data["results"])
+    random_result = random.randint(0, (top_result_limit - 1))
+    listdictinfo = []
+    if chooseit == "characters?":
+        unmodified = str(data["results"][random_result]["modified"])
+        modified = unmodified.partition("T")[0]
+        imagelink = (
+            data["results"][random_result]["thumbnail"]["path"]
+            + "."
+            + data["results"][random_result]["thumbnail"]["extension"]
+        )
+
+        listdictinfo.append(
+            {
+                "hero": True,
+                "heroId": data["results"][random_result]["id"],
+                "heroName": data["results"][random_result]["name"],
+                "heroDateModified": modified,
+                "heroImageLink": imagelink,
+                "heroDescription": data["results"][random_result]["description"],
+            }
+        )
+    else:  # comic
+        unmodified = str(data["results"][random_result]["dates"][0]["date"])
+        modified = unmodified.partition("T")[0]
+
+        imagelink = (
+            data["results"][random_result]["thumbnail"]["path"]
+            + "."
+            + data["results"][random_result]["thumbnail"]["extension"]
+        )
+
+        listdictinfo.append(
+            {
+                "hero": False,
+                "comicId": data["results"][random_result]["id"],
+                "comicName": data["results"][random_result]["title"],
+                "comicDatePublished": modified,
+                "comicImageLink": imagelink,
+                "comicSeries": data["results"][random_result]["series"]["name"],
+            }
+        )
+    return listdictinfo
 
 
 # there are 4 different types of searches
