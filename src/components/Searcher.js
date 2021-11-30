@@ -88,9 +88,23 @@ function Searcher() {
     // console.log(heroRadioActive);
   }
 
-  function searchResultAdd(ishero, id) {
-    window.console.log(ishero);
-    window.console.log(id);
+  //  for managing results to add
+  const [IDsToAdd, setIDsToAdd] = setState([]);
+
+  function searchResultAdd(name, datePublished, description, id, imageLink) {
+    //  window.console.log(ishero);
+    //  window.console.log(id);
+
+    //  appending JSON
+    IDsToAdd.push(
+      json(
+        "name" : name,
+        "datePublished" : datePublished,
+        "description" : description, 
+        "id" : id,
+        "imageLink" : imageLink
+      )
+    )
   }
 
   return (
