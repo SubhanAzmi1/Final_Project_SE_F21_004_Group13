@@ -3,4 +3,5 @@ requests
 python-dotenv
 Flask-Login
 psycopg2-binary
+pyopenssl
 Flask-SQLAlchemy

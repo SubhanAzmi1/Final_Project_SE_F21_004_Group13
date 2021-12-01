@@ -6,6 +6,7 @@ import React from 'react';
 // sources:
 // tables https://www.youtube.com/watch?v=hson9BXU9F8
 // iterate thorugh json: https://stackoverflow.com/questions/43241139/looping-through-table-data-react-js
+// html tables: https://www.w3schools.com/html/html_tables.asp
 function FormResult({
   isHero, nameList, dates, images, extraInfos, ids, AddFav, fixResultsEmpty,
 }) {
@@ -31,12 +32,13 @@ function FormResult({
   // depending on isHero is true i have different headers
   //    for the table to be displayed.
   //    then each column in a row is one item from the various arrays.
+  // window.console.log(data);
   const tableData = data.map((obj) => (
     <tr>
       <td>
         <img
           src={obj.imageUrl}
-          width={60} // to be determined
+          width={50} // to be determined
           alt="Character"
         />
       </td>
@@ -53,7 +55,7 @@ function FormResult({
         {obj.id}
       </td>
       <td>
-        <button onClick={() => AddFav(isHero, obj.id)} type="button">
+        <button onClick={() => AddFav(isHero, obj.nameTitle, obj.date, obj.info, obj.id, obj.imageUrl)} type="button">
           Add
         </button>
       </td>
@@ -62,7 +64,7 @@ function FormResult({
   return (
     <div>
       {isHero === true ? (
-        <table>
+        <table border="1" cellPadding="0.25" id="displayfavtable">
           <thead>
             <tr>
               <th>Image</th>
@@ -78,7 +80,7 @@ function FormResult({
           </tbody>
         </table>
       ) : (
-        <table>
+        <table border="1" cellPadding="0.25" id="displayfavtable">
           <thead>
             <tr>
               <th>Image</th>

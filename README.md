@@ -1,4 +1,11 @@
 # Flask and `create-react-app`
+# Heroku deployment address for sprint_1 : 
+https://tranquil-temple-93146.herokuapp.com/
+
+# Heroku deployment address for sprint_2 : 
+https://serene-lake-89912.herokuapp.com/
+
+**You have to type out the https in the front. We are still working on the http vs https stuff.** 
 
 ## Requirements
 1. `npm install`

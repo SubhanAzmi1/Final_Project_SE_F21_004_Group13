@@ -3,6 +3,9 @@ Flask app logic for P1M3
 """
 # pylint: disable=no-member
 # pylint: disable=too-few-public-methods
+
+# sources:
+#   find specific in list_dict: https://www.geeksforgeeks.org/python-find-dictionary-matching-value-in-list/
 import os
 import json
 import random
@@ -21,7 +24,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from genius import get_lyrics_link
 from spotify import get_access_token, get_song_data
-from marvel import get_charac_data, get_comic_data
+from marvel import get_charac_data, get_comic_data, get_rand_h_or_c
 
 load_dotenv(find_dotenv())
 
@@ -34,6 +37,7 @@ GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 # client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 app = flask.Flask(__name__, static_folder="./build/static")
+
 # Point SQLAlchemy to your Heroku database
 db_url = os.getenv("DATABASE_URL")
 if db_url.startswith("postgres://"):
@@ -88,8 +92,12 @@ class Hero(db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    hero_id = db.Column("hero_id", db.String, nullable=False)
+    hero_id = db.Column("hero_id", db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    image_link = db.Column("image_link", db.String, nullable=False)
+    name = db.Column("name", db.String, nullable=False)
+    date_modified = db.Column("date_modified", db.String, nullable=False)
+    description = db.Column("description", db.String, nullable=False)
 
     def __repr__(self):
         return "<Hero %r>" % self.hero_id
@@ -101,8 +109,12 @@ class Comic(db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    comic_id = db.Column("comic_id", db.String, nullable=False)
+    comic_id = db.Column("comic_id", db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    image_link = db.Column("image_link", db.String, nullable=False)
+    name = db.Column("name", db.String, nullable=False)
+    date_modified = db.Column("date_modified", db.String, nullable=False)
+    description = db.Column("description", db.String, nullable=False)
 
     def __repr__(self):
         return "<Hero %r>" % self.comic_id
@@ -148,40 +160,6 @@ def login():
     Main page. Fetches song data and embeds it in the returned HTML. Returns
     dummy data if something goes wrong.
     """
-    # artists = Hero.query.filter_by(username=current_user.username).all()
-    # artist_ids = [a.artist_id for a in artists]
-    # has_artists_saved = len(artist_ids) > 0
-    # if has_artists_saved:
-    #     artist_id = random.choice(artist_ids)
-
-    #     # API calls
-    #     access_token = get_access_token()
-    #     (song_name, song_artist, song_image_url, preview_url) = get_song_data(
-    #         artist_id, access_token
-    #     )
-    #     genius_url = get_lyrics_link(song_name)
-
-    # else:
-    #     (song_name, song_artist, song_image_url, preview_url, genius_url) = (
-    #         None,
-    #         None,
-    #         None,
-    #         None,
-    #         None,
-    #     )
-
-    # data = json.dumps(
-    #     {
-    #         "username": current_user.username,
-    #         "artist_ids": artist_ids,
-    #         "has_artists_saved": has_artists_saved,
-    #         "song_name": song_name,
-    #         "song_artist": song_artist,
-    #         "song_image_url": song_image_url,
-    #         "preview_url": preview_url,
-    #         "genius_url": genius_url,
-    #     }
-    # )
     return flask.render_template(
         "index.html",
         # data=data,
@@ -216,12 +194,200 @@ def signup_post():
     return flask.redirect(flask.url_for("login"))
 
 
-# @app.route("/login")
-# def login():
-#     """
-#     Login endpoint for GET requests
-#     """
-#     return flask.render_template("login.html")
+@app.route("/get_User_Heroes", methods=["POST"])
+def get_User_Heroes():
+    """
+    Get users saved heroes from the database
+    """
+    id = flask.request.json.get("userIdS")
+    characters = Hero.query.filter_by(user_id=id).all()
+
+    has_hero_saved = len(characters) > 0
+
+    DATA = []
+
+    if has_hero_saved:
+        for charac in characters:
+            DATA.append(
+                {
+                    "heroId": charac.hero_id,
+                    "heroName": charac.name,
+                    "heroDateModified": charac.date_modified,
+                    "heroImageLink": charac.image_link,
+                    "heroDescription": charac.description,
+                }
+            )
+    else:
+        pass
+
+    return flask.jsonify(DATA)
+
+
+@app.route("/get_User_Comics", methods=["POST"])
+def get_User_Comics():
+    """
+    Get users saved comics from the database
+    """
+    id = flask.request.json.get("userIdS")
+    comics = Comic.query.filter_by(user_id=id).all()
+    has_comic_saved = len(comics) > 0
+
+    DATA = []
+
+    if has_comic_saved:
+        for comic in comics:
+            DATA.append(
+                {
+                    "comicId": comic.comic_id,
+                    "comicName": comic.name,
+                    "comicDatePublished": comic.date_modified,
+                    "comicImageLink": comic.image_link,
+                    "comicSeries": comic.description,
+                }
+            )
+    else:
+        pass
+    return flask.jsonify(DATA)
+
+
+@app.route("/marvelMakeChangesToDatabase", methods=["POST"])
+def marvelMakeChangesToDatabase():
+    """
+    Saves favorites from front end to database
+    """
+    heroes_fe = flask.request.json.get("FEHeroes")
+    print(heroes_fe)
+    comics_fe = flask.request.json.get("FEComics")
+    print(comics_fe)
+
+    h_fe_ids = [h["heroId"] for h in heroes_fe]
+    c_fe_ids = [c["comicId"] for c in comics_fe]
+
+    id = flask.request.json.get("userIdS")
+
+    user_saved_heroes = Hero.query.filter_by(user_id=id).all()
+    hero_ids = [a.hero_id for a in user_saved_heroes]
+
+    user_saved_comics = Comic.query.filter_by(user_id=id).all()
+    comic_ids = [a.comic_id for a in user_saved_comics]
+
+    has_hero_saved = len(user_saved_heroes) > 0
+    has_comic_saved = len(user_saved_comics) > 0
+
+    if has_hero_saved:
+        # do compare with old
+        # run queries on whether
+        not_common_h = set(h_fe_ids).symmetric_difference(set(hero_ids))
+
+        for each in not_common_h:
+            # if its in old delete it
+            if each in hero_ids:
+                hero_to_remove = Hero.query.filter_by(user_id=id, hero_id=each).first()
+                db.session.delete(hero_to_remove)
+                db.session.commit()
+            # if its not in old then add it
+            else:
+                # get data from dict passed from frontend, each=heroid
+                specific_hero = {}
+                for hero in heroes_fe:
+                    if hero["heroId"] == each:
+                        specific_hero = hero
+                image_link_fe = specific_hero["heroImageLink"]
+                name_fe = specific_hero["heroName"]
+                date_modified_fe = specific_hero["heroDateModified"]
+                description_fe = specific_hero["heroDescription"]
+                db.session.add(
+                    Hero(
+                        hero_id=each,
+                        user_id=id,
+                        image_link=image_link_fe,
+                        name=name_fe,
+                        date_modified=date_modified_fe,
+                        description=description_fe,
+                    )
+                )
+                db.session.commit()
+    else:
+
+        # if len(newFaves) == 0:
+        # previous if handles this by asserting that there are none in database so nothing to do.
+
+        # there could be none previous saved but miltiple added
+        # if new stuff is to be added then add.
+        if len(heroes_fe) != 0:
+            for each in heroes_fe:
+                db.session.add(
+                    Hero(
+                        hero_id=each["heroId"],
+                        user_id=id,
+                        image_link=each["heroImageLink"],
+                        name=each["heroName"],
+                        date_modified=each["heroDateModified"],
+                        description=each["heroDescription"],
+                    )
+                )
+                db.session.commit()
+
+    if has_comic_saved:
+        not_common_c = set(c_fe_ids).symmetric_difference(set(comic_ids))
+
+        for each in not_common_c:
+            if each in comic_ids:
+                comic_to_remove = Comic.query.filter_by(
+                    user_id=id, comic_id=each
+                ).first()
+                db.session.delete(comic_to_remove)
+                db.session.commit()
+            else:
+                # get data from dict passed from frontend
+                specific_comic = {}
+                for comic in comics_fe:
+                    if comic["comicId"] == each:
+                        specific_comic = comic
+                image_link_fe = specific_comic["comicImageLink"]
+                name_fe = specific_comic["comicName"]
+                date_modified_fe = specific_comic["comicDatePublished"]
+                description_fe = specific_comic["comicSeries"]
+                db.session.add(
+                    Comic(
+                        comic_id=each,
+                        user_id=id,
+                        image_link=image_link_fe,
+                        name=name_fe,
+                        date_modified=date_modified_fe,
+                        description=description_fe,
+                    )
+                )
+                db.session.commit()
+    else:
+
+        # if len(newFaves) == 0:
+        # previous if handles this by asserting that there are none in database so nothing to do.
+
+        # there could be none previous saved but miltiple added
+        # if new stuff is to be added then add.
+        if len(comics_fe) != 0:
+            for each in comics_fe:
+                db.session.add(
+                    Comic(
+                        comic_id=each["comicId"],
+                        user_id=id,
+                        image_link=each["comicImageLink"],
+                        name=each["comicName"],
+                        date_modified=each["comicDatePublished"],
+                        description=each["comicSeries"],
+                    )
+                )
+                db.session.commit()
+
+    print(heroes_fe)
+    print(comics_fe)
+    return flask.jsonify("we good in back here")
+
+
+"""  # modularize the call to the database
+    def updateDatabase(frontEndListOfDicts, hero_or_comic, id):
+    user_saved = hero_or_comic.query.filter_by(user_id=id) """
 
 
 @app.route("/login", methods=["POST"])
@@ -296,14 +462,7 @@ def login_google_authenticate():
     # response stuff is mostly null.
     data = {
         "username": user.username,
-        "artist_ids": [],
-        "has_artists_saved": False,
         "userId": user.id,
-        # "song_name": None,
-        # "song_artist": None,
-        # "song_image_url": None,
-        # "preview_url": None,
-        # "genius_url": None,
     }
     # print(id_token)
     # print(response)
@@ -329,12 +488,12 @@ def marvelLookupHero():
         "descriptions": descriptions,
         "ids": ids,
     }
-    print("heroes results: ")
-    print(names)
-    print(modified_dates)
-    print(image_urls)
-    print(descriptions)
-    print(ids)
+    # print("heroes results: ")
+    # print(names)
+    # print(modified_dates)
+    # print(image_urls)
+    # print(descriptions)
+    # print(ids)
     return flask.jsonify(searchResult)
 
 
@@ -356,12 +515,12 @@ def marvelLookupComic():
         "series": series,
         "ids": ids,
     }
-    print("titles results: ")
-    print(titles)
-    print(release_dates)
-    print(image_urls)
-    print(series)
-    print(ids)
+    # print("titles results: ")
+    # print(titles)
+    # print(release_dates)
+    # print(image_urls)
+    # print(series)
+    # print(ids)
     return flask.jsonify(searchResult)
 
 #ROUTE FOR CROSSOVE SEARCH
@@ -429,20 +588,29 @@ def voteUp():
 
 
 
-def update_db_ids_for_user(username, valid_ids):
+@app.route("/get_Random_Hero_or_Comic", methods=["POST"])
+def get_Random_Hero_or_Comic():
+    """
+    calls the marvel api to get a random comic or character data and return to front end.
+    returns a list with a dict in it.
+    """
+    return flask.jsonify(get_rand_h_or_c())
+
+
+def update_db_ids_for_user(user_id, valid_ids):
     """
     Updates the DB so that only entries for valid_ids exist in it.
     @param username: the username of the current user
     @param valid_ids: a set of artist IDs that the DB should update itself
         to reflect
     """
-    existing_ids = {v.artist_id for v in Hero.query.filter_by(username=username).all()}
+    existing_ids = {v.hero_id for v in Hero.query.filter_by(user_id=user_id).all()}
     new_ids = valid_ids - existing_ids
     for new_id in new_ids:
-        db.session.add(Hero(artist_id=new_id, username=username))
+        db.session.add(Hero(hero_id=new_id, user_id=user_id))
     if len(existing_ids - valid_ids) > 0:
-        for hero in Hero.query.filter_by(username=username).filter(
-            Hero.artist_id.notin_(valid_ids)
+        for hero in Hero.query.filter_by(user_id=user_id).filter(
+            Hero.hero_id.notin_(valid_ids)
         ):
             db.session.delete(hero)
     db.session.commit()
@@ -459,8 +627,11 @@ def main():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=int(os.getenv("PORT", "8081")))
     # app.run(
-    #     host=os.getenv("IP", "0.0.0.0"),
+    #     debug=True,
     #     port=int(os.getenv("PORT", "8081")),
     # )
+    app.run(
+        host=os.getenv("IP", "0.0.0.0"),
+        port=int(os.getenv("PORT", "8081")),
+    )
