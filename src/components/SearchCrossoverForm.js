@@ -52,7 +52,7 @@ function SearchCompareForm(props) {
           <input
             type="text"
             placeholder="Hero Two's Name Here"
-            ref={textInput}
+            ref={textInput2}
             maxLength="45"
             id="hero2"
           /><br/>

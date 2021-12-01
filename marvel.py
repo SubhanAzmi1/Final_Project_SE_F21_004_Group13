@@ -134,6 +134,8 @@ def get_comic_data(search_word, e_or_sw):
         pass
     return (titles, release_dates, image_urls, series, ids)
 
+def get_crossover_data(search_one, search_two, e_or_sw):
+    pass
 
 def get_rand_h_or_c():
     """
