@@ -119,6 +119,20 @@ class Comic(db.Model):
     def __repr__(self):
         return "<Hero %r>" % self.comic_id
 
+class HeroVote(db.Model):
+    """
+    Hero vote count here, remove if after increasing/decreasing, vote count is 0 or less
+    """
+
+    id = db.Column("id", db.Integer, primary_key=True)
+    hero_id = db.Column("hero_id", db.String, nullable=False)
+    image_link = db.Column("image_link", db.String, nullable=False)
+    name = db.Column("name", db.String, nullable=False)
+    vote_count = db.Column("vote_count", db.Integer, nullable=False)
+
+    def repr(self):
+        return "<HeroVote%r%r>" % self.hero_id % self.vote_count
+
 
 # db.drop_all()
 db.create_all()
@@ -508,6 +522,70 @@ def marvelLookupComic():
     # print(series)
     # print(ids)
     return flask.jsonify(searchResult)
+
+#ROUTE FOR CROSSOVE SEARCH
+
+@app.route("/marvelLookupCrossovers", methods=["POST"])
+def crossoverLookup():
+    """
+    Searching hero crossovers
+    """
+
+    hero_one = flask.request.get_json()["heroOne"]
+
+    hero_two = flask.request.get_json()["heroTwo"]
+
+    #SEARCH THROUGH THE MARVEL API BOTH HEROES
+    result = None
+
+    return flask.jsonify({"results" : result})
+
+
+
+# FUNCTIONS FOR VOTING FOR HEROES
+
+@app.route("/voteUpHero", methods=["POST"])
+def voteUp():
+    """
+    For voting up a hero
+    """
+
+    hero_id = flask.request.get_json()["heroId"]
+
+    # SEARCH UP IF ID EXISTS
+    hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
+
+    if (hero_poll_search is not None):
+        hero_poll_search.vote_count = hero_poll_search.vote_count + 1
+        db.session.commit()
+
+    return flask.jsonify({"result" : "success"})
+
+
+@app.route("/voteDownHero", methods=["POST"])
+def voteUp():
+    """
+    Searching hero crossovers
+    """
+
+    hero_id = flask.request.get_json()["heroId"]
+
+    # SEARCH UP IF ID EXISTS
+    hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
+
+    if (hero_poll_search is not None):
+        hero_poll_search.vote_count = hero_poll_search.vote_count - 1
+
+        # CHECK IF 0 OR BELOW
+
+        if (hero_poll_search.vote_count < 1):
+            #REMOVE FROM DATABASE
+            HeroVote.remove(hero_poll_search)
+
+        db.session.commit()
+
+    return flask.jsonify({"result" : "success"})
+
 
 
 @app.route("/get_Random_Hero_or_Comic", methods=["POST"])
