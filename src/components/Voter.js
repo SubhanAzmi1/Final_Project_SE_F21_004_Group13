@@ -1,4 +1,6 @@
-function Searcher() {
+import React from 'react';
+
+function Voter() {
     function VoteUp(hero_id) {
     fetch('/voteUpHero', {
         method: 'POST',
@@ -35,3 +37,5 @@ function Searcher() {
         </div>
     );
 }
+
+export default Voter;
