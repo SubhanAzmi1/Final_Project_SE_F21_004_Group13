@@ -364,6 +364,24 @@ def marvelLookupComic():
     print(ids)
     return flask.jsonify(searchResult)
 
+#ROUTE FOR CROSSOVE SEARCH
+
+@app.route("/marvelLookupCrossovers", methods=["POST"])
+def crossoverLookup():
+    """
+    Searching hero crossovers
+    """
+
+    hero_one = flask.request.get_json()["heroOne"]
+
+    hero_two = flask.request.get_json()["heroTwo"]
+
+    #SEARCH THROUGH THE MARVEL API BOTH HEROES
+    result = None
+
+    return flask.jsonify({"results" : result})
+
+
 
 # FUNCTIONS FOR VOTING FOR HEROES
 
