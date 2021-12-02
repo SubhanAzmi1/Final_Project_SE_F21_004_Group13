@@ -9,6 +9,8 @@
 #   marvel:
 #       Authoriztion: https://developer.marvel.com/documentation/authorization
 #       Results: https://developer.marvel.com/documentation/apiresults
+#   random sampling: https://stackoverflow.com/questions/48246528/how-do-i-generate-random-but-unique-numbers-in-python
+#       https://stackoverflow.com/questions/68167851/valueerror-sample-larger-than-population-or-is-negative
 
 import os
 import requests
@@ -50,6 +52,7 @@ def get_charac_data(search_word, e_or_sw):  # exact or starts_with.
     modified_dates = None
     image_urls = None
     descriptions = None
+    comics = None
     ids = None
     try:
         response = requests.get(requesturl)
@@ -61,7 +64,9 @@ def get_charac_data(search_word, e_or_sw):  # exact or starts_with.
         modified_dates = []
         image_urls = []
         descriptions = []
+        comics = []
         ids = []
+
         for characters in data["results"]:
             names.append(characters["name"])
 
@@ -77,11 +82,36 @@ def get_charac_data(search_word, e_or_sw):  # exact or starts_with.
             modified = unmodified.partition("T")[0]
             modified_dates.append(modified)
 
+            comics_top_limit = min(len(characters["comics"]["items"]), 3)
+            rand_trio = []
+            if comics_top_limit > 0:
+                if comics_top_limit < 3:
+                    rand_trio = random.sample(
+                        range(0, len(characters["comics"]["items"])),
+                        len(characters["comics"]["items"]),
+                    )
+                else:
+                    rand_trio = random.sample(
+                        range(0, len(characters["comics"]["items"])), 3
+                    )
+                # print(rand_trio)
+            comics_combined = ""
+            for i in rand_trio:
+                # print(comics_combined)
+                comics_combined = (
+                    comics_combined
+                    + "'"
+                    + characters["comics"]["items"][i]["name"]
+                    + "'"
+                    + ", "
+                )
+            comics.append(comics_combined)
+
             ids.append(characters["id"])
 
     except KeyError:
         pass
-    return (names, modified_dates, image_urls, descriptions, ids)
+    return (names, modified_dates, image_urls, descriptions, ids, comics)
 
 
 def get_comic_data(search_word, e_or_sw):
@@ -106,6 +136,7 @@ def get_comic_data(search_word, e_or_sw):
     image_urls = []
     series = []
     ids = []
+    characters = []
     try:
         data = json_response["data"]
         # title
@@ -129,10 +160,36 @@ def get_comic_data(search_word, e_or_sw):
 
             series.append(comics["series"]["name"])
 
+            characters_top_limit = min(len(comics["characters"]["items"]), 3)
+            # 3 random numbers within the limit of items
+            rand_trio = []
+            if characters_top_limit > 0:
+                if characters_top_limit < 3:
+                    rand_trio = random.sample(
+                        range(0, len(comics["characters"]["items"])),
+                        len(comics["characters"]["items"]),
+                    )
+                else:
+                    rand_trio = random.sample(
+                        range(0, len(comics["characters"]["items"])), 3
+                    )
+                # print(rand_trio)
+            characters_combined = ""
+            for i in rand_trio:
+                characters_combined = (
+                    characters_combined
+                    + "'"
+                    + comics["characters"]["items"][i]["name"]
+                    + "'"
+                    + ", "
+                )
+            characters.append(characters_combined)
+
             ids.append(comics["id"])
     except KeyError:
         pass
-    return (titles, release_dates, image_urls, series, ids)
+    return (titles, release_dates, image_urls, series, ids, characters)
+
 
 def get_crossover_data(search_one, search_two, e_or_sw):
     """
@@ -189,6 +246,7 @@ def get_crossover_data(search_one, search_two, e_or_sw):
 
     return (titles, release_dates, image_urls, series, ids)
 
+
 def get_rand_h_or_c():
     """
     calls the marvel api to get a random comic or character data and return to front end.
@@ -223,6 +281,30 @@ def get_rand_h_or_c():
             + "."
             + data["results"][random_result]["thumbnail"]["extension"]
         )
+        comics_top_limit = min(
+            len(data["results"][random_result]["comics"]["items"]), 3
+        )
+        rand_trio = []
+        if comics_top_limit > 0:
+            if comics_top_limit < 3:
+                rand_trio = random.sample(
+                    range(0, len(data["results"][random_result]["comics"]["items"])),
+                    len(data["results"][random_result]["comics"]["items"]),
+                )
+            else:
+                rand_trio = random.sample(
+                    range(0, len(data["results"][random_result]["comics"]["items"])), 3
+                )
+            # print(rand_trio)
+        comics_combined = ""
+        for i in rand_trio:
+            comics_combined = (
+                comics_combined
+                + "'"
+                + data["results"][random_result]["comics"]["items"][i]["name"]
+                + "'"
+                + ", "
+            )
 
         listdictinfo.append(
             {
@@ -232,6 +314,7 @@ def get_rand_h_or_c():
                 "date": modified,
                 "imageUrl": imagelink,
                 "info": data["results"][random_result]["description"],
+                "info2": comics_combined,
             }
         )
     else:  # comic
@@ -243,6 +326,35 @@ def get_rand_h_or_c():
             + "."
             + data["results"][random_result]["thumbnail"]["extension"]
         )
+        characters_top_limit = min(
+            len(data["results"][random_result]["characters"]["items"]), 3
+        )
+        rand_trio2 = []
+        if characters_top_limit > 0:
+            if characters_top_limit < 3:
+                rand_trio2 = random.sample(
+                    range(
+                        0, len(data["results"][random_result]["characters"]["items"])
+                    ),
+                    len(data["results"][random_result]["characters"]["items"]),
+                )
+            else:
+                rand_trio2 = random.sample(
+                    range(
+                        0, len(data["results"][random_result]["characters"]["items"])
+                    ),
+                    3,
+                )
+            # print(rand_trio)
+        characters_combined = ""
+        for i in rand_trio2:
+            characters_combined = (
+                characters_combined
+                + "'"
+                + data["results"][random_result]["characters"]["items"][i]["name"]
+                + "'"
+                + ", "
+            )
 
         listdictinfo.append(
             {
@@ -252,6 +364,7 @@ def get_rand_h_or_c():
                 "date": modified,
                 "imageUrl": imagelink,
                 "info": data["results"][random_result]["series"]["name"],
+                "info2": characters_combined,
             }
         )
     print(listdictinfo)

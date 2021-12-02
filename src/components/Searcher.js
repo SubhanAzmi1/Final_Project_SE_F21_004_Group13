@@ -18,6 +18,7 @@ function Searcher({ userIdS }) {
   const [releasedModifiedDates, setreleasedModifiedDates] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
   const [addtionalInfo, setAddtionalInfo] = useState([]);
+  const [addtionalInfo2, setAddtionalInfo2] = useState([]);
   const [ids, setIds] = useState([]);
   const [wereSearchResultsEmpty, setWereSearchResultsEmpty] = useState(false);
   const [heroRadioActive, setHeroActive] = useState(true);
@@ -109,6 +110,7 @@ function Searcher({ userIdS }) {
     setreleasedModifiedDates([]);
     setImageUrls([]);
     setAddtionalInfo([]);
+    setAddtionalInfo2([]);
     const textToSearch = textInput.current.value;
     // window.console.log(heroRadioActive);
     // window.console.log(textToSearch);
@@ -127,6 +129,7 @@ function Searcher({ userIdS }) {
           setreleasedModifiedDates(searchResult.modified_dates);
           setImageUrls(searchResult.image_urls);
           setAddtionalInfo(searchResult.descriptions);
+          setAddtionalInfo2(searchResult.comics);
           setIds(searchResult.ids);
           if (nameList.length === 0) {
             setWereSearchResultsEmpty(true);
@@ -148,6 +151,7 @@ function Searcher({ userIdS }) {
           setreleasedModifiedDates(searchResult.release_dates);
           setImageUrls(searchResult.image_urls);
           setAddtionalInfo(searchResult.series);
+          setAddtionalInfo2(searchResult.characters);
           setIds(searchResult.ids);
           if (nameList.length === 0) {
             setWereSearchResultsEmpty(true);
@@ -328,6 +332,7 @@ function Searcher({ userIdS }) {
               dates={releasedModifiedDates}
               images={imageUrls}
               extraInfos={addtionalInfo}
+              extraInfos2={addtionalInfo2}
               ids={ids}
               AddFav={searchResultAdd}
               fixResultsEmpty={setWereSearchResultsEmpty}

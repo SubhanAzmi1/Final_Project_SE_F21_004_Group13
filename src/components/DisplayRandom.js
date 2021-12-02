@@ -21,12 +21,12 @@ function DisplayRandom({
               {isHero ? (
                 <>
                   <th>Name</th>
-                  <th>ID</th>
+                  <th>Comics</th>
                 </>
               ) : (
                 <>
                   <th>Title</th>
-                  <th>ID</th>
+                  <th>Characters</th>
                 </>
               )}
             </tr>
@@ -34,7 +34,7 @@ function DisplayRandom({
           <tbody>
             <tr>
               <td>{objR.nameTitle}</td>
-              <td>{objR.id}</td>
+              <td>{objR.info2}</td>
             </tr>
           </tbody>
           <thead>

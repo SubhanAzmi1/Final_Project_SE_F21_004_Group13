@@ -8,7 +8,7 @@ import React from 'react';
 // iterate thorugh json: https://stackoverflow.com/questions/43241139/looping-through-table-data-react-js
 // html tables: https://www.w3schools.com/html/html_tables.asp
 function FormResult({
-  isHero, nameList, dates, images, extraInfos, ids, AddFav, fixResultsEmpty,
+  isHero, nameList, dates, images, extraInfos, ids, extraInfos2, AddFav, fixResultsEmpty,
 }) {
   function makeDataJs() {
     const dataJson = [];
@@ -19,6 +19,7 @@ function FormResult({
         date: dates[i],
         imageUrl: images[i],
         info: extraInfos[i],
+        info2: extraInfos2[i],
         id: ids[i],
       });
     }
@@ -52,7 +53,7 @@ function FormResult({
         {obj.info}
       </td>
       <td>
-        {obj.id}
+        {obj.info2}
       </td>
       <td>
         <button onClick={() => AddFav(isHero, obj.nameTitle, obj.date, obj.info, obj.id, obj.imageUrl)} type="button">
@@ -71,7 +72,7 @@ function FormResult({
               <th>Name</th>
               <th>Date_modified</th>
               <th>Description</th>
-              <th>ID</th>
+              <th>Comics</th>
               <th>Add to Favorites!</th>
             </tr>
           </thead>
@@ -87,7 +88,7 @@ function FormResult({
               <th>Title</th>
               <th>Date_published</th>
               <th>Series</th>
-              <th>ID</th>
+              <th>Characters</th>
               <th>Add to Favorites!</th>
             </tr>
           </thead>
@@ -107,6 +108,7 @@ FormResult.defaultProps = {
   dates: [],
   images: [],
   extraInfos: [],
+  extraInfos2: [],
   ids: [],
 };
 
@@ -118,6 +120,7 @@ FormResult.propTypes = {
   dates: Array,
   images: Array,
   extraInfos: Array,
+  extraInfos2: Array,
   ids: Array,
 };
 export default FormResult;
