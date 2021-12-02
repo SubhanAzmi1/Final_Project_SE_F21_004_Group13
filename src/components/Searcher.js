@@ -343,7 +343,7 @@ function Searcher({ userIdS }) {
         )}
         <div>
           <h2>
-            Enter a hero crossover here!
+            Enter a Character crossover here!
           </h2>
           <form>
             <input
