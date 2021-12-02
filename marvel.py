@@ -135,7 +135,59 @@ def get_comic_data(search_word, e_or_sw):
     return (titles, release_dates, image_urls, series, ids)
 
 def get_crossover_data(search_one, search_two, e_or_sw):
-    pass
+    """
+    Searches a comic where comics where two heros crossover are searched
+
+    Functionally, it is the same as the comic searcher, but here, it bases its search on two different heroes
+    """
+
+    ts = time.strftime("%Y%d%m%H%M%S")
+    hash = create_api_access_hash_string(ts)
+    PUB_KEY = os.getenv("MARVEL_PUB_KEY")
+    if e_or_sw == "exact":
+        search_parameter1 = "title"
+    else:  # starts_with
+        search_parameter1 = "titleStartsWith"
+
+    requesturl = f"https://gateway.marvel.com:443/v1/public/comics?characters={search_one}%2C{search_two}&apikey=&apikey={PUB_KEY}&limit=5&ts={ts}&hash={hash}"
+    print(requesturl)
+    response = requests.get(requesturl)
+
+    json_response = response.json()
+    # print(json_response)
+    titles = []
+    release_dates = []
+    image_urls = []
+    series = []
+    ids = []
+    try:
+        data = json_response["data"]
+        # title
+        # release date
+        # url
+        #
+
+        for comics in data["results"]:
+            titles.append(comics["title"])
+
+            unmodified = str(comics["dates"][0]["date"])
+            modified = unmodified.partition("T")[0]
+            release_dates.append(modified)
+
+            # urls.append(comics["urls"][0]["url"])
+            # this is for digital webpage
+
+            image_urls.append(
+                comics["thumbnail"]["path"] + "." + comics["thumbnail"]["extension"]
+            )
+
+            series.append(comics["series"]["name"])
+
+            ids.append(comics["id"])
+    except KeyError:
+        pass
+
+    return (titles, release_dates, image_urls, series, ids)
 
 def get_rand_h_or_c():
     """

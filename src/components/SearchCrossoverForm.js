@@ -36,13 +36,13 @@ function SearchCompareForm(props) {
     return (
       <div>
         <h2>
-          Enter a hero crossover here!
+          Enter a hero crossover here! (Note: both textboxes must be Hero IDs!)
         </h2>
         <form>
           <label htmlFor="hero1"/>
           <input
             type="text"
-            placeholder="Hero One's Name Here"
+            placeholder="Hero One's ID Here"
             ref={textInput1}
             maxLength="45"
             id="hero1"/>
@@ -51,7 +51,7 @@ function SearchCompareForm(props) {
           <label htmlFor="hero2"/>
           <input
             type="text"
-            placeholder="Hero Two's Name Here"
+            placeholder="Hero Two's ID Here"
             ref={textInput2}
             maxLength="45"
             id="hero2"
