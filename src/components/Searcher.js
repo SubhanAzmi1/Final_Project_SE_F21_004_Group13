@@ -180,13 +180,8 @@ function Searcher({ userIdS }) {
         setComicsCommonCO(crossSearchResult.comics_common);
         setStoriesCommonCO(crossSearchResult.stories_common);
         setEventsCommonCO(crossSearchResult.events_common);
-
-        if (crossSearchResult.names[0] === 'wd' || crossSearchResult.names[1] === 'wd') {
-          setWereSearchResultsEmpty2(true);
-          setCOsearchdone(1);
-        } else {
-          setCOsearchdone(1);
-        }
+        setWereSearchResultsEmpty2(crossSearchResult.nothing_in_common);
+        setCOsearchdone(1);
       });
   }
   function searchResultAdd(ishero, name, date, info, id2, imageLink) {
@@ -280,7 +275,7 @@ function Searcher({ userIdS }) {
       <colmid>
         <div>
           <h2>
-            Enter a hero or comic issue here!
+            Enter a character or comic name here!
           </h2>
           <form>
             <label htmlFor="hero">
@@ -292,7 +287,7 @@ function Searcher({ userIdS }) {
                 onChange={setHeroRadio}
                 checked={heroRadioActive}
               />
-              Hero
+              Character
             </label>
             <label htmlFor="comic">
               <input
@@ -310,7 +305,7 @@ function Searcher({ userIdS }) {
           <form>
             <input
               type="text"
-              placeholder="Hero or Comic Name Here"
+              placeholder="Character or Comic Name Here"
               ref={textInput}
               data-testid="text_input"
               maxLength="45"
@@ -348,14 +343,14 @@ function Searcher({ userIdS }) {
           <form>
             <input
               type="text"
-              placeholder="Hero One's Name Here"
+              placeholder="Character One's Name Here"
               ref={textInput1}
               maxLength="45"
               id="hero1"
             />
             <input
               type="text"
-              placeholder="Hero Two's Name Here"
+              placeholder="Character Two's Name Here"
               ref={textInput2}
               maxLength="45"
               id="hero2"
@@ -384,7 +379,7 @@ function Searcher({ userIdS }) {
           <DisplayComics listofDICKSc={comicsFE} DeleteFavC={deleteFavComic} />
         </div>
         <div>
-          Favorite Heroes
+          Favorite Characters
           <DisplayHeros listofDICKSh={herosFE} DeleteFavH={deleteFavHero} />
         </div>
         <div>

@@ -10,7 +10,7 @@ function DisplayRandom({
       <div>
         <img
           src={objR.imageUrl}
-          width={100} // to be determined
+          width={150} // to be determined
           alt="Comic/Character"
         />
       </div>
@@ -65,7 +65,7 @@ function DisplayRandom({
       {isHero ? (
         <>
           <div>
-            Random Hero
+            Random Character
           </div>
           {displayDataR}
         </>

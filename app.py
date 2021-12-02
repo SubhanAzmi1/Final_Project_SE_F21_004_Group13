@@ -409,6 +409,7 @@ def login_post():
 
     return flask.jsonify({"status": 401, "reason": "Username or Password Error"})
 
+
 @app.route("/login_google_authenticate", methods=["POST"])
 def login_google_authenticate():
     """
@@ -525,7 +526,9 @@ def marvelLookupCrossovers():
         stories_common,
         events_common,
     ) = get_common_data_heroes(hero_one, hero_two)
-
+    nothing_in_common = False
+    if len(comics_common) == 0 and len(stories_common) == 0 and len(events_common) == 0:
+        nothing_in_common = True
     print(names)
     print(image_urls)
     print(comics_common)
@@ -538,6 +541,7 @@ def marvelLookupCrossovers():
         "comics_common": comics_common,
         "stories_common": stories_common,
         "events_common": events_common,
+        "nothing_in_common": nothing_in_common,
     }
 
     return flask.jsonify(crossSearchResult)
@@ -628,11 +632,11 @@ def main():
 
 
 if __name__ == "__main__":
-    # app.run(
-    #     debug=True,
-    #     port=int(os.getenv("PORT", "8081")),
-    # )
     app.run(
-        host=os.getenv("IP", "0.0.0.0"),
+        debug=True,
         port=int(os.getenv("PORT", "8081")),
     )
+    # app.run(
+    #     host=os.getenv("IP", "0.0.0.0"),
+    #     port=int(os.getenv("PORT", "8081")),
+    # )
