@@ -64,7 +64,7 @@ function FormResult({
   return (
     <div>
       {isHero === true ? (
-        <table border="1" cellPadding="0.25" id="displayfavtable">
+        <table border="1" cellPadding="0.25" id="displayfavtable1">
           <thead>
             <tr>
               <th>Image</th>
@@ -80,7 +80,7 @@ function FormResult({
           </tbody>
         </table>
       ) : (
-        <table border="1" cellPadding="0.25" id="displayfavtable">
+        <table border="1" cellPadding="0.25" id="displayfavtable1">
           <thead>
             <tr>
               <th>Image</th>

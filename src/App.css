@@ -50,6 +50,9 @@ img {
 #displayfavtable {
   font-size: 8px;
 }
+#displayfavtable1 {
+  font-size: 12px;
+}
 #main {
   display: flex;
   min-height: calc(100vh - 40vh);
@@ -67,6 +70,24 @@ img {
 }
 header, footer, colmid, colrandom, colsaved {
   padding: 1em;
+}
+#left_hero {
+  float:left;
+  width: 50%;
+}
+#right_hero {
+  float:right;
+  width: 50%;
+}
+#crossover_super {
+  text-align: center;
+}
+#crossover_table_result {
+  text-align: center;
+}
+#common_in_table {
+  text-align: center;
+  float: middle;
 }
 header, footer {
   background: rgb(204 , 66, 36);

@@ -158,11 +158,10 @@ function Searcher({ userIdS }) {
   }
   function searchUpCrossOverResult() {
     setCOsearchdone(0);
+    setWereSearchResultsEmpty2(false);
     const textToSearch1 = textInput1.current.value;
     const textToSearch2 = textInput2.current.value;
 
-    textInput1.current.value = '';
-    textInput2.current.value = '';
     fetch('/marvelLookupCrossovers', {
       method: 'POST',
       headers: {
@@ -181,10 +180,13 @@ function Searcher({ userIdS }) {
         setComicsCommonCO(crossSearchResult.comics_common);
         setStoriesCommonCO(crossSearchResult.stories_common);
         setEventsCommonCO(crossSearchResult.events_common);
-        if (comicsCommonCO.length === 0 && storiesCommonCO === 0 && eventsCommonCO === 0) {
+
+        if (crossSearchResult.names[0] === 'wd' || crossSearchResult.names[1] === 'wd') {
           setWereSearchResultsEmpty2(true);
+          setCOsearchdone(1);
+        } else {
+          setCOsearchdone(1);
         }
-        setCOsearchdone(1);
       });
   }
   function searchResultAdd(ishero, name, date, info, id2, imageLink) {
@@ -351,8 +353,6 @@ function Searcher({ userIdS }) {
               maxLength="45"
               id="hero1"
             />
-          </form>
-          <form>
             <input
               type="text"
               placeholder="Hero Two's Name Here"
@@ -371,7 +371,7 @@ function Searcher({ userIdS }) {
               images2={imageUrlsCO}
               comicsCommon={comicsCommonCO}
               storiesCommon={storiesCommonCO}
-              eventsCommon={storiesCommonCO}
+              eventsCommon={eventsCommonCO}
             />
           </div>
         ) : (
