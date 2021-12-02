@@ -10,7 +10,6 @@ import React from 'react';
 //  https://stackoverflow.com/questions/16603884/align-2-images-one-to-right-other-to-left-inside-div
 // html tables: https://www.w3schools.com/html/html_tables.asp
 
-
 function FormResultHeroComparison({
   noResults, nameList2, images2, comicsCommon, storiesCommon, eventsCommon,
 }) {
@@ -85,7 +84,15 @@ function FormResultHeroComparison({
               </tr>
             </thead>
             <tbody>
-              {tableData}
+              <tr>
+                {comicsCommon}
+              </tr>
+              <tr>
+                {storiesCommon}
+              </tr>
+              <tr>
+                {eventsCommon}
+              </tr>
             </tbody>
           </table>
         </div>
@@ -96,19 +103,19 @@ function FormResultHeroComparison({
 FormResultHeroComparison.defaultProps = {
   noResults: true,
   nameList2: [],
-  comicsCommon: [],
+  comicsCommon: '',
   images2: [],
-  storiesCommon: [],
-  eventsCommon: [],
+  storiesCommon: '',
+  eventsCommon: '',
 };
 
 FormResultHeroComparison.propTypes = {
   noResults: Boolean,
   nameList2: Array,
-  comicsCommon: Array,
+  comicsCommon: String,
   images2: Array,
-  storiesCommon: Array,
-  eventsCommon: Array,
+  storiesCommon: String,
+  eventsCommon: String,
 };
 export default FormResultHeroComparison;
 

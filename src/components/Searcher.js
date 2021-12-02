@@ -25,9 +25,9 @@ function Searcher({ userIdS }) {
 
   const [namesCO, setNamesCO] = useState([]);
   const [imageUrlsCO, setImageUrlsCO] = useState([]);
-  const [comicsCommonCO, setComicsCommonCO] = useState([]);
-  const [storiesCommonCO, setStoriesCommonCO] = useState([]);
-  const [eventsCommonCO, setEventsCommonCO] = useState([]);
+  const [comicsCommonCO, setComicsCommonCO] = useState('');
+  const [storiesCommonCO, setStoriesCommonCO] = useState('');
+  const [eventsCommonCO, setEventsCommonCO] = useState('');
   const [wereSearchResultsEmpty2, setWereSearchResultsEmpty2] = useState(false);
   const [cOsearchdone, setCOsearchdone] = useState(0);
 
