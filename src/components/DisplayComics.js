@@ -53,7 +53,7 @@ function DisplayComics({
   ));
   return (
     <div>
-      <table border="1" cellPadding="0.25" id="displayfavtable">
+      <table cellPadding="0.25" id="displayfavtable">
         <thead>
           <tr>
             <th>Image</th>

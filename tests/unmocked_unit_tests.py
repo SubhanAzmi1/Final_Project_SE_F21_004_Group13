@@ -22,11 +22,11 @@ EXPECTED_OUTPUT = "EXPECTED_OUTPUT"
 
 class GetComicDataTests(unittest.TestCase):
     def test_get_comic_data_1(self):
-        self.assertEqual(get_comic_data("", "other"), ([], [], [], [], []))
+        self.assertEqual(get_comic_data("", "other"), ([], [], [], [], [], []))
 
     def test_get_comic_data_2(self):
         self.assertEqual(
-            get_comic_data("Iron Man (2020) #13", "exact"), ([], [], [], [], [])
+            get_comic_data("Iron Man (2020) #13", "exact"), ([], [], [], [], [], [])
         )
 
 
