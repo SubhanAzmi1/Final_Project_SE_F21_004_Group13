@@ -187,9 +187,9 @@ function Searcher({ userIdS }) {
     // window.console.log(newComics);
     setComicsFE(newComics);
   }
-  
   function deleteFavHero(id2h) {
     //  removing value from JSON
+
     // window.console.log(herosFE);
     let newHeros = herosFE.slice();
     newHeros = newHeros.filter((value) => value.heroId !== id2h);

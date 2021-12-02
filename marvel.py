@@ -206,6 +206,104 @@ def get_rand_h_or_c():
     return listdictinfo
 
 
+def get_common_data_heroes(charac_1, charac_2):
+
+    search_word_1 = charac_1
+    search_word_2 = charac_2
+    ts_1 = time.strftime("%Y%d%m%H%M%S")
+    hash_1 = create_api_access_hash_string(ts_1)
+    ts_2 = time.strftime("%Y%d%m%H%M%S")
+    hash_2 = create_api_access_hash_string(ts_2)
+    PUB_KEY = os.getenv("MARVEL_PUB_KEY")
+
+    search_parameter1 = "nameStartsWith"
+
+    requesturl_1 = f"https://gateway.marvel.com:443/v1/public/characters?{search_parameter1}={search_word_1}&apikey={PUB_KEY}&limit=2&ts={ts_1}&hash={hash_1}"
+    requesturl_2 = f"https://gateway.marvel.com:443/v1/public/characters?{search_parameter1}={search_word_2}&apikey={PUB_KEY}&limit=2&ts={ts_2}&hash={hash_2}"
+
+    # print(requesturl)
+    names = None
+    image_urls = None
+    comics_1, comics_2, comics_common = None, None, None
+    stories_1, stories_2, stories_common = None, None, None
+    events_1, events_2, events_common = None, None, None
+
+    try:
+        response_1 = requests.get(requesturl_1)
+        response_2 = requests.get(requesturl_2)
+        json_response_1 = response_1.json()
+        data_1 = json_response_1["data"]
+
+        json_response_2 = response_2.json()
+        data_2 = json_response_2["data"]
+
+        names = []
+        image_urls = []
+        comics_1, comics_2, comics_common = [], [], []
+        stories_1, stories_2, stories_common = [], [], []
+        events_1, events_2, events_common = [], [], []
+
+        if len(data_1["results"]) < 1:
+            names.append("Who dat")
+            # hulk thinking https://www.fightersgeneration.com/nx5/char/hulk-thinking.jpg
+            # angry hulk https://static1.srcdn.com/wordpress/wp-content/uploads/2020/06/comic-hulk-angry.jpg
+            # downloaded them to images folder
+            image_urls.append(
+                "wd"
+            )  # shortform for checking, will use images imported in react.
+        else:
+            # takes first result
+            names.append(data_1["results"][0]["name"])  # 0th position
+            # 0th position
+            image_urls.append(
+                data_1["results"][0]["thumbnail"]["path"]
+                + "."
+                + data_1["results"][0]["thumbnail"]["extension"]
+            )
+            for comic in data_1["results"][0]["comics"]["items"]:
+                comics_1.append(comic["name"])
+            for story in data_1["results"][0]["stories"]["items"]:
+                stories_1.append(story["name"])
+            for event in data_1["results"][0]["events"]["items"]:
+                events_1.append(event["name"])
+
+        if len(data_2["results"]) < 1:
+            names.append("Who dat")
+            image_urls.append(
+                "wd"
+            )  # shortform for checking, will use images imported in react.
+        else:
+            names.append(data_2["results"][0]["name"])  # 1st position
+            # 1st position
+            image_urls.append(
+                data_2["results"][0]["thumbnail"]["path"]
+                + "."
+                + data_2["results"][0]["thumbnail"]["extension"]
+            )
+            for comic in data_2["results"][0]["comics"]["items"]:
+                comics_2.append(comic["name"])
+            for story in data_2["results"][0]["stories"]["items"]:
+                stories_2.append(story["name"])
+            for event in data_2["results"][0]["events"]["items"]:
+                events_2.append(event["name"])
+
+        for comic in comics_1:
+            if comic in comics_2:
+                comics_common.append(comic)
+
+        for story in stories_1:
+            if story in stories_2:
+                stories_common.append(story)
+
+        for event in events_1:
+            if event in events_2:
+                events_common.append(event)
+
+    except KeyError:
+        pass
+    return (names, image_urls, comics_common, stories_common, events_common)
+
+
 # there are 4 different types of searches
 # heroes
 #   exact
