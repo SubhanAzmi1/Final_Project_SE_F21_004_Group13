@@ -243,7 +243,12 @@ def get_common_data_heroes(charac_1, charac_2):
 
         if len(data_1["results"]) < 1:
             names.append("Who dat")
-            image_urls.append("placehold_hulk_image.jpg")  # still need to find it.
+            # hulk thinking https://www.fightersgeneration.com/nx5/char/hulk-thinking.jpg
+            # angry hulk https://static1.srcdn.com/wordpress/wp-content/uploads/2020/06/comic-hulk-angry.jpg
+            # downloaded them to images folder
+            image_urls.append(
+                "wd"
+            )  # shortform for checking, will use images imported in react.
         else:
             # takes first result
             names.append(data_1["results"][0]["name"])  # 0th position
@@ -260,31 +265,33 @@ def get_common_data_heroes(charac_1, charac_2):
             for event in data_1["results"][0]["events"]["items"]:
                 events_1.append(event["name"])
 
-        names.append(data_2["results"][0]["name"])  # 1st position
-
-        # 1st position
-        image_urls.append(
-            data_2["results"][0]["thumbnail"]["path"]
-            + "."
-            + data_2["results"][0]["thumbnail"]["extension"]
-        )
-
-        for comic in data_2["results"][0]["comics"]["items"]:
-            comics_2.append(comic["name"])
+        if len(data_2["results"]) < 1:
+            names.append("Who dat")
+            image_urls.append(
+                "wd"
+            )  # shortform for checking, will use images imported in react.
+        else:
+            names.append(data_2["results"][0]["name"])  # 1st position
+            # 1st position
+            image_urls.append(
+                data_2["results"][0]["thumbnail"]["path"]
+                + "."
+                + data_2["results"][0]["thumbnail"]["extension"]
+            )
+            for comic in data_2["results"][0]["comics"]["items"]:
+                comics_2.append(comic["name"])
+            for story in data_2["results"][0]["stories"]["items"]:
+                stories_2.append(story["name"])
+            for event in data_2["results"][0]["events"]["items"]:
+                events_2.append(event["name"])
 
         for comic in comics_1:
             if comic in comics_2:
                 comics_common.append(comic)
 
-        for story in data_2["results"][0]["stories"]["items"]:
-            stories_2.append(story["name"])
-
         for story in stories_1:
             if story in stories_2:
                 stories_common.append(story)
-
-        for event in data_2["results"][0]["events"]["items"]:
-            events_2.append(event["name"])
 
         for event in events_1:
             if event in events_2:
