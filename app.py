@@ -409,30 +409,6 @@ def login_post():
 
     return flask.jsonify({"status": 401, "reason": "Username or Password Error"})
 
-
-@app.route("/save", methods=["POST"])
-def save():
-    """
-    Receives JSON data from App.js, filters out invalid artist IDs, and
-    updates the DB to contain all valid ones and nothing else.
-    """
-    artist_ids = flask.request.json.get("artist_ids")
-    valid_ids = set()
-    for artist_id in artist_ids:
-        try:
-            access_token = get_access_token()
-            get_song_data(artist_id, access_token)
-            valid_ids.add(artist_id)
-        except KeyError:
-            pass
-
-    username = current_user.username
-    update_db_ids_for_user(username, valid_ids)
-
-    response = {"artist_ids": [a for a in artist_ids if a in valid_ids]}
-    return flask.jsonify(response)
-
-
 @app.route("/login_google_authenticate", methods=["POST"])
 def login_google_authenticate():
     """
