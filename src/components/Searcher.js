@@ -8,6 +8,7 @@ import React, { useState, useRef } from 'react';
 //  add object to array: https://www.freecodecamp.org/news/a-complete-guide-to-creating-objects-in-javascript-b0e2450655e8/
 //  delete object from array via filter: https://www.delftstack.com/howto/javascript/javascript-remove-object-from-array/
 import FormResult from './FormResult';
+import FormResultHeroComparison from './FormResultHeroComparison';
 import DisplayComics from './DisplayComics';
 import DisplayHeros from './DisplayHeros';
 import DisplayRandom from './DisplayRandom';
@@ -21,12 +22,25 @@ function Searcher({ userIdS }) {
   const [wereSearchResultsEmpty, setWereSearchResultsEmpty] = useState(false);
   const [heroRadioActive, setHeroActive] = useState(true);
   const [comicRadioActive, setComicActive] = useState(false);
+
+  const [namesCO, setNamesCO] = useState([]);
+  const [imageUrlsCO, setImageUrlsCO] = useState([]);
+  const [comicsCommonCO, setComicsCommonCO] = useState('');
+  const [storiesCommonCO, setStoriesCommonCO] = useState('');
+  const [eventsCommonCO, setEventsCommonCO] = useState('');
+  const [wereSearchResultsEmpty2, setWereSearchResultsEmpty2] = useState(false);
+  const [cOsearchdone, setCOsearchdone] = useState(0);
+
   const textInput = useRef(null);
+  const textInput1 = useRef(null);
+  const textInput2 = useRef(null);
+
   const [herosFE, setHerosFE] = useState([]);
   const [comicsFE, setComicsFE] = useState([]);
   const [randThing, setRandThing] = useState([]);
   const [getcounter, setGetCounter] = useState(0);
   const [isRandHero, setisRandHero] = useState(false);
+
   function getUserComics() {
     fetch('/get_User_Comics', {
       method: 'POST',
@@ -141,6 +155,39 @@ function Searcher({ userIdS }) {
           textInput.current.value = '';
         });
     }
+  }
+  function searchUpCrossOverResult() {
+    setCOsearchdone(0);
+    setWereSearchResultsEmpty2(false);
+    const textToSearch1 = textInput1.current.value;
+    const textToSearch2 = textInput2.current.value;
+
+    fetch('/marvelLookupCrossovers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        heroOne: textToSearch1,
+        heroTwo: textToSearch2,
+      }),
+    })
+      .then((response) => response.json())
+      .then((crossSearchResult) => {
+      // SEND OVER TO DISPLAY CROSSOVERS
+        setNamesCO(crossSearchResult.names);
+        setImageUrlsCO(crossSearchResult.image_urls);
+        setComicsCommonCO(crossSearchResult.comics_common);
+        setStoriesCommonCO(crossSearchResult.stories_common);
+        setEventsCommonCO(crossSearchResult.events_common);
+
+        if (crossSearchResult.names[0] === 'wd' || crossSearchResult.names[1] === 'wd') {
+          setWereSearchResultsEmpty2(true);
+          setCOsearchdone(1);
+        } else {
+          setCOsearchdone(1);
+        }
+      });
   }
   function searchResultAdd(ishero, name, date, info, id2, imageLink) {
     //  appending JSON
@@ -289,6 +336,42 @@ function Searcher({ userIdS }) {
               ids={ids}
               AddFav={searchResultAdd}
               fixResultsEmpty={setWereSearchResultsEmpty}
+            />
+          </div>
+        ) : (
+          <div />
+        )}
+        <div>
+          <h2>
+            Enter a hero crossover here!
+          </h2>
+          <form>
+            <input
+              type="text"
+              placeholder="Hero One's Name Here"
+              ref={textInput1}
+              maxLength="45"
+              id="hero1"
+            />
+            <input
+              type="text"
+              placeholder="Hero Two's Name Here"
+              ref={textInput2}
+              maxLength="45"
+              id="hero2"
+            />
+          </form>
+          <button onClick={searchUpCrossOverResult} type="button">Starts-with search</button>
+        </div>
+        {cOsearchdone !== 0 ? (
+          <div>
+            <FormResultHeroComparison
+              noResults={wereSearchResultsEmpty2}
+              nameList2={namesCO}
+              images2={imageUrlsCO}
+              comicsCommon={comicsCommonCO}
+              storiesCommon={storiesCommonCO}
+              eventsCommon={eventsCommonCO}
             />
           </div>
         ) : (

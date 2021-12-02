@@ -9,7 +9,7 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 test_text = "Kitty Pryde"
-test_text_2 = "zor"
+test_text_2 = "iron man"
 exact = "exact"
 starts = "other"
 

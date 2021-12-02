@@ -291,12 +291,14 @@ def get_common_data_heroes(charac_1, charac_2):
 
         names = []
         image_urls = []
-        comics_1, comics_2, comics_common = [], [], []
-        stories_1, stories_2, stories_common = [], [], []
-        events_1, events_2, events_common = [], [], []
+        comics_1, comics_2, comics_common = [], [], ""
+        stories_1, stories_2, stories_common = [], [], ""
+        events_1, events_2, events_common = [], [], ""
 
         if len(data_1["results"]) < 1:
-            names.append("Who dat")
+            names.append(
+                "wd"
+            )  # shortform for checking, will use images imported in react.
             # hulk thinking https://www.fightersgeneration.com/nx5/char/hulk-thinking.jpg
             # angry hulk https://static1.srcdn.com/wordpress/wp-content/uploads/2020/06/comic-hulk-angry.jpg
             # downloaded them to images folder
@@ -320,7 +322,9 @@ def get_common_data_heroes(charac_1, charac_2):
                 events_1.append(event["name"])
 
         if len(data_2["results"]) < 1:
-            names.append("Who dat")
+            names.append(
+                "wd"
+            )  # shortform for checking, will use images imported in react.
             image_urls.append(
                 "wd"
             )  # shortform for checking, will use images imported in react.
@@ -341,15 +345,17 @@ def get_common_data_heroes(charac_1, charac_2):
 
         for comic in comics_1:
             if comic in comics_2:
-                comics_common.append(comic)
+                # comics_common.append(comic)
+                # comics_common is a now a string.
+                comics_common = comics_common + "'" + comic + "'" + ", "
 
         for story in stories_1:
             if story in stories_2:
-                stories_common.append(story)
+                stories_common = stories_common + "'" + story + "'" + ", "
 
         for event in events_1:
             if event in events_2:
-                events_common.append(event)
+                events_common = events_common + "'" + event + "'" + ", "
 
     except KeyError:
         pass

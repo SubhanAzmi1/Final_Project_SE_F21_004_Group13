@@ -1,18 +1,18 @@
 // This component is for putting in form data for crossover search
 
 function SearchCompareForm(props) {
-    // State and function for text
-    const textInput1 = useRef(null);
-    const textInput2 = useRef(null);
-    
-    function doCrossoverSearch() {
-      const textToSearch1 = textInput1.current.value;
-      props.setHeroOne(textToSearch1);
-      
-      const textToSearch2 = textInput2.current.value;
-      props.setHeroTwo(textToSearch2);
-      
-      props.onClick();
+  // State and function for text
+  const textInput1 = useRef(null);
+  const textInput2 = useRef(null);
+
+  function doCrossoverSearch() {
+    const textToSearch1 = textInput1.current.value;
+    props.setHeroOne(textToSearch1);
+
+    const textToSearch2 = textInput2.current.value;
+    props.setHeroTwo(textToSearch2);
+
+    props.onClick();
       
       textInput1.current.value = '';
       textInput2.current.value = '';

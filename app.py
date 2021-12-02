@@ -22,7 +22,14 @@ from flask_login import (
 )
 from flask_sqlalchemy import SQLAlchemy
 
-from marvel import get_charac_data, get_comic_data, get_crossover_data, get_rand_h_or_c
+from genius import get_lyrics_link
+from spotify import get_access_token, get_song_data
+from marvel import (
+    get_charac_data,
+    get_comic_data,
+    get_rand_h_or_c,
+    get_common_data_heroes,
+)
 
 load_dotenv(find_dotenv())
 
@@ -116,6 +123,7 @@ class Comic(db.Model):
 
     def __repr__(self):
         return "<Hero %r>" % self.comic_id
+
 
 class HeroVote(db.Model):
     """
@@ -497,41 +505,49 @@ def marvelLookupComic():
     # print(ids)
     return flask.jsonify(searchResult)
 
-#ROUTE FOR CROSSOVE SEARCH
+
+# ROUTE FOR CROSSOVE SEARCH
+
 
 @app.route("/marvelLookupCrossovers", methods=["POST"])
-def crossoverLookup():
+def marvelLookupCrossovers():
     """
     Searching hero crossovers
     """
+    hero_one = flask.request.json.get("heroOne")
+    hero_two = flask.request.json.get("heroTwo")
 
-    hero_one = flask.request.get_json()["heroOne"]
+    # SEARCH THROUGH THE MARVEL API BOTH HEROES
+    (
+        names,
+        image_urls,
+        comics_common,
+        stories_common,
+        events_common,
+    ) = get_common_data_heroes(hero_one, hero_two)
 
-    hero_two = flask.request.get_json()["heroTwo"]
+    print(names)
+    print(image_urls)
+    print(comics_common)
+    print(stories_common)
+    print(events_common)
 
-    #SEARCH THROUGH THE MARVEL API BOTH HEROES
-    starts = "other"
-
-    names, modified_dates, image_urls, descriptions, ids = get_crossover_data(
-        hero_one, hero_two, starts
-    )
-
-    searchResult = {
+    crossSearchResult = {
         "names": names,
-        "modified_dates": modified_dates,
         "image_urls": image_urls,
-        "descriptions": descriptions,
-        "ids": ids,
+        "comics_common": comics_common,
+        "stories_common": stories_common,
+        "events_common": events_common,
     }
 
-    return flask.jsonify({"results" : searchResult})
-
+    return flask.jsonify(crossSearchResult)
 
 
 # FUNCTIONS FOR VOTING FOR HEROES
 
+
 @app.route("/voteUpHero", methods=["POST"])
-def voteUp():
+def voteUpHero():
     """
     For voting up a hero
     """
@@ -541,15 +557,15 @@ def voteUp():
     # SEARCH UP IF ID EXISTS
     hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
 
-    if (hero_poll_search is not None):
+    if hero_poll_search is not None:
         hero_poll_search.vote_count = hero_poll_search.vote_count + 1
         db.session.commit()
 
-    return flask.jsonify({"result" : "success"})
+    return flask.jsonify({"result": "success"})
 
 
 @app.route("/voteDownHero", methods=["POST"])
-def voteUp():
+def voteDownHero():
     """
     Searching hero crossovers
     """
@@ -559,19 +575,18 @@ def voteUp():
     # SEARCH UP IF ID EXISTS
     hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
 
-    if (hero_poll_search is not None):
+    if hero_poll_search is not None:
         hero_poll_search.vote_count = hero_poll_search.vote_count - 1
 
         # CHECK IF 0 OR BELOW
 
-        if (hero_poll_search.vote_count < 1):
-            #REMOVE FROM DATABASE
+        if hero_poll_search.vote_count < 1:
+            # REMOVE FROM DATABASE
             HeroVote.remove(hero_poll_search)
 
         db.session.commit()
 
-    return flask.jsonify({"result" : "success"})
-
+    return flask.jsonify({"result": "success"})
 
 
 @app.route("/get_Random_Hero_or_Comic", methods=["POST"])
