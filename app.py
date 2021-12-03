@@ -587,7 +587,9 @@ def voteUpHero():
         hero_poll_search.vote_count = hero_poll_search.vote_count + 1
         db.session.commit()
 
-    return flask.jsonify({"result": "success"})
+    hero_poll_filter = HeroVote.query.filter(vote_count > 0)
+    
+    return flask.jsonify({"result": hero_poll_filter})
 
 
 @app.route("/voteDownHero", methods=["POST"])
@@ -604,15 +606,9 @@ def voteDownHero():
     if hero_poll_search is not None:
         hero_poll_search.vote_count = hero_poll_search.vote_count - 1
 
-        # CHECK IF 0 OR BELOW
-
-        if hero_poll_search.vote_count < 1:
-            # REMOVE FROM DATABASE
-            HeroVote.remove(hero_poll_search)
-
-        db.session.commit()
-
-    return flask.jsonify({"result": "success"})
+    hero_poll_filter = HeroVote.query.filter(vote_count > 0)
+    
+    return flask.jsonify({"result": hero_poll_filter})
 
 
 @app.route("/get_Random_Hero_or_Comic", methods=["POST"])
