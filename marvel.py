@@ -267,104 +267,128 @@ def get_rand_h_or_c():
 
     print(requesturl)
     response = requests.get(requesturl)
+    listdictinfo = []
 
     json_response = response.json()
-    data = json_response["data"]
-    top_result_limit = len(data["results"])
-    random_result = random.randint(0, (top_result_limit - 1))
-    listdictinfo = []
-    if chooseit == "characters?":
-        unmodified = str(data["results"][random_result]["modified"])
-        modified = unmodified.partition("T")[0]
-        imagelink = (
-            data["results"][random_result]["thumbnail"]["path"]
-            + "."
-            + data["results"][random_result]["thumbnail"]["extension"]
-        )
-        comics_top_limit = min(
-            len(data["results"][random_result]["comics"]["items"]), 3
-        )
-        rand_trio = []
-        if comics_top_limit > 0:
-            if comics_top_limit < 3:
-                rand_trio = random.sample(
-                    range(0, len(data["results"][random_result]["comics"]["items"])),
-                    len(data["results"][random_result]["comics"]["items"]),
-                )
-            else:
-                rand_trio = random.sample(
-                    range(0, len(data["results"][random_result]["comics"]["items"])), 3
-                )
-            # print(rand_trio)
-        comics_combined = ""
-        for i in rand_trio:
-            comics_combined = (
-                comics_combined
-                + "'"
-                + data["results"][random_result]["comics"]["items"][i]["name"]
-                + "'"
-                + ", "
+    try:
+        data = json_response["data"]
+        top_result_limit = len(data["results"])
+        random_result = random.randint(0, (top_result_limit - 1))
+
+        if chooseit == "characters?":
+            unmodified = str(data["results"][random_result]["modified"])
+            modified = unmodified.partition("T")[0]
+            imagelink = (
+                data["results"][random_result]["thumbnail"]["path"]
+                + "."
+                + data["results"][random_result]["thumbnail"]["extension"]
             )
-
-        listdictinfo.append(
-            {
-                "hero": True,
-                "id": data["results"][random_result]["id"],
-                "nameTitle": data["results"][random_result]["name"],
-                "date": modified,
-                "imageUrl": imagelink,
-                "info": data["results"][random_result]["description"],
-                "info2": comics_combined,
-            }
-        )
-    else:  # comic
-        unmodified = str(data["results"][random_result]["dates"][0]["date"])
-        modified = unmodified.partition("T")[0]
-
-        imagelink = (
-            data["results"][random_result]["thumbnail"]["path"]
-            + "."
-            + data["results"][random_result]["thumbnail"]["extension"]
-        )
-        characters_top_limit = min(
-            len(data["results"][random_result]["characters"]["items"]), 3
-        )
-        rand_trio2 = []
-        if characters_top_limit > 0:
-            if characters_top_limit < 3:
-                rand_trio2 = random.sample(
-                    range(
-                        0, len(data["results"][random_result]["characters"]["items"])
-                    ),
-                    len(data["results"][random_result]["characters"]["items"]),
-                )
-            else:
-                rand_trio2 = random.sample(
-                    range(
-                        0, len(data["results"][random_result]["characters"]["items"])
-                    ),
-                    3,
-                )
-            # print(rand_trio)
-        characters_combined = ""
-        for i in rand_trio2:
-            characters_combined = (
-                characters_combined
-                + "'"
-                + data["results"][random_result]["characters"]["items"][i]["name"]
-                + "'"
-                + ", "
+            comics_top_limit = min(
+                len(data["results"][random_result]["comics"]["items"]), 3
             )
+            rand_trio = []
+            if comics_top_limit > 0:
+                if comics_top_limit < 3:
+                    rand_trio = random.sample(
+                        range(
+                            0, len(data["results"][random_result]["comics"]["items"])
+                        ),
+                        len(data["results"][random_result]["comics"]["items"]),
+                    )
+                else:
+                    rand_trio = random.sample(
+                        range(
+                            0, len(data["results"][random_result]["comics"]["items"])
+                        ),
+                        3,
+                    )
+                # print(rand_trio)
+            comics_combined = ""
+            for i in rand_trio:
+                comics_combined = (
+                    comics_combined
+                    + "'"
+                    + data["results"][random_result]["comics"]["items"][i]["name"]
+                    + "'"
+                    + ", "
+                )
 
+            listdictinfo.append(
+                {
+                    "hero": True,
+                    "id": data["results"][random_result]["id"],
+                    "nameTitle": data["results"][random_result]["name"],
+                    "date": modified,
+                    "imageUrl": imagelink,
+                    "info": data["results"][random_result]["description"],
+                    "info2": comics_combined,
+                    "marvelError": False,
+                }
+            )
+        else:  # comic
+            unmodified = str(data["results"][random_result]["dates"][0]["date"])
+            modified = unmodified.partition("T")[0]
+
+            imagelink = (
+                data["results"][random_result]["thumbnail"]["path"]
+                + "."
+                + data["results"][random_result]["thumbnail"]["extension"]
+            )
+            characters_top_limit = min(
+                len(data["results"][random_result]["characters"]["items"]), 3
+            )
+            rand_trio2 = []
+            if characters_top_limit > 0:
+                if characters_top_limit < 3:
+                    rand_trio2 = random.sample(
+                        range(
+                            0,
+                            len(data["results"][random_result]["characters"]["items"]),
+                        ),
+                        len(data["results"][random_result]["characters"]["items"]),
+                    )
+                else:
+                    rand_trio2 = random.sample(
+                        range(
+                            0,
+                            len(data["results"][random_result]["characters"]["items"]),
+                        ),
+                        3,
+                    )
+                # print(rand_trio)
+            characters_combined = ""
+            for i in rand_trio2:
+                characters_combined = (
+                    characters_combined
+                    + "'"
+                    + data["results"][random_result]["characters"]["items"][i]["name"]
+                    + "'"
+                    + ", "
+                )
+
+            listdictinfo.append(
+                {
+                    "hero": False,
+                    "id": data["results"][random_result]["id"],
+                    "nameTitle": data["results"][random_result]["title"],
+                    "date": modified,
+                    "imageUrl": imagelink,
+                    "info": data["results"][random_result]["series"]["name"],
+                    "info2": characters_combined,
+                    "marvelError": False,
+                }
+            )
+    except KeyError:
         listdictinfo.append(
             {
                 "hero": False,
-                "id": data["results"][random_result]["id"],
-                "nameTitle": data["results"][random_result]["title"],
-                "date": modified,
-                "imageUrl": imagelink,
-                "info": data["results"][random_result]["series"]["name"],
-                "info2": characters_combined,
+                "id": "",
+                "nameTitle": "Marvel Api Response Error",
+                "date": "modified",
+                "imageUrl": "imagelink",
+                "info": "info",
+                "info2": "info2",
+                "marvelError": True,
             }
         )
     print(listdictinfo)
