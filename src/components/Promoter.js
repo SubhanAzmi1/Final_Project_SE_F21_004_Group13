@@ -1,3 +1,5 @@
+// WOULD MOVE FUNCTIONS UP, BUT ALREADY DID 
+
 function Promoter(props) {
     function VoteUp() {
     fetch('/voteUpHero', {
@@ -9,8 +11,7 @@ function Promoter(props) {
         })
             .then((response) => response.json())
             .then((searchResult) => {
-            // DONT HAVE TO DO ANYTHING HERE, SHOULD UPDATE IN DATABASE
-            console.log(searchResult);
+            // UPDATE RESULTS TO FRONT END
         });
     }
 
@@ -24,8 +25,7 @@ function Promoter(props) {
         })
             .then((response) => response.json())
             .then((searchResult) => {
-            // DONT HAVE TO DO ANYTHING HERE, SHOULD UPDATE IN DATABASE
-            console.log(searchResult);
+            // UPDATE RESULTS TO FRONT END
         });
     }
 
