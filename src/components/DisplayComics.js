@@ -54,6 +54,7 @@ function DisplayComics({
           onClick={() => {
             let s = 'http://www.google.com/search?tbm=shop&q=';
             s += objC.comicName;
+            s = s.replace('#', '%23');
             window.open(s);
           }}
           type="button"
