@@ -261,7 +261,8 @@ def get_rand_h_or_c():
     else:  # comic
         search_parameter1 = "titleStartsWith"
 
-    search_word = random.choice(string.ascii_letters)
+    search_word = random.choice(string.ascii_lowercase)
+    print(search_word)
 
     requesturl = f"https://gateway.marvel.com:443/v1/public/{chooseit}{search_parameter1}={search_word}&apikey={PUB_KEY}&limit=20&ts={ts}&hash={hash}"
 
@@ -269,6 +270,7 @@ def get_rand_h_or_c():
     response = requests.get(requesturl)
 
     json_response = response.json()
+    print(json_response)
     data = json_response["data"]
     top_result_limit = len(data["results"])
     random_result = random.randint(0, (top_result_limit - 1))
