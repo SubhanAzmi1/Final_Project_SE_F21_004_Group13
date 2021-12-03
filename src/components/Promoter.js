@@ -1,11 +1,11 @@
-function Voter() {
-    function VoteUp(hero_id) {
+function Promoter(props) {
+    function VoteUp() {
     fetch('/voteUpHero', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ heroToSearch: hero_id}),
+        body: JSON.stringify({ heroId: props.heroId}),
         })
             .then((response) => response.json())
             .then((searchResult) => {
@@ -14,13 +14,13 @@ function Voter() {
         });
     }
 
-    function VoteDown(hero_id) {
+    function VoteDown() {
         fetch('/voteDownHero', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ heroToSearch: hero_id}),
+            body: JSON.stringify({ heroId: props.heroId}),
         })
             .then((response) => response.json())
             .then((searchResult) => {
@@ -31,8 +31,17 @@ function Voter() {
 
     return (
         <div>
-
+            <button onClick = {VoteUp()}>Promote Up</button>
+            <button onClick = {VoteDown()}>Promote Down</button>
         </div>
     );
 }
-export default Voter;
+Promoter.defaultProps = {
+  heroId: '',
+};
+
+Promoter.propTypes = {
+  heroId: String
+};
+
+export default Promoter;
