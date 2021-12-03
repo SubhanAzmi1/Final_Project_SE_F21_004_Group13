@@ -10,7 +10,7 @@ import React from 'react';
 
 // it is suppossed to be listofdic_T_s
 function DisplayHeros({
-  listofDICKSh, DeleteFavH, AddPromoteH
+  listofDICKSh, DeleteFavH, AddPromoteH,
 }) {
   // function addForm() {
   //   onClick(nameList[0], '1');
@@ -49,7 +49,7 @@ function DisplayHeros({
           Delete
         </button>
       </td>
-       <td>
+      <td>
         <button onClick={() => AddPromoteH(objH.heroId, objH.heroImageLink, objH.heroName)} type="button">
           Add to Promote
         </button>
