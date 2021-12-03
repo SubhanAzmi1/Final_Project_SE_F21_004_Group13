@@ -8,6 +8,7 @@ import React, { useState, useRef } from 'react';
 //  add object to array: https://www.freecodecamp.org/news/a-complete-guide-to-creating-objects-in-javascript-b0e2450655e8/
 //  delete object from array via filter: https://www.delftstack.com/howto/javascript/javascript-remove-object-from-array/
 import FormResult from './FormResult';
+import FormResultHeroComparison from './FormResultHeroComparison';
 import DisplayComics from './DisplayComics';
 import DisplayHeros from './DisplayHeros';
 import DisplayRandom from './DisplayRandom';
@@ -17,16 +18,30 @@ function Searcher({ userIdS }) {
   const [releasedModifiedDates, setreleasedModifiedDates] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
   const [addtionalInfo, setAddtionalInfo] = useState([]);
+  const [addtionalInfo2, setAddtionalInfo2] = useState([]);
   const [ids, setIds] = useState([]);
   const [wereSearchResultsEmpty, setWereSearchResultsEmpty] = useState(false);
   const [heroRadioActive, setHeroActive] = useState(true);
   const [comicRadioActive, setComicActive] = useState(false);
+
+  const [namesCO, setNamesCO] = useState([]);
+  const [imageUrlsCO, setImageUrlsCO] = useState([]);
+  const [comicsCommonCO, setComicsCommonCO] = useState('');
+  const [storiesCommonCO, setStoriesCommonCO] = useState('');
+  const [eventsCommonCO, setEventsCommonCO] = useState('');
+  const [wereSearchResultsEmpty2, setWereSearchResultsEmpty2] = useState(false);
+  const [cOsearchdone, setCOsearchdone] = useState(0);
+
   const textInput = useRef(null);
+  const textInput1 = useRef(null);
+  const textInput2 = useRef(null);
+
   const [herosFE, setHerosFE] = useState([]);
   const [comicsFE, setComicsFE] = useState([]);
   const [randThing, setRandThing] = useState([]);
   const [getcounter, setGetCounter] = useState(0);
   const [isRandHero, setisRandHero] = useState(false);
+
   function getUserComics() {
     fetch('/get_User_Comics', {
       method: 'POST',
@@ -95,6 +110,7 @@ function Searcher({ userIdS }) {
     setreleasedModifiedDates([]);
     setImageUrls([]);
     setAddtionalInfo([]);
+    setAddtionalInfo2([]);
     const textToSearch = textInput.current.value;
     // window.console.log(heroRadioActive);
     // window.console.log(textToSearch);
@@ -113,6 +129,7 @@ function Searcher({ userIdS }) {
           setreleasedModifiedDates(searchResult.modified_dates);
           setImageUrls(searchResult.image_urls);
           setAddtionalInfo(searchResult.descriptions);
+          setAddtionalInfo2(searchResult.comics);
           setIds(searchResult.ids);
           if (nameList.length === 0) {
             setWereSearchResultsEmpty(true);
@@ -134,6 +151,7 @@ function Searcher({ userIdS }) {
           setreleasedModifiedDates(searchResult.release_dates);
           setImageUrls(searchResult.image_urls);
           setAddtionalInfo(searchResult.series);
+          setAddtionalInfo2(searchResult.characters);
           setIds(searchResult.ids);
           if (nameList.length === 0) {
             setWereSearchResultsEmpty(true);
@@ -141,6 +159,34 @@ function Searcher({ userIdS }) {
           textInput.current.value = '';
         });
     }
+  }
+  function searchUpCrossOverResult() {
+    setCOsearchdone(0);
+    setWereSearchResultsEmpty2(false);
+    const textToSearch1 = textInput1.current.value;
+    const textToSearch2 = textInput2.current.value;
+
+    fetch('/marvelLookupCrossovers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        heroOne: textToSearch1,
+        heroTwo: textToSearch2,
+      }),
+    })
+      .then((response) => response.json())
+      .then((crossSearchResult) => {
+      // SEND OVER TO DISPLAY CROSSOVERS
+        setNamesCO(crossSearchResult.names);
+        setImageUrlsCO(crossSearchResult.image_urls);
+        setComicsCommonCO(crossSearchResult.comics_common);
+        setStoriesCommonCO(crossSearchResult.stories_common);
+        setEventsCommonCO(crossSearchResult.events_common);
+        setWereSearchResultsEmpty2(crossSearchResult.nothing_in_common);
+        setCOsearchdone(1);
+      });
   }
   function searchResultAdd(ishero, name, date, info, id2, imageLink) {
     //  appending JSON
@@ -233,7 +279,7 @@ function Searcher({ userIdS }) {
       <colmid>
         <div>
           <h2>
-            Enter a hero or comic issue here!
+            Enter a character or comic name here!
           </h2>
           <form>
             <label htmlFor="hero">
@@ -245,7 +291,7 @@ function Searcher({ userIdS }) {
                 onChange={setHeroRadio}
                 checked={heroRadioActive}
               />
-              Hero
+              Character
             </label>
             <label htmlFor="comic">
               <input
@@ -263,13 +309,13 @@ function Searcher({ userIdS }) {
           <form>
             <input
               type="text"
-              placeholder="Hero or Comic Name Here"
+              placeholder="Character or Comic Name Here"
               ref={textInput}
               data-testid="text_input"
               maxLength="45"
             />
           </form>
-          <button onClick={searchUpResult} type="button">Starts-with search</button>
+          <button onClick={searchUpResult} type="button" data-testid="sw_search_button">Starts-with search</button>
         </div>
         {wereSearchResultsEmpty ? (
           <div>
@@ -286,9 +332,46 @@ function Searcher({ userIdS }) {
               dates={releasedModifiedDates}
               images={imageUrls}
               extraInfos={addtionalInfo}
+              extraInfos2={addtionalInfo2}
               ids={ids}
               AddFav={searchResultAdd}
               fixResultsEmpty={setWereSearchResultsEmpty}
+            />
+          </div>
+        ) : (
+          <div />
+        )}
+        <div>
+          <h2>
+            Enter a Character crossover here!
+          </h2>
+          <form>
+            <input
+              type="text"
+              placeholder="Character One's Name Here"
+              ref={textInput1}
+              maxLength="45"
+              id="hero1"
+            />
+            <input
+              type="text"
+              placeholder="Character Two's Name Here"
+              ref={textInput2}
+              maxLength="45"
+              id="hero2"
+            />
+          </form>
+          <button onClick={searchUpCrossOverResult} type="button">Starts-with search</button>
+        </div>
+        {cOsearchdone !== 0 ? (
+          <div>
+            <FormResultHeroComparison
+              noResults={wereSearchResultsEmpty2}
+              nameList2={namesCO}
+              images2={imageUrlsCO}
+              comicsCommon={comicsCommonCO}
+              storiesCommon={storiesCommonCO}
+              eventsCommon={eventsCommonCO}
             />
           </div>
         ) : (
@@ -301,7 +384,7 @@ function Searcher({ userIdS }) {
           <DisplayComics listofDICKSc={comicsFE} DeleteFavC={deleteFavComic} />
         </div>
         <div>
-          Favorite Heroes
+          Favorite Characters
           <DisplayHeros listofDICKSh={herosFE} DeleteFavH={deleteFavHero} />
         </div>
         <div>
