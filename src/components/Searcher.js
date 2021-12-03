@@ -233,6 +233,7 @@ function Searcher({ userIdS }) {
     // window.console.log(newComics);
     setComicsFE(newComics);
   }
+  
   function deleteFavHero(id2h) {
     //  removing value from JSON
 
@@ -241,6 +242,24 @@ function Searcher({ userIdS }) {
     newHeros = newHeros.filter((value) => value.heroId !== id2h);
     // window.console.log(newHeros);
     setHerosFE(newHeros);
+  }
+  function promoteHero(heroId, heroImage, heroName) {
+    fetch('/addHeroToVote', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        heroId: heroId,
+        heroImage: heroImage,
+        heroName: heroName
+      }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        window.console.log('Promoted heroes have been updated!');
+      //DO SOMETHING TO UPDATE PROMOTED HEROES
+    });
   }
 
   function saveResults() {
@@ -385,7 +404,7 @@ function Searcher({ userIdS }) {
         </div>
         <div>
           Favorite Characters
-          <DisplayHeros listofDICKSh={herosFE} DeleteFavH={deleteFavHero} />
+          <DisplayHeros listofDICKSh={herosFE} DeleteFavH={deleteFavHero} AddPromoteH={promoteHero}/>
         </div>
         <div>
           <button onClick={saveResults} type="button">Save Changes</button>
