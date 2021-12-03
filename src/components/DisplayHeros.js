@@ -61,6 +61,7 @@ function DisplayHeros({
             <th>Date_Modified</th>
             <th>ID</th>
             <th>Delete Favorites!</th>
+            <th>Buy comic here!</th>
           </tr>
         </thead>
         <tbody>
@@ -71,7 +72,7 @@ function DisplayHeros({
   );
 }
 DisplayHeros.defaultProps = {
-  DeleteFavH: () => {},
+  DeleteFavH: () => { },
   listofDICKSh: [],
 };
 

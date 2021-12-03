@@ -7,7 +7,6 @@ import React from 'react';
 // tables https://www.youtube.com/watch?v=hson9BXU9F8
 // iterate thorugh json: https://stackoverflow.com/questions/43241139/looping-through-table-data-react-js
 // html tables: https://www.w3schools.com/html/html_tables.asp
-
 // it is suppossed to be listofdic_T_s
 function DisplayComics({
   listofDICKSc, DeleteFavC,
@@ -49,6 +48,18 @@ function DisplayComics({
           Delete
         </button>
       </td>
+      <td>
+        <button
+          onClick={() => {
+            list = 'https://www.google.com/search?tbm=shop&q=';
+            a = objC.name;
+            window.open('https://www.google.com/search?tbm=shop&q=');
+          }}
+          type="button"
+        >
+          Buy
+        </button>
+      </td>
     </tr>
   ));
   return (
@@ -61,6 +72,7 @@ function DisplayComics({
             <th>Date_published</th>
             <th>ID</th>
             <th>Delete Favorites!</th>
+            <th>Buy comic here!</th>
           </tr>
         </thead>
         <tbody>
@@ -71,7 +83,7 @@ function DisplayComics({
   );
 }
 DisplayComics.defaultProps = {
-  DeleteFavC: () => {},
+  DeleteFavC: () => { },
   listofDICKSc: [],
 };
 
