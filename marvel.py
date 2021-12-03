@@ -270,6 +270,7 @@ def get_rand_h_or_c():
     listdictinfo = []
 
     json_response = response.json()
+    # print(json_response)
     try:
         data = json_response["data"]
         top_result_limit = len(data["results"])
@@ -384,7 +385,7 @@ def get_rand_h_or_c():
                 "hero": False,
                 "id": "",
                 "nameTitle": "Marvel Api Response Error",
-                "date": "modified",
+                "date": "date_modified",
                 "imageUrl": "imagelink",
                 "info": "info",
                 "info2": "info2",

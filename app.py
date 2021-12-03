@@ -553,8 +553,9 @@ def marvelLookupCrossovers():
 
 # FUNCTIONS FOR VOTING FOR HEROES
 
+
 @app.route("/addHeroToVote", methods=["POST"])
-def voteUpHero():
+def addHeroToVote():
     """
     For adding a hero to the poll
     """
@@ -567,10 +568,15 @@ def voteUpHero():
     hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
 
     if hero_poll_search is not None:
-        db.session.add(HeroVote(hero_id=hero_id, name=hero_name, image_link = hero_image, vote_count = 1))
+        db.session.add(
+            HeroVote(
+                hero_id=hero_id, name=hero_name, image_link=hero_image, vote_count=1
+            )
+        )
         db.session.commit()
 
     return flask.jsonify({"result": "success"})
+
 
 @app.route("/voteUpHero", methods=["POST"])
 def voteUpHero():
@@ -654,11 +660,11 @@ def main():
 
 
 if __name__ == "__main__":
-    # app.run(
-    #     debug=True,
-    #     port=int(os.getenv("PORT", "8081")),
-    # )
     app.run(
-        host=os.getenv("IP", "0.0.0.0"),
+        debug=True,
         port=int(os.getenv("PORT", "8081")),
     )
+    # app.run(
+    #     host=os.getenv("IP", "0.0.0.0"),
+    #     port=int(os.getenv("PORT", "8081")),
+    # )
