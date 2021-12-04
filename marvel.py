@@ -392,7 +392,7 @@ def get_rand_h_or_c():
                 "marvelError": True,
             }
         )
-    print(listdictinfo)
+    # print(listdictinfo)
     return listdictinfo
 
 

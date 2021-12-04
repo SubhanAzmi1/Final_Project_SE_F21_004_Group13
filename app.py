@@ -402,8 +402,8 @@ def marvelMakeChangesToDatabase():
                 )
                 db.session.commit()
 
-    print(heroes_fe)
-    print(comics_fe)
+    # print(heroes_fe)
+    # print(comics_fe)
     return flask.jsonify("we good in back here")
 
 
@@ -573,11 +573,12 @@ def get_Promoted():
     """
     For sending list of promoted items to front end.
     """
+    # print("promoted is called")
     listofpromoted = []
-    hero_poll_search = HeroVote.query.filter(vote_count >= 1).all()
-    comic_poll_search = ComicVote.query.filter(vote_count >= 1).all()
-    print(hero_poll_search)
-    print(comic_poll_search)
+    hero_poll_search = HeroVote.query.filter(HeroVote.vote_count >= 1).all()
+    comic_poll_search = ComicVote.query.filter(ComicVote.vote_count >= 1).all()
+    # print(hero_poll_search)
+    # print(comic_poll_search)
     for eachEntry in hero_poll_search:
         listofpromoted.append(
             {
@@ -616,7 +617,7 @@ def addHeroToVote():
     # SEARCH UP IF ID EXISTS
     hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
 
-    if hero_poll_search is not None:
+    if hero_poll_search is None:
         db.session.add(
             HeroVote(
                 hero_id=hero_id, name=hero_name, image_link=hero_img_link, vote_count=1
@@ -639,7 +640,7 @@ def addComicToVote():
     # SEARCH UP IF ID EXISTS
     comic_poll_search = ComicVote.query.filter_by(comic_id=comic_id).first()
 
-    if comic_poll_search is not None:
+    if comic_poll_search is None:
         db.session.add(
             ComicVote(
                 comic_id=comic_id,
@@ -699,7 +700,7 @@ def voteDown():
 
             if hero_poll_search.vote_count < 1:
                 # REMOVE FROM DATABASE
-                HeroVote.remove(hero_poll_search)
+                db.session.delete(hero_poll_search)
 
             db.session.commit()
     else:
@@ -712,7 +713,7 @@ def voteDown():
 
             if comic_poll_search.vote_count < 1:
                 # REMOVE FROM DATABASE
-                ComicVote.remove(comic_poll_search)
+                db.session.delete(comic_poll_search)
 
             db.session.commit()
 

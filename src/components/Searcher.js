@@ -318,7 +318,7 @@ function Searcher({ userIdS }) {
   }
 
   function VoteDown(isHeroV, idV) {
-    fetch('/voteUp', {
+    fetch('/voteDown', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
