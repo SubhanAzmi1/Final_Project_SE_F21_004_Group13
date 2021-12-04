@@ -561,6 +561,28 @@ def addHeroToVote():
     """
 
     hero_id = flask.request.get_json()["heroId"]
+
+    # SEARCH UP IF ID EXISTS
+    hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).fgitirst()
+
+    if hero_poll_search is not None:
+        db.session.add(
+            HeroVote(
+                hero_id=hero_id, name=hero_name, image_link=hero_image, vote_count=1
+            )
+        )
+        db.session.commit()
+
+    return flask.jsonify({"result": "success"})
+
+
+@app.route("/addComicToVote", methods=["POST"])
+def addComicToVote():
+    """
+    For adding a hero to the poll
+    """
+
+    hero_id = flask.request.get_json()["heroId"]
     hero_image = flask.request.get_json()["heroImage"]
     hero_name = flask.request.get_json()["heroName"]
 

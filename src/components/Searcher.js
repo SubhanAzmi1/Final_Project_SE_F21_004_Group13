@@ -243,7 +243,7 @@ function Searcher({ userIdS }) {
     // window.console.log(newHeros);
     setHerosFE(newHeros);
   }
-  function promoteHero(heroId, heroImage, heroName) {
+  function promoteHero(heroId) {
     fetch('/addHeroToVote', {
       method: 'POST',
       headers: {
@@ -251,8 +251,22 @@ function Searcher({ userIdS }) {
       },
       body: JSON.stringify({
         heroId,
-        heroImage,
-        heroName,
+      }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        window.console.log('Promoted heroes have been updated!');
+        // DO SOMETHING TO UPDATE PROMOTED HEROES
+      });
+  }
+  function promoteComic(comicID) {
+    fetch('/addComicToVote', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        comicID,
       }),
     })
       .then((response) => response.json())
@@ -400,7 +414,11 @@ function Searcher({ userIdS }) {
       <colsaved>
         <div>
           Favorite Comics
-          <DisplayComics listofDICKSc={comicsFE} DeleteFavC={deleteFavComic} />
+          <DisplayComics
+            listofDICKSc={comicsFE}
+            DeleteFavC={deleteFavComic}
+            AddPromoteC={promoteComic}
+          />
         </div>
         <div>
           Favorite Characters
