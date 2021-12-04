@@ -7,6 +7,7 @@ import React, { useState, useRef } from 'react';
 //  add object to usestate: https://newbedev.com/how-do-i-insert-into-an-array-inside-a-object-using-usestate-code-example
 //  add object to array: https://www.freecodecamp.org/news/a-complete-guide-to-creating-objects-in-javascript-b0e2450655e8/
 //  delete object from array via filter: https://www.delftstack.com/howto/javascript/javascript-remove-object-from-array/
+//  disable enter on forms: https://stackoverflow.com/questions/43750335/react-prevent-form-submission-when-enter-is-pressed-inside-input
 import FormResult from './FormResult';
 import FormResultHeroComparison from './FormResultHeroComparison';
 import DisplayComics from './DisplayComics';
@@ -373,32 +374,31 @@ function Searcher({ userIdS }) {
           <h2>
             Enter a character or comic name here!
           </h2>
-          <form>
-            <label htmlFor="hero">
-              <input
-                type="radio"
-                value="Hero"
-                name="Selection"
-                id="hero"
-                onChange={setHeroRadio}
-                checked={heroRadioActive}
-              />
-              Character
-            </label>
-            <label htmlFor="comic">
-              <input
-                type="radio"
-                value="Comic"
-                name="Selection"
-                id="comic"
-                onChange={setComicRadio}
-                checked={comicRadioActive}
-              />
-              Comic
-            </label>
-            <br />
-          </form>
-          <form>
+          <form onSubmit={(e) => { e.preventDefault(); }}>
+            <div>
+              <label htmlFor="hero">
+                <input
+                  type="radio"
+                  value="Hero"
+                  name="Selection"
+                  id="hero"
+                  onChange={setHeroRadio}
+                  checked={heroRadioActive}
+                />
+                Character
+              </label>
+              <label htmlFor="comic">
+                <input
+                  type="radio"
+                  value="Comic"
+                  name="Selection"
+                  id="comic"
+                  onChange={setComicRadio}
+                  checked={comicRadioActive}
+                />
+                Comic
+              </label>
+            </div>
             <div>
               <input
                 type="text"
@@ -446,7 +446,7 @@ function Searcher({ userIdS }) {
           <h2>
             Enter a Character crossover here!
           </h2>
-          <form>
+          <form onSubmit={(e) => { e.preventDefault(); }}>
             <div>
               <input
                 type="text"
