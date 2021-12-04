@@ -54,6 +54,19 @@ function DisplayComics({
           Promote
         </button>
       </td>
+      <td>
+        <button
+          onClick={() => {
+            let s = 'http://www.google.com/search?tbm=shop&q=';
+            s += objC.comicName;
+            s = s.replace('#', '%23');
+            window.open(s);
+          }}
+          type="button"
+        >
+          Buy
+        </button>
+      </td>
     </tr>
   ));
   return (
@@ -66,6 +79,8 @@ function DisplayComics({
             <th>Date_published</th>
             <th>ID</th>
             <th>Delete Favorites!</th>
+            <th>Promote!</th>
+            <th>Buy!</th>
           </tr>
         </thead>
         <tbody>
