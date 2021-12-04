@@ -7,11 +7,13 @@ import React, { useState, useRef } from 'react';
 //  add object to usestate: https://newbedev.com/how-do-i-insert-into-an-array-inside-a-object-using-usestate-code-example
 //  add object to array: https://www.freecodecamp.org/news/a-complete-guide-to-creating-objects-in-javascript-b0e2450655e8/
 //  delete object from array via filter: https://www.delftstack.com/howto/javascript/javascript-remove-object-from-array/
+//  disable enter on forms: https://stackoverflow.com/questions/43750335/react-prevent-form-submission-when-enter-is-pressed-inside-input
 import FormResult from './FormResult';
 import FormResultHeroComparison from './FormResultHeroComparison';
 import DisplayComics from './DisplayComics';
 import DisplayHeros from './DisplayHeros';
 import DisplayRandom from './DisplayRandom';
+import DisplayPromoted from './DisplayPromoted';
 
 function Searcher({ userIdS }) {
   const [nameList, setNameList] = useState([]);
@@ -39,6 +41,7 @@ function Searcher({ userIdS }) {
   const [herosFE, setHerosFE] = useState([]);
   const [comicsFE, setComicsFE] = useState([]);
   const [randThing, setRandThing] = useState([]);
+  const [promotedFE, setPromotedFE] = useState([]);
   const [getcounter, setGetCounter] = useState(0);
   const [isRandHero, setisRandHero] = useState(false);
 
@@ -74,6 +77,21 @@ function Searcher({ userIdS }) {
         setHerosFE(DATA);
       });
   }
+  function getPromoted() {
+    fetch('/get_Promoted', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+      }),
+    })
+      .then((response) => response.json())
+      .then((DATA) => {
+        // window.console.log(DATA);
+        setPromotedFE(DATA);
+      });
+  }
   function getRandomHorC() {
     fetch('/get_Random_Hero_or_Comic', {
       method: 'POST',
@@ -94,6 +112,7 @@ function Searcher({ userIdS }) {
     getUserComics();
     getUserHeroes();
     getRandomHorC();
+    getPromoted();
     setGetCounter(1);
   }
   function setHeroRadio() {
@@ -233,6 +252,7 @@ function Searcher({ userIdS }) {
     // window.console.log(newComics);
     setComicsFE(newComics);
   }
+
   function deleteFavHero(id2h) {
     //  removing value from JSON
 
@@ -241,6 +261,79 @@ function Searcher({ userIdS }) {
     newHeros = newHeros.filter((value) => value.heroId !== id2h);
     // window.console.log(newHeros);
     setHerosFE(newHeros);
+  }
+  function promoteHero(heroId, heroName, heroImgLink) {
+    fetch('/addHeroToVote', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        heroId,
+        heroName,
+        heroImgLink,
+      }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        window.console.log('Promoted have been updated!');
+        // DO SOMETHING TO UPDATE PROMOTED
+        getPromoted();
+      });
+  }
+  function promoteComic(comicID, comicName, comicImgLink) {
+    fetch('/addComicToVote', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        comicID,
+        comicName,
+        comicImgLink,
+      }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        window.console.log('Promoted have been updated!');
+        // DO SOMETHING TO UPDATE PROMOTED
+        getPromoted();
+      });
+  }
+  function VoteUp(isHeroV, idV) {
+    fetch('/voteUp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        isHeroV,
+        idV,
+      }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+      // DO SOMETHING TO UPDATE PROMOTED
+        getPromoted();
+      });
+  }
+
+  function VoteDown(isHeroV, idV) {
+    fetch('/voteDown', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        isHeroV,
+        idV,
+      }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+      // DO SOMETHING TO UPDATE PROMOTED
+        getPromoted();
+      });
   }
 
   function saveResults() {
@@ -281,41 +374,49 @@ function Searcher({ userIdS }) {
           <h2>
             Enter a character or comic name here!
           </h2>
-          <form>
-            <label htmlFor="hero">
+          <form onSubmit={(e) => { e.preventDefault(); }}>
+            <div>
+              <label htmlFor="hero">
+                <input
+                  type="radio"
+                  value="Hero"
+                  name="Selection"
+                  id="hero"
+                  onChange={setHeroRadio}
+                  checked={heroRadioActive}
+                />
+                Character
+              </label>
+              <label htmlFor="comic">
+                <input
+                  type="radio"
+                  value="Comic"
+                  name="Selection"
+                  id="comic"
+                  onChange={setComicRadio}
+                  checked={comicRadioActive}
+                />
+                Comic
+              </label>
+            </div>
+            <div>
               <input
-                type="radio"
-                value="Hero"
-                name="Selection"
-                id="hero"
-                onChange={setHeroRadio}
-                checked={heroRadioActive}
+                type="text"
+                placeholder="Character or Comic Name Here"
+                ref={textInput}
+                data-testid="text_input"
+                maxLength="45"
               />
-              Character
-            </label>
-            <label htmlFor="comic">
+            </div>
+            <div>
               <input
-                type="radio"
-                value="Comic"
-                name="Selection"
-                id="comic"
-                onChange={setComicRadio}
-                checked={comicRadioActive}
+                type="button"
+                Value="Starts-with lookup search"
+                onClick={searchUpResult}
+                data-testid="sw_search_button"
               />
-              Comic
-            </label>
-            <br />
+            </div>
           </form>
-          <form>
-            <input
-              type="text"
-              placeholder="Character or Comic Name Here"
-              ref={textInput}
-              data-testid="text_input"
-              maxLength="45"
-            />
-          </form>
-          <button onClick={searchUpResult} type="button" data-testid="sw_search_button">Starts-with search</button>
         </div>
         {wereSearchResultsEmpty ? (
           <div>
@@ -345,23 +446,31 @@ function Searcher({ userIdS }) {
           <h2>
             Enter a Character crossover here!
           </h2>
-          <form>
-            <input
-              type="text"
-              placeholder="Character One's Name Here"
-              ref={textInput1}
-              maxLength="45"
-              id="hero1"
-            />
-            <input
-              type="text"
-              placeholder="Character Two's Name Here"
-              ref={textInput2}
-              maxLength="45"
-              id="hero2"
-            />
+          <form onSubmit={(e) => { e.preventDefault(); }}>
+            <div>
+              <input
+                type="text"
+                placeholder="Character One's Name Here"
+                ref={textInput1}
+                maxLength="45"
+                id="hero1"
+              />
+              <input
+                type="text"
+                placeholder="Character Two's Name Here"
+                ref={textInput2}
+                maxLength="45"
+                id="hero2"
+              />
+            </div>
+            <div>
+              <input
+                type="button"
+                Value="Starts-with crossover search"
+                onClick={searchUpCrossOverResult}
+              />
+            </div>
           </form>
-          <button onClick={searchUpCrossOverResult} type="button">Starts-with search</button>
         </div>
         {cOsearchdone !== 0 ? (
           <div>
@@ -381,14 +490,30 @@ function Searcher({ userIdS }) {
       <colsaved>
         <div>
           Favorite Comics
-          <DisplayComics listofDICKSc={comicsFE} DeleteFavC={deleteFavComic} />
+          <DisplayComics
+            listofDICKSc={comicsFE}
+            DeleteFavC={deleteFavComic}
+            AddPromoteC={promoteComic}
+          />
         </div>
         <div>
           Favorite Characters
-          <DisplayHeros listofDICKSh={herosFE} DeleteFavH={deleteFavHero} />
+          <DisplayHeros
+            listofDICKSh={herosFE}
+            DeleteFavH={deleteFavHero}
+            AddPromoteH={promoteHero}
+          />
         </div>
         <div>
           <button onClick={saveResults} type="button">Save Changes</button>
+        </div>
+        <div>
+          Promoted Characters and Comics.
+          <DisplayPromoted
+            listofDICKSp={promotedFE}
+            voteUp={VoteUp}
+            voteDown={VoteDown}
+          />
         </div>
       </colsaved>
     </div>

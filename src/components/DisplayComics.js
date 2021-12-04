@@ -10,7 +10,7 @@ import React from 'react';
 
 // it is suppossed to be listofdic_T_s
 function DisplayComics({
-  listofDICKSc, DeleteFavC,
+  listofDICKSc, DeleteFavC, AddPromoteC,
 }) {
   // function addForm() {
   //   onClick(nameList[0], '1');
@@ -49,6 +49,11 @@ function DisplayComics({
           Delete
         </button>
       </td>
+      <td>
+        <button onClick={() => AddPromoteC(objC.comicId, objC.comicName, objC.comicImageLink)} type="button">
+          Promote
+        </button>
+      </td>
     </tr>
   ));
   return (
@@ -72,11 +77,13 @@ function DisplayComics({
 }
 DisplayComics.defaultProps = {
   DeleteFavC: () => {},
+  AddPromoteC: () => {},
   listofDICKSc: [],
 };
 
 DisplayComics.propTypes = {
   DeleteFavC: Function,
+  AddPromoteC: Function,
   listofDICKSc: Array,
 };
 export default DisplayComics;

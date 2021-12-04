@@ -54,9 +54,13 @@ function DisplayRandom({
         </table>
       </div>
       <div>
-        <button onClick={() => AddFav(objR.hero, objR.nameTitle, objR.date, objR.info, objR.id, objR.imageUrl)} type="button">
-          Add to Fav.
-        </button>
+        {objR.marvelError ? (
+          <div />
+        ) : (
+          <button onClick={() => AddFav(objR.hero, objR.nameTitle, objR.date, objR.info, objR.id, objR.imageUrl)} type="button">
+            Add to Fav.
+          </button>
+        )}
       </div>
     </>
   ));

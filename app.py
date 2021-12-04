@@ -6,6 +6,7 @@ Flask app logic for P1M3
 
 # sources:
 #   find specific in list_dict: https://www.geeksforgeeks.org/python-find-dictionary-matching-value-in-list/
+from enum import unique
 import os
 import json
 import random
@@ -131,7 +132,22 @@ class HeroVote(db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    hero_id = db.Column("hero_id", db.String, nullable=False)
+    hero_id = db.Column("hero_id", db.Integer, nullable=False, unique=True)
+    image_link = db.Column("image_link", db.String, nullable=False)
+    name = db.Column("name", db.String, nullable=False)
+    vote_count = db.Column("vote_count", db.Integer, nullable=False)
+
+    def repr(self):
+        return "<HeroVote%r%r>" % self.hero_id % self.vote_count
+
+
+class ComicVote(db.Model):
+    """
+    Comic vote count here, remove if after increasing/decreasing, vote count is 0 or less
+    """
+
+    id = db.Column("id", db.Integer, primary_key=True)
+    comic_id = db.Column("comic_id", db.Integer, nullable=False, unique=True)
     image_link = db.Column("image_link", db.String, nullable=False)
     name = db.Column("name", db.String, nullable=False)
     vote_count = db.Column("vote_count", db.Integer, nullable=False)
@@ -262,9 +278,9 @@ def marvelMakeChangesToDatabase():
     Saves favorites from front end to database
     """
     heroes_fe = flask.request.json.get("FEHeroes")
-    print(heroes_fe)
+    # print(heroes_fe)
     comics_fe = flask.request.json.get("FEComics")
-    print(comics_fe)
+    # print(comics_fe)
 
     h_fe_ids = [h["heroId"] for h in heroes_fe]
     c_fe_ids = [c["comicId"] for c in comics_fe]
@@ -386,8 +402,8 @@ def marvelMakeChangesToDatabase():
                 )
                 db.session.commit()
 
-    print(heroes_fe)
-    print(comics_fe)
+    # print(heroes_fe)
+    # print(comics_fe)
     return flask.jsonify("we good in back here")
 
 
@@ -459,19 +475,30 @@ def marvelLookupHero():
     Utilizes marvel.py to contact marvel api.
     """
     searchText = flask.request.json.get("text")
-    starts = "other"
-    names, modified_dates, image_urls, descriptions, ids, comics = get_charac_data(
-        searchText, starts
-    )
+    print(searchText)
+    if searchText == "":
+        searchResult = {
+            "names": [],
+            "modified_dates": [],
+            "image_urls": [],
+            "descriptions": [],
+            "ids": [],
+            "comics": [],
+        }
+    else:
+        starts = "other"
+        names, modified_dates, image_urls, descriptions, ids, comics = get_charac_data(
+            searchText, starts
+        )
 
-    searchResult = {
-        "names": names,
-        "modified_dates": modified_dates,
-        "image_urls": image_urls,
-        "descriptions": descriptions,
-        "ids": ids,
-        "comics": comics,
-    }
+        searchResult = {
+            "names": names,
+            "modified_dates": modified_dates,
+            "image_urls": image_urls,
+            "descriptions": descriptions,
+            "ids": ids,
+            "comics": comics,
+        }
     # print("heroes results: ")
     # print(names)
     # print(modified_dates)
@@ -489,20 +516,31 @@ def marvelLookupComic():
     """
     searchText = flask.request.json.get("text")
     # print("searchText is: " + searchText)
-    starts = "other"
-    titles, release_dates, image_urls, series, ids, characters = get_comic_data(
-        searchText, starts
-    )
+    print(searchText)
+    if searchText == "":
+        searchResult = {
+            "titles": [],
+            "release_dates": [],
+            "image_urls": [],
+            "series": [],
+            "ids": [],
+            "characters": [],
+        }
+    else:
+        starts = "other"
+        titles, release_dates, image_urls, series, ids, characters = get_comic_data(
+            searchText, starts
+        )
 
-    searchResult = {
-        "titles": titles,
-        "release_dates": release_dates,
-        "image_urls": image_urls,
-        "series": series,
-        "ids": ids,
-        "characters": characters,
-    }
-    # print("titles results: ")
+        searchResult = {
+            "titles": titles,
+            "release_dates": release_dates,
+            "image_urls": image_urls,
+            "series": series,
+            "ids": ids,
+            "characters": characters,
+        }
+        # print("titles results: ")
     # print(titles)
     # print(release_dates)
     # print(image_urls)
@@ -521,23 +559,40 @@ def marvelLookupCrossovers():
     """
     hero_one = flask.request.json.get("heroOne")
     hero_two = flask.request.json.get("heroTwo")
-
-    # SEARCH THROUGH THE MARVEL API BOTH HEROES
-    (
-        names,
-        image_urls,
-        comics_common,
-        stories_common,
-        events_common,
-    ) = get_common_data_heroes(hero_one, hero_two)
-    nothing_in_common = False
+    if hero_one == "" or hero_two == "":
+        (names, image_urls, comics_common, stories_common, events_common,) = (
+            [],
+            [],
+            "",
+            "",
+            "",
+        )
+        if hero_one == "" and hero_two != "":
+            names.append("wd")
+            names.append(hero_two)
+        elif hero_two == "" and hero_one != "":
+            names.append(hero_one)
+            names.append("wd")
+        else:
+            names.append("wd")
+            names.append("wd")
+    else:
+        # SEARCH THROUGH THE MARVEL API BOTH HEROES
+        (
+            names,
+            image_urls,
+            comics_common,
+            stories_common,
+            events_common,
+        ) = get_common_data_heroes(hero_one, hero_two)
+        nothing_in_common = False
     if len(comics_common) == 0 and len(stories_common) == 0 and len(events_common) == 0:
         nothing_in_common = True
-    print(names)
-    print(image_urls)
-    print(comics_common)
-    print(stories_common)
-    print(events_common)
+    # print(names)
+    # print(image_urls)
+    # print(comics_common)
+    # print(stories_common)
+    # print(events_common)
 
     crossSearchResult = {
         "names": names,
@@ -551,48 +606,155 @@ def marvelLookupCrossovers():
     return flask.jsonify(crossSearchResult)
 
 
-# FUNCTIONS FOR VOTING FOR HEROES
-
-
-@app.route("/voteUpHero", methods=["POST"])
-def voteUpHero():
+# FUNCTIONS FOR VOTING
+@app.route("/get_Promoted", methods=["POST"])
+def get_Promoted():
     """
-    For voting up a hero
+    For sending list of promoted items to front end.
+    """
+    # print("promoted is called")
+    listofpromoted = []
+    hero_poll_search = HeroVote.query.filter(HeroVote.vote_count >= 1).all()
+    comic_poll_search = ComicVote.query.filter(ComicVote.vote_count >= 1).all()
+    # print(hero_poll_search)
+    # print(comic_poll_search)
+    for eachEntry in hero_poll_search:
+        listofpromoted.append(
+            {
+                "isHero": True,
+                "id": eachEntry.hero_id,
+                "nameTitle": eachEntry.name,
+                "voteCount": eachEntry.vote_count,
+                "imageUrl": eachEntry.image_link,
+            }
+        )
+    # print(listofpromoted)
+    for eachEntry in comic_poll_search:
+        listofpromoted.append(
+            {
+                "isHero": False,
+                "id": eachEntry.comic_id,
+                "nameTitle": eachEntry.name,
+                "voteCount": eachEntry.vote_count,
+                "imageUrl": eachEntry.image_link,
+            }
+        )
+    # print(listofpromoted)
+    return flask.jsonify(listofpromoted)
+
+
+@app.route("/addHeroToVote", methods=["POST"])
+def addHeroToVote():
+    """
+    For adding a hero to the poll
     """
 
-    hero_id = flask.request.get_json()["heroId"]
+    hero_id = flask.request.json.get("heroId")
+    hero_name = flask.request.json.get("heroName")
+    hero_img_link = flask.request.json.get("heroImgLink")
 
     # SEARCH UP IF ID EXISTS
     hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
 
-    if hero_poll_search is not None:
-        hero_poll_search.vote_count = hero_poll_search.vote_count + 1
+    if hero_poll_search is None:
+        db.session.add(
+            HeroVote(
+                hero_id=hero_id, name=hero_name, image_link=hero_img_link, vote_count=1
+            )
+        )
         db.session.commit()
 
     return flask.jsonify({"result": "success"})
 
 
-@app.route("/voteDownHero", methods=["POST"])
-def voteDownHero():
+@app.route("/addComicToVote", methods=["POST"])
+def addComicToVote():
     """
-    Searching hero crossovers
+    For adding a hero to the poll
     """
-
-    hero_id = flask.request.get_json()["heroId"]
+    comic_id = flask.request.json.get("comicID")
+    comic_name = flask.request.json.get("comicName")
+    comic_img_link = flask.request.json.get("comicImgLink")
 
     # SEARCH UP IF ID EXISTS
-    hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
+    comic_poll_search = ComicVote.query.filter_by(comic_id=comic_id).first()
 
-    if hero_poll_search is not None:
-        hero_poll_search.vote_count = hero_poll_search.vote_count - 1
-
-        # CHECK IF 0 OR BELOW
-
-        if hero_poll_search.vote_count < 1:
-            # REMOVE FROM DATABASE
-            HeroVote.remove(hero_poll_search)
-
+    if comic_poll_search is None:
+        db.session.add(
+            ComicVote(
+                comic_id=comic_id,
+                name=comic_name,
+                image_link=comic_img_link,
+                vote_count=1,
+            )
+        )
         db.session.commit()
+
+    return flask.jsonify({"result": "success"})
+
+
+@app.route("/voteUp", methods=["POST"])
+def voteUp():
+    """
+    For voting up
+    """
+
+    item_id = flask.request.json.get("idV")
+    is_hero = flask.request.json.get("isHeroV")
+
+    # SEARCH UP IF ID EXISTS
+    if is_hero:
+        hero_poll_search = HeroVote.query.filter_by(hero_id=item_id).first()
+
+        if hero_poll_search is not None:
+            hero_poll_search.vote_count = hero_poll_search.vote_count + 1
+            db.session.commit()
+    else:
+        comic_poll_search = ComicVote.query.filter_by(comic_id=item_id).first()
+
+        if comic_poll_search is not None:
+            comic_poll_search.vote_count = comic_poll_search.vote_count + 1
+            db.session.commit()
+
+    return flask.jsonify({"result": "success"})
+
+
+@app.route("/voteDown", methods=["POST"])
+def voteDown():
+    """
+    for voting down
+    """
+
+    item_id = flask.request.json.get("idV")
+    is_hero = flask.request.json.get("isHeroV")
+
+    # SEARCH UP IF ID EXISTS
+    if is_hero:
+        hero_poll_search = HeroVote.query.filter_by(hero_id=item_id).first()
+
+        if hero_poll_search is not None:
+            hero_poll_search.vote_count = hero_poll_search.vote_count - 1
+
+            # CHECK IF 0 OR BELOW
+
+            if hero_poll_search.vote_count < 1:
+                # REMOVE FROM DATABASE
+                db.session.delete(hero_poll_search)
+
+            db.session.commit()
+    else:
+        comic_poll_search = ComicVote.query.filter_by(comic_id=item_id).first()
+
+        if comic_poll_search is not None:
+            comic_poll_search.vote_count = comic_poll_search.vote_count - 1
+
+            # CHECK IF 0 OR BELOW
+
+            if comic_poll_search.vote_count < 1:
+                # REMOVE FROM DATABASE
+                db.session.delete(comic_poll_search)
+
+            db.session.commit()
 
     return flask.jsonify({"result": "success"})
 

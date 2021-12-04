@@ -10,7 +10,7 @@ import React from 'react';
 
 // it is suppossed to be listofdic_T_s
 function DisplayHeros({
-  listofDICKSh, DeleteFavH,
+  listofDICKSh, DeleteFavH, AddPromoteH,
 }) {
   // function addForm() {
   //   onClick(nameList[0], '1');
@@ -49,6 +49,11 @@ function DisplayHeros({
           Delete
         </button>
       </td>
+      <td>
+        <button onClick={() => AddPromoteH(objH.heroId, objH.heroName, objH.heroImageLink)} type="button">
+          Promote
+        </button>
+      </td>
     </tr>
   ));
   return (
@@ -61,6 +66,7 @@ function DisplayHeros({
             <th>Date_Modified</th>
             <th>ID</th>
             <th>Delete Favorites!</th>
+            <th>Add to Promote!</th>
           </tr>
         </thead>
         <tbody>
@@ -72,11 +78,13 @@ function DisplayHeros({
 }
 DisplayHeros.defaultProps = {
   DeleteFavH: () => {},
+  AddPromoteH: () => {},
   listofDICKSh: [],
 };
 
 DisplayHeros.propTypes = {
   DeleteFavH: Function,
+  AddPromoteH: Function,
   listofDICKSh: Array,
 };
 export default DisplayHeros;
