@@ -25,14 +25,22 @@ function FormResultHeroComparison({
       leftImage = 'https://www.fightersgeneration.com/nx5/char/hulk-thinking.jpg';
     } else {
       leftName = nameList2[someIndex0];
-      leftImage = images2[someIndex0];
+      if (nameList2[someIndex1] === 'wd') {
+        leftImage = 'https://www.fightersgeneration.com/nx5/char/hulk-thinking.jpg';
+      } else {
+        leftImage = images2[someIndex0];
+      }
     }
     if (nameList2[someIndex1] === 'wd') {
       rightName = 'Who is dat?';
       rightImage = 'https://www.fightersgeneration.com/nx5/char/hulk-thinking.jpg';
     } else {
       rightName = nameList2[someIndex1];
-      rightImage = images2[someIndex1];
+      if (nameList2[someIndex0] === 'wd') {
+        rightImage = 'https://www.fightersgeneration.com/nx5/char/hulk-thinking.jpg';
+      } else {
+        rightImage = images2[someIndex1];
+      }
     }
   }
   window.console.log(noResults);

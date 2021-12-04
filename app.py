@@ -278,9 +278,9 @@ def marvelMakeChangesToDatabase():
     Saves favorites from front end to database
     """
     heroes_fe = flask.request.json.get("FEHeroes")
-    print(heroes_fe)
+    # print(heroes_fe)
     comics_fe = flask.request.json.get("FEComics")
-    print(comics_fe)
+    # print(comics_fe)
 
     h_fe_ids = [h["heroId"] for h in heroes_fe]
     c_fe_ids = [c["comicId"] for c in comics_fe]
@@ -537,23 +537,40 @@ def marvelLookupCrossovers():
     """
     hero_one = flask.request.json.get("heroOne")
     hero_two = flask.request.json.get("heroTwo")
-
-    # SEARCH THROUGH THE MARVEL API BOTH HEROES
-    (
-        names,
-        image_urls,
-        comics_common,
-        stories_common,
-        events_common,
-    ) = get_common_data_heroes(hero_one, hero_two)
-    nothing_in_common = False
+    if hero_one == "" or hero_two == "":
+        (names, image_urls, comics_common, stories_common, events_common,) = (
+            [],
+            [],
+            "",
+            "",
+            "",
+        )
+        if hero_one == "" and hero_two != "":
+            names.append("wd")
+            names.append(hero_two)
+        elif hero_two == "" and hero_one != "":
+            names.append(hero_one)
+            names.append("wd")
+        else:
+            names.append("wd")
+            names.append("wd")
+    else:
+        # SEARCH THROUGH THE MARVEL API BOTH HEROES
+        (
+            names,
+            image_urls,
+            comics_common,
+            stories_common,
+            events_common,
+        ) = get_common_data_heroes(hero_one, hero_two)
+        nothing_in_common = False
     if len(comics_common) == 0 and len(stories_common) == 0 and len(events_common) == 0:
         nothing_in_common = True
-    print(names)
-    print(image_urls)
-    print(comics_common)
-    print(stories_common)
-    print(events_common)
+    # print(names)
+    # print(image_urls)
+    # print(comics_common)
+    # print(stories_common)
+    # print(events_common)
 
     crossSearchResult = {
         "names": names,
@@ -589,7 +606,7 @@ def get_Promoted():
                 "imageUrl": eachEntry.image_link,
             }
         )
-    print(listofpromoted)
+    # print(listofpromoted)
     for eachEntry in comic_poll_search:
         listofpromoted.append(
             {
@@ -600,7 +617,7 @@ def get_Promoted():
                 "imageUrl": eachEntry.image_link,
             }
         )
-    print(listofpromoted)
+    # print(listofpromoted)
     return flask.jsonify(listofpromoted)
 
 

@@ -438,20 +438,29 @@ function Searcher({ userIdS }) {
             Enter a Character crossover here!
           </h2>
           <form>
-            <input
-              type="text"
-              placeholder="Character One's Name Here"
-              ref={textInput1}
-              maxLength="45"
-              id="hero1"
-            />
-            <input
-              type="text"
-              placeholder="Character Two's Name Here"
-              ref={textInput2}
-              maxLength="45"
-              id="hero2"
-            />
+            <div>
+              <input
+                type="text"
+                placeholder="Character One's Name Here"
+                ref={textInput1}
+                maxLength="45"
+                id="hero1"
+              />
+              <input
+                type="text"
+                placeholder="Character Two's Name Here"
+                ref={textInput2}
+                maxLength="45"
+                id="hero2"
+              />
+            </div>
+            <div>
+              <input
+                type="button"
+                Value="Sw search"
+                onClick={searchUpCrossOverResult}
+              />
+            </div>
           </form>
           <button onClick={searchUpCrossOverResult} type="button">Starts-with search</button>
         </div>
