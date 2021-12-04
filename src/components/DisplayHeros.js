@@ -50,7 +50,7 @@ function DisplayHeros({
         </button>
       </td>
       <td>
-        <button onClick={() => AddPromoteH(objH.heroId)} type="button">
+        <button onClick={() => AddPromoteH(objH.heroId, objH.heroName, objH.heroImageLink)} type="button">
           Promote
         </button>
       </td>

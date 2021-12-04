@@ -6,6 +6,7 @@ Flask app logic for P1M3
 
 # sources:
 #   find specific in list_dict: https://www.geeksforgeeks.org/python-find-dictionary-matching-value-in-list/
+from enum import unique
 import os
 import json
 import random
@@ -131,7 +132,7 @@ class HeroVote(db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    hero_id = db.Column("hero_id", db.Integer, nullable=False)
+    hero_id = db.Column("hero_id", db.Integer, nullable=False, unique=True)
     image_link = db.Column("image_link", db.String, nullable=False)
     name = db.Column("name", db.String, nullable=False)
     vote_count = db.Column("vote_count", db.Integer, nullable=False)
@@ -146,7 +147,7 @@ class ComicVote(db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    comic_id = db.Column("comic_id", db.Integer, nullable=False)
+    comic_id = db.Column("comic_id", db.Integer, nullable=False, unique=True)
     image_link = db.Column("image_link", db.String, nullable=False)
     name = db.Column("name", db.String, nullable=False)
     vote_count = db.Column("vote_count", db.Integer, nullable=False)
@@ -576,6 +577,8 @@ def addHeroToVote():
     """
 
     hero_id = flask.request.json.get("heroId")
+    hero_name = flask.request.json.get("heroName")
+    hero_img_link = flask.request.json.get("heroImgLink")
 
     # SEARCH UP IF ID EXISTS
     hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
@@ -583,7 +586,7 @@ def addHeroToVote():
     if hero_poll_search is not None:
         db.session.add(
             HeroVote(
-                hero_id=hero_id, name=hero_name, image_link=hero_image, vote_count=1
+                hero_id=hero_id, name=hero_name, image_link=hero_img_link, vote_count=1
             )
         )
         db.session.commit()
@@ -597,14 +600,19 @@ def addComicToVote():
     For adding a hero to the poll
     """
     comic_id = flask.request.json.get("comicID")
+    comic_name = flask.request.json.get("comicName")
+    comic_img_link = flask.request.json.get("comicImgLink")
 
     # SEARCH UP IF ID EXISTS
-    comic_poll_search = HeroVote.query.filter_by(comic_id=comic_id).first()
+    comic_poll_search = ComicVote.query.filter_by(comic_id=comic_id).first()
 
-    if hero_poll_search is not None:
+    if comic_poll_search is not None:
         db.session.add(
-            HeroVote(
-                hero_id=hero_id, name=hero_name, image_link=hero_image, vote_count=1
+            ComicVote(
+                comic_id=comic_id,
+                name=comic_name,
+                image_link=comic_img_link,
+                vote_count=1,
             )
         )
         db.session.commit()
@@ -615,17 +623,25 @@ def addComicToVote():
 @app.route("/voteUp", methods=["POST"])
 def voteUp():
     """
-    For voting up a hero
+    For voting up
     """
 
-    item_id = flask.request.get_json()["heroId"]
+    item_id = flask.request.json.get("idV")
+    is_hero = flask.request.json.get("isHeroV")
 
     # SEARCH UP IF ID EXISTS
-    hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
+    if is_hero:
+        hero_poll_search = HeroVote.query.filter_by(hero_id=item_id).first()
 
-    if hero_poll_search is not None:
-        hero_poll_search.vote_count = hero_poll_search.vote_count + 1
-        db.session.commit()
+        if hero_poll_search is not None:
+            hero_poll_search.vote_count = hero_poll_search.vote_count + 1
+            db.session.commit()
+    else:
+        comic_poll_search = ComicVote.query.filter_by(comic_id=item_id).first()
+
+        if comic_poll_search is not None:
+            comic_poll_search.vote_count = comic_poll_search.vote_count + 1
+            db.session.commit()
 
     return flask.jsonify({"result": "success"})
 
@@ -633,24 +649,39 @@ def voteUp():
 @app.route("/voteDown", methods=["POST"])
 def voteDown():
     """
-    Searching hero crossovers
+    for voting down
     """
 
-    hero_id = flask.request.get_json()["heroId"]
+    item_id = flask.request.json.get("idV")
+    is_hero = flask.request.json.get("isHeroV")
 
     # SEARCH UP IF ID EXISTS
-    hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
+    if is_hero:
+        hero_poll_search = HeroVote.query.filter_by(hero_id=item_id).first()
 
-    if hero_poll_search is not None:
-        hero_poll_search.vote_count = hero_poll_search.vote_count - 1
+        if hero_poll_search is not None:
+            hero_poll_search.vote_count = hero_poll_search.vote_count - 1
 
-        # CHECK IF 0 OR BELOW
+            # CHECK IF 0 OR BELOW
 
-        if hero_poll_search.vote_count < 1:
-            # REMOVE FROM DATABASE
-            HeroVote.remove(hero_poll_search)
+            if hero_poll_search.vote_count < 1:
+                # REMOVE FROM DATABASE
+                HeroVote.remove(hero_poll_search)
 
-        db.session.commit()
+            db.session.commit()
+    else:
+        comic_poll_search = ComicVote.query.filter_by(comic_id=item_id).first()
+
+        if comic_poll_search is not None:
+            comic_poll_search.vote_count = comic_poll_search.vote_count - 1
+
+            # CHECK IF 0 OR BELOW
+
+            if comic_poll_search.vote_count < 1:
+                # REMOVE FROM DATABASE
+                ComicVote.remove(comic_poll_search)
+
+            db.session.commit()
 
     return flask.jsonify({"result": "success"})
 

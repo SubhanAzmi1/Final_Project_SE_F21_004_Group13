@@ -50,7 +50,7 @@ function DisplayComics({
         </button>
       </td>
       <td>
-        <button onClick={() => AddPromoteC(objC.comicId)} type="button">
+        <button onClick={() => AddPromoteC(objC.comicId, objC.comicName, objC.comicImageLink)} type="button">
           Promote
         </button>
       </td>

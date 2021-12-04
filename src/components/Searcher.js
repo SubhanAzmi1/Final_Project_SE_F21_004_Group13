@@ -40,6 +40,7 @@ function Searcher({ userIdS }) {
   const [herosFE, setHerosFE] = useState([]);
   const [comicsFE, setComicsFE] = useState([]);
   const [randThing, setRandThing] = useState([]);
+  const [promotedFE, setPromotedFE] = useState([]);
   const [getcounter, setGetCounter] = useState(0);
   const [isRandHero, setisRandHero] = useState(false);
 
@@ -75,6 +76,21 @@ function Searcher({ userIdS }) {
         setHerosFE(DATA);
       });
   }
+  function getPromoted() {
+    fetch('/get_Promoted', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+      }),
+    })
+      .then((response) => response.json())
+      .then((DATA) => {
+        // window.console.log(DATA);
+        setPromotedFE(DATA);
+      });
+  }
   function getRandomHorC() {
     fetch('/get_Random_Hero_or_Comic', {
       method: 'POST',
@@ -95,6 +111,7 @@ function Searcher({ userIdS }) {
     getUserComics();
     getUserHeroes();
     getRandomHorC();
+    getPromoted();
     setGetCounter(1);
   }
   function setHeroRadio() {
@@ -244,7 +261,7 @@ function Searcher({ userIdS }) {
     // window.console.log(newHeros);
     setHerosFE(newHeros);
   }
-  function promoteHero(heroId) {
+  function promoteHero(heroId, heroName, heroImgLink) {
     fetch('/addHeroToVote', {
       method: 'POST',
       headers: {
@@ -252,15 +269,18 @@ function Searcher({ userIdS }) {
       },
       body: JSON.stringify({
         heroId,
+        heroName,
+        heroImgLink,
       }),
     })
       .then((response) => response.json())
       .then(() => {
         window.console.log('Promoted have been updated!');
-        // DO SOMETHING TO UPDATE PROMOTED HEROES
+        // DO SOMETHING TO UPDATE PROMOTED
+        getPromoted();
       });
   }
-  function promoteComic(comicID) {
+  function promoteComic(comicID, comicName, comicImgLink) {
     fetch('/addComicToVote', {
       method: 'POST',
       headers: {
@@ -268,12 +288,15 @@ function Searcher({ userIdS }) {
       },
       body: JSON.stringify({
         comicID,
+        comicName,
+        comicImgLink,
       }),
     })
       .then((response) => response.json())
       .then(() => {
         window.console.log('Promoted have been updated!');
-        // DO SOMETHING TO UPDATE PROMOTED HEROES
+        // DO SOMETHING TO UPDATE PROMOTED
+        getPromoted();
       });
   }
   function VoteUp(isHeroV, idV) {
@@ -289,7 +312,8 @@ function Searcher({ userIdS }) {
     })
       .then((response) => response.json())
       .then(() => {
-      // UPDATE RESULTS TO FRONT END
+      // DO SOMETHING TO UPDATE PROMOTED
+        getPromoted();
       });
   }
 
@@ -306,7 +330,8 @@ function Searcher({ userIdS }) {
     })
       .then((response) => response.json())
       .then(() => {
-      // UPDATE RESULTS TO FRONT END
+      // DO SOMETHING TO UPDATE PROMOTED
+        getPromoted();
       });
   }
 
