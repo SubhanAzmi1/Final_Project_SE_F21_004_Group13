@@ -399,15 +399,24 @@ function Searcher({ userIdS }) {
             <br />
           </form>
           <form>
-            <input
-              type="text"
-              placeholder="Character or Comic Name Here"
-              ref={textInput}
-              data-testid="text_input"
-              maxLength="45"
-            />
+            <div>
+              <input
+                type="text"
+                placeholder="Character or Comic Name Here"
+                ref={textInput}
+                data-testid="text_input"
+                maxLength="45"
+              />
+            </div>
+            <div>
+              <input
+                type="button"
+                Value="Starts-with lookup search"
+                onClick={searchUpResult}
+                data-testid="sw_search_button"
+              />
+            </div>
           </form>
-          <button onClick={searchUpResult} type="button" data-testid="sw_search_button">Starts-with search</button>
         </div>
         {wereSearchResultsEmpty ? (
           <div>
@@ -457,12 +466,11 @@ function Searcher({ userIdS }) {
             <div>
               <input
                 type="button"
-                Value="Sw search"
+                Value="Starts-with crossover search"
                 onClick={searchUpCrossOverResult}
               />
             </div>
           </form>
-          <button onClick={searchUpCrossOverResult} type="button">Starts-with search</button>
         </div>
         {cOsearchdone !== 0 ? (
           <div>

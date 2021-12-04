@@ -475,19 +475,30 @@ def marvelLookupHero():
     Utilizes marvel.py to contact marvel api.
     """
     searchText = flask.request.json.get("text")
-    starts = "other"
-    names, modified_dates, image_urls, descriptions, ids, comics = get_charac_data(
-        searchText, starts
-    )
+    print(searchText)
+    if searchText == "":
+        searchResult = {
+            "names": [],
+            "modified_dates": [],
+            "image_urls": [],
+            "descriptions": [],
+            "ids": [],
+            "comics": [],
+        }
+    else:
+        starts = "other"
+        names, modified_dates, image_urls, descriptions, ids, comics = get_charac_data(
+            searchText, starts
+        )
 
-    searchResult = {
-        "names": names,
-        "modified_dates": modified_dates,
-        "image_urls": image_urls,
-        "descriptions": descriptions,
-        "ids": ids,
-        "comics": comics,
-    }
+        searchResult = {
+            "names": names,
+            "modified_dates": modified_dates,
+            "image_urls": image_urls,
+            "descriptions": descriptions,
+            "ids": ids,
+            "comics": comics,
+        }
     # print("heroes results: ")
     # print(names)
     # print(modified_dates)
@@ -505,20 +516,31 @@ def marvelLookupComic():
     """
     searchText = flask.request.json.get("text")
     # print("searchText is: " + searchText)
-    starts = "other"
-    titles, release_dates, image_urls, series, ids, characters = get_comic_data(
-        searchText, starts
-    )
+    print(searchText)
+    if searchText == "":
+        searchResult = {
+            "titles": [],
+            "release_dates": [],
+            "image_urls": [],
+            "series": [],
+            "ids": [],
+            "characters": [],
+        }
+    else:
+        starts = "other"
+        titles, release_dates, image_urls, series, ids, characters = get_comic_data(
+            searchText, starts
+        )
 
-    searchResult = {
-        "titles": titles,
-        "release_dates": release_dates,
-        "image_urls": image_urls,
-        "series": series,
-        "ids": ids,
-        "characters": characters,
-    }
-    # print("titles results: ")
+        searchResult = {
+            "titles": titles,
+            "release_dates": release_dates,
+            "image_urls": image_urls,
+            "series": series,
+            "ids": ids,
+            "characters": characters,
+        }
+        # print("titles results: ")
     # print(titles)
     # print(release_dates)
     # print(image_urls)
