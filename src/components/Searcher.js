@@ -315,7 +315,7 @@ function Searcher({ userIdS }) {
               maxLength="45"
             />
           </form>
-          <button onClick={searchUpResult} type="button">Starts-with search</button>
+          <button onClick={searchUpResult} type="button" data-testid="sw_search_button">Starts-with search</button>
         </div>
         {wereSearchResultsEmpty ? (
           <div>
@@ -343,7 +343,7 @@ function Searcher({ userIdS }) {
         )}
         <div>
           <h2>
-            Enter a hero crossover here!
+            Enter a Character crossover here!
           </h2>
           <form>
             <input

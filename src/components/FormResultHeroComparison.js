@@ -67,7 +67,7 @@ function FormResultHeroComparison({
       <div>
         {noResults ? (
           <div>
-            <div>
+            <div id="crossover_table_result">
               <img
                 src="https://static1.srcdn.com/wordpress/wp-content/uploads/2020/06/comic-hulk-angry.jpg"
                 width={300} // to be determined

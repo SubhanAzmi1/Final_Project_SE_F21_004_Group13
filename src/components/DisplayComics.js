@@ -49,6 +49,19 @@ function DisplayComics({
           Delete
         </button>
       </td>
+      <td>
+        <button
+          onClick={() => {
+            let s = 'http://www.google.com/search?tbm=shop&q=';
+            s += objC.comicName;
+            s = s.replace('#', '%23');
+            window.open(s);
+          }}
+          type="button"
+        >
+          Buy
+        </button>
+      </td>
     </tr>
   ));
   return (
@@ -61,6 +74,7 @@ function DisplayComics({
             <th>Date_published</th>
             <th>ID</th>
             <th>Delete Favorites!</th>
+            <th>Buy Here!</th>
           </tr>
         </thead>
         <tbody>
@@ -71,7 +85,7 @@ function DisplayComics({
   );
 }
 DisplayComics.defaultProps = {
-  DeleteFavC: () => {},
+  DeleteFavC: () => { },
   listofDICKSc: [],
 };
 
