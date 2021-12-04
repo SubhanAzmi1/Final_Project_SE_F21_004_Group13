@@ -14,7 +14,7 @@ function DisplayPromoted({
     <tr>
       <td>
         <img
-          src={objp.heroImageLink}
+          src={objp.imageUrl}
           width={25} // to be determined
           alt="Character"
         />

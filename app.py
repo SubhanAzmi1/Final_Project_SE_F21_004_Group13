@@ -567,7 +567,40 @@ def marvelLookupCrossovers():
     return flask.jsonify(crossSearchResult)
 
 
-# FUNCTIONS FOR VOTING FOR HEROES
+# FUNCTIONS FOR VOTING
+@app.route("/get_Promoted", methods=["POST"])
+def get_Promoted():
+    """
+    For sending list of promoted items to front end.
+    """
+    listofpromoted = []
+    hero_poll_search = HeroVote.query.filter(vote_count >= 1).all()
+    comic_poll_search = ComicVote.query.filter(vote_count >= 1).all()
+    print(hero_poll_search)
+    print(comic_poll_search)
+    for eachEntry in hero_poll_search:
+        listofpromoted.append(
+            {
+                "isHero": True,
+                "id": eachEntry.hero_id,
+                "nameTitle": eachEntry.name,
+                "voteCount": eachEntry.vote_count,
+                "imageUrl": eachEntry.image_link,
+            }
+        )
+    print(listofpromoted)
+    for eachEntry in comic_poll_search:
+        listofpromoted.append(
+            {
+                "isHero": False,
+                "id": eachEntry.comic_id,
+                "nameTitle": eachEntry.name,
+                "voteCount": eachEntry.vote_count,
+                "imageUrl": eachEntry.image_link,
+            }
+        )
+    print(listofpromoted)
+    return flask.jsonify(listofpromoted)
 
 
 @app.route("/addHeroToVote", methods=["POST"])
