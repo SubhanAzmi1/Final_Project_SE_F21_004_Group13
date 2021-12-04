@@ -131,7 +131,22 @@ class HeroVote(db.Model):
     """
 
     id = db.Column("id", db.Integer, primary_key=True)
-    hero_id = db.Column("hero_id", db.String, nullable=False)
+    hero_id = db.Column("hero_id", db.Integer, nullable=False)
+    image_link = db.Column("image_link", db.String, nullable=False)
+    name = db.Column("name", db.String, nullable=False)
+    vote_count = db.Column("vote_count", db.Integer, nullable=False)
+
+    def repr(self):
+        return "<HeroVote%r%r>" % self.hero_id % self.vote_count
+
+
+class ComicVote(db.Model):
+    """
+    Comic vote count here, remove if after increasing/decreasing, vote count is 0 or less
+    """
+
+    id = db.Column("id", db.Integer, primary_key=True)
+    comic_id = db.Column("comic_id", db.Integer, nullable=False)
     image_link = db.Column("image_link", db.String, nullable=False)
     name = db.Column("name", db.String, nullable=False)
     vote_count = db.Column("vote_count", db.Integer, nullable=False)
@@ -560,10 +575,10 @@ def addHeroToVote():
     For adding a hero to the poll
     """
 
-    hero_id = flask.request.get_json()["heroId"]
+    hero_id = flask.request.json.get("heroId")
 
     # SEARCH UP IF ID EXISTS
-    hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).fgitirst()
+    hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
 
     if hero_poll_search is not None:
         db.session.add(
@@ -581,11 +596,10 @@ def addComicToVote():
     """
     For adding a hero to the poll
     """
-
-    hero_id = flask.request.get_json()["ComicId"]
+    comic_id = flask.request.json.get("comicID")
 
     # SEARCH UP IF ID EXISTS
-    hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
+    comic_poll_search = HeroVote.query.filter_by(comic_id=comic_id).first()
 
     if hero_poll_search is not None:
         db.session.add(
@@ -598,13 +612,13 @@ def addComicToVote():
     return flask.jsonify({"result": "success"})
 
 
-@app.route("/voteUpHero", methods=["POST"])
-def voteUpHero():
+@app.route("/voteUp", methods=["POST"])
+def voteUp():
     """
     For voting up a hero
     """
 
-    hero_id = flask.request.get_json()["heroId"]
+    item_id = flask.request.get_json()["heroId"]
 
     # SEARCH UP IF ID EXISTS
     hero_poll_search = HeroVote.query.filter_by(hero_id=hero_id).first()
@@ -616,8 +630,8 @@ def voteUpHero():
     return flask.jsonify({"result": "success"})
 
 
-@app.route("/voteDownHero", methods=["POST"])
-def voteDownHero():
+@app.route("/voteDown", methods=["POST"])
+def voteDown():
     """
     Searching hero crossovers
     """

@@ -12,6 +12,7 @@ import FormResultHeroComparison from './FormResultHeroComparison';
 import DisplayComics from './DisplayComics';
 import DisplayHeros from './DisplayHeros';
 import DisplayRandom from './DisplayRandom';
+import DisplayPromoted from './DisplayPromoted';
 
 function Searcher({ userIdS }) {
   const [nameList, setNameList] = useState([]);
@@ -255,7 +256,7 @@ function Searcher({ userIdS }) {
     })
       .then((response) => response.json())
       .then(() => {
-        window.console.log('Promoted heroes have been updated!');
+        window.console.log('Promoted have been updated!');
         // DO SOMETHING TO UPDATE PROMOTED HEROES
       });
   }
@@ -271,8 +272,41 @@ function Searcher({ userIdS }) {
     })
       .then((response) => response.json())
       .then(() => {
-        window.console.log('Promoted heroes have been updated!');
+        window.console.log('Promoted have been updated!');
         // DO SOMETHING TO UPDATE PROMOTED HEROES
+      });
+  }
+  function VoteUp(isHeroV, idV) {
+    fetch('/voteUp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        isHeroV,
+        idV,
+      }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+      // UPDATE RESULTS TO FRONT END
+      });
+  }
+
+  function VoteDown(isHeroV, idV) {
+    fetch('/voteUp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        isHeroV,
+        idV,
+      }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+      // UPDATE RESULTS TO FRONT END
       });
   }
 
@@ -430,6 +464,14 @@ function Searcher({ userIdS }) {
         </div>
         <div>
           <button onClick={saveResults} type="button">Save Changes</button>
+        </div>
+        <div>
+          Promoted Characters and Comics.
+          <DisplayPromoted
+            listofDICKSp={promotedFE}
+            voteUp={VoteUp}
+            voteDown={VoteDown}
+          />
         </div>
       </colsaved>
     </div>
